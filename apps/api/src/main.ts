@@ -14,7 +14,10 @@ async function bootstrap() {
     new ValidationPipe({ transform: true, whitelist: true }),
   );
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: process.env.CORS_ORIGIN?.split(',').map((o) => o.trim()) || [
+      'http://localhost:5173',
+      'http://localhost:5174',
+    ],
     credentials: true,
   });
 

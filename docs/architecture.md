@@ -144,7 +144,8 @@ npm run dev            # API + web
 qlp/
 ├── apps/
 │   ├── api/          # NestJS modular monolith
-│   └── web/          # React + Vite (prototype; target Next.js)
+│   ├── web/          # Learner React + Vite (prototype; target Next.js)
+│   └── admin/        # Admin console React + Vite
 ├── packages/shared/
 └── docs/
 ```

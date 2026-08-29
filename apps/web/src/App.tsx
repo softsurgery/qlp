@@ -12,7 +12,6 @@ import ChatPage from './pages/ChatPage';
 import ProfilePage from './pages/ProfilePage';
 import AchievementsPage from './pages/AchievementsPage';
 import ChildrenPage from './pages/ChildrenPage';
-import AdminPage from './pages/AdminPage';
 import VideoCallPage from './pages/VideoCallPage';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -43,7 +42,6 @@ export default function App() {
         <Route path="profile" element={<ProfilePage />} />
         <Route path="achievements" element={<AchievementsPage />} />
         <Route path="children" element={<ChildrenPage />} />
-        <Route path="admin" element={<AdminPage />} />
         <Route path="video/:bookingId" element={<VideoCallPage />} />
       </Route>
     </Routes>

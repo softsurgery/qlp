@@ -18,7 +18,7 @@ PDF sources: `docs/Quran_Platform_Architecture_and_Delivery_Plan.pdf`, `docs/Qur
 
 | Layer | Target (PDF) | Current prototype |
 |-------|--------------|-------------------|
-| Web | Next.js | React 18 + Vite + Tailwind |
+| Web | Next.js | React 18 + Vite + Tailwind (learner + admin apps) |
 | Mobile | React Native | — |
 | Backend | NestJS modular monolith | NestJS + TypeORM |
 | Video | **LiveKit** (Cloud → self-hosted Media VM) | LiveKit token stub + dev fallback |
@@ -35,6 +35,7 @@ npm run dev
 ```
 
 - Web: http://localhost:5173
+- Admin: http://localhost:5174
 - API: http://localhost:3001
 - Swagger: http://localhost:3001/docs
 
@@ -47,7 +48,27 @@ npm run dev
 - Tutor discovery, booking, chat
 - LiveKit-oriented video orchestration (configure keys for real calls)
 - Parent-child accounts, EN/AR RTL i18n
-- Admin: users, tutor verification
+- Admin console (separate app): users, tutor verification, curriculum
+
+## Monorepo layout
+
+```
+qlp/
+├── apps/
+│   ├── api/          # NestJS backend
+│   ├── web/          # Learner-facing React app (:5173)
+│   └── admin/        # Admin console React app (:5174)
+├── packages/
+│   └── shared/       # Shared enums & types
+├── docs/
+└── docker-compose.yml
+```
+
+| App | Port | Audience |
+|-----|------|----------|
+| `@qlp/web` | 5173 | Students, parents, tutors |
+| `@qlp/admin` | 5174 | Platform administrators |
+| `@qlp/api` | 3001 | Shared backend API |
 
 ## Environment
 
@@ -63,5 +84,7 @@ LIVEKIT_API_SECRET=
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | API + web |
+| `npm run dev` | API + web + admin |
+| `npm run dev:web` | Learner app only |
+| `npm run dev:admin` | Admin app only |
 | `npm run build` | Build all packages |

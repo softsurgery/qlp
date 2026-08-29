@@ -82,11 +82,3 @@ export const parentApi = {
   createChild: (data: Record<string, string>) => api.post('/parent-links/children', data),
   getChildProgress: (childId: string) => api.get(`/parent-links/children/${childId}/progress`),
 };
-
-export const adminApi = {
-  getUsers: () => api.get('/admin/users'),
-  setUserActive: (id: string, isActive: boolean) => api.patch(`/admin/users/${id}/active`, { isActive }),
-  getPendingTutors: () => api.get('/admin/tutors/pending'),
-  verifyTutor: (id: string, status: string) => api.patch(`/admin/tutors/${id}/verify`, { status }),
-  getCurriculum: () => api.get('/admin/curriculum'),
-};

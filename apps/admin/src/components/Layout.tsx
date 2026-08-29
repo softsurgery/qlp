@@ -1,47 +1,29 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../stores/auth';
 import { cn } from '../lib/utils';
-import {
-  BookOpen, Users, Calendar, MessageCircle, User, Trophy,
-  LayoutDashboard, Baby, LogOut, Globe,
-} from 'lucide-react';
+import { LayoutDashboard, Users, GraduationCap, BookOpen, LogOut, Shield } from 'lucide-react';
+
+const links = [
+  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/users', icon: Users, label: 'Users' },
+  { to: '/tutors', icon: GraduationCap, label: 'Tutor Verification' },
+  { to: '/curriculum', icon: BookOpen, label: 'Curriculum' },
+];
 
 export default function Layout() {
-  const { t, i18n } = useTranslation();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const navigate = useNavigate();
-
-  const links = [
-    { to: '/', icon: LayoutDashboard, label: t('nav.dashboard') },
-    { to: '/curriculum', icon: BookOpen, label: t('nav.curriculum') },
-    { to: '/tutors', icon: Users, label: t('nav.tutors') },
-    { to: '/bookings', icon: Calendar, label: t('nav.bookings') },
-    { to: '/chat', icon: MessageCircle, label: t('nav.chat') },
-    { to: '/achievements', icon: Trophy, label: t('nav.achievements') },
-    { to: '/profile', icon: User, label: t('nav.profile') },
-  ];
-
-  if (user?.role === 'parent') {
-    links.push({ to: '/children', icon: Baby, label: t('nav.children') });
-  }
-
-  const toggleLang = () => {
-    i18n.changeLanguage(i18n.language === 'ar' ? 'en' : 'ar');
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/auth');
-  };
 
   return (
     <div className="min-h-screen flex">
       <aside className="w-64 bg-primary text-primary-foreground flex flex-col">
         <div className="p-6 border-b border-white/10">
-          <h1 className="text-xl font-bold">{t('appName')}</h1>
-          <p className="text-sm opacity-80">{t('tagline')}</p>
+          <div className="flex items-center gap-2">
+            <Shield className="w-5 h-5" />
+            <h1 className="text-xl font-bold">QLP Admin</h1>
+          </div>
+          <p className="text-sm opacity-80 mt-1">Platform management</p>
         </div>
         <nav className="flex-1 p-4 space-y-1">
           {links.map(({ to, icon: Icon, label }) => (
@@ -62,22 +44,18 @@ export default function Layout() {
           ))}
         </nav>
         <div className="p-4 border-t border-white/10 space-y-2">
-          <button
-            onClick={toggleLang}
-            className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm hover:bg-white/10"
-          >
-            <Globe className="w-4 h-4" />
-            {i18n.language === 'ar' ? 'English' : 'العربية'}
-          </button>
           <div className="px-3 py-2 text-sm opacity-80">
             {user?.firstName} {user?.lastName}
           </div>
           <button
-            onClick={handleLogout}
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
             className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm hover:bg-white/10"
           >
             <LogOut className="w-4 h-4" />
-            {t('nav.logout')}
+            Logout
           </button>
         </div>
       </aside>

@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 98%;
+    --foreground: 220 30% 12%;
+    --primary: 220 45% 22%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 94%;
+    --muted: 220 10% 96%;
+    --border: 220 15% 88%;
+    --radius: 0.5rem;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .bg-background { background-color: hsl(var(--background)); }
+  .text-foreground { color: hsl(var(--foreground)); }
+  .bg-primary { background-color: hsl(var(--primary)); }
+  .text-primary { color: hsl(var(--primary)); }
+  .text-primary-foreground { color: hsl(var(--primary-foreground)); }
+  .bg-secondary { background-color: hsl(var(--secondary)); }
+  .bg-muted { background-color: hsl(var(--muted)); }
+  .border-border { border-color: hsl(var(--border)); }
+}

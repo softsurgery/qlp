@@ -7,11 +7,12 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev -w @qlp/api\" \"npm run dev -w @qlp/web\"",
+    "dev": "concurrently \"npm run dev -w @qlp/api\" \"npm run dev -w @qlp/web\" \"npm run dev -w @qlp/admin\"",
     "dev:api": "npm run dev -w @qlp/api",
     "dev:web": "npm run dev -w @qlp/web",
-    "build": "npm run build -w @qlp/shared && npm run build -w @qlp/api && npm run build -w @qlp/web",
-    "lint": "npm run lint -w @qlp/api && npm run lint -w @qlp/web",
+    "dev:admin": "npm run dev -w @qlp/admin",
+    "build": "npm run build -w @qlp/shared && npm run build -w @qlp/api && npm run build -w @qlp/web && npm run build -w @qlp/admin",
+    "lint": "npm run lint -w @qlp/api && npm run lint -w @qlp/web && npm run lint -w @qlp/admin",
     "test": "npm run test -w @qlp/api"
   },
   "devDependencies": {
