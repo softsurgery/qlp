@@ -1,0 +1,20 @@
+{
+  "name": "qlp",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w @qlp/api\" \"npm run dev -w @qlp/web\"",
+    "dev:api": "npm run dev -w @qlp/api",
+    "dev:web": "npm run dev -w @qlp/web",
+    "build": "npm run build -w @qlp/shared && npm run build -w @qlp/api && npm run build -w @qlp/web",
+    "lint": "npm run lint -w @qlp/api && npm run lint -w @qlp/web",
+    "test": "npm run test -w @qlp/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
