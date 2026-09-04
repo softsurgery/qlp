@@ -62,7 +62,8 @@ qlp/
 │   └── admin/        # Admin console React app (:5174)
 ├── packages/
 │   ├── api-client/   # Shared HTTP client for web & admin
-│   └── shared/       # Shared enums & types
+│   ├── hooks/        # Auth persist store
+│   └── lib/          # Shared utilities
 ├── pnpm-workspace.yaml
 ├── turbo.json
 ├── docs/
@@ -78,7 +79,6 @@ qlp/
 | Package | Description |
 |---------|-------------|
 | `@qlp/api-client` | Shared HTTP client used by web and admin |
-| `@qlp/shared` | Shared enums and types |
 
 ## Environment
 

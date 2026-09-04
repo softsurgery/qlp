@@ -1,16 +1,15 @@
-import { createApiClient } from '@qlp/api-client';
-import { useAuthPersistStore } from '@qlp/hooks';
+import { createApiClient } from "@qlp/api-client";
+import { useAuthPersistStore } from "@qlp/hooks";
 
 const api = createApiClient({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
-  refreshPath: '/auth/refresh-token',
+  baseURL: import.meta.env.VITE_API_URL || "/api",
+  refreshPath: "/admin/auth/refresh-token",
   onUnauthorized: () => {
     useAuthPersistStore.getState().logout();
-    window.location.href = '/login';
+    window.location.href = "/login";
   },
 });
 
-export const authApi = api.auth;
-export const adminApi = api.admin;
+export const adminAuthApi = api.adminAuth;
 
 export default api.http;

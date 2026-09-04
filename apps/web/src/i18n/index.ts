@@ -23,6 +23,7 @@ const resources = {
         login: 'Sign In',
         register: 'Create Account',
         email: 'Email',
+        username: 'Username',
         password: 'Password',
         firstName: 'First Name',
         lastName: 'Last Name',
@@ -32,6 +33,7 @@ const resources = {
         tutor: 'Tutor',
         noAccount: "Don't have an account?",
         hasAccount: 'Already have an account?',
+        accountCreated: 'Account created. Check your email to verify, then sign in.',
       },
       dashboard: {
         welcome: 'Welcome back',
@@ -123,6 +125,7 @@ const resources = {
         login: 'تسجيل الدخول',
         register: 'إنشاء حساب',
         email: 'البريد الإلكتروني',
+        username: 'اسم المستخدم',
         password: 'كلمة المرور',
         firstName: 'الاسم الأول',
         lastName: 'اسم العائلة',
@@ -132,6 +135,7 @@ const resources = {
         tutor: 'معلم',
         noAccount: 'ليس لديك حساب؟',
         hasAccount: 'لديك حساب بالفعل؟',
+        accountCreated: 'تم إنشاء الحساب. تحقق من بريدك الإلكتروني ثم سجّل الدخول.',
       },
       dashboard: {
         welcome: 'مرحباً بعودتك',

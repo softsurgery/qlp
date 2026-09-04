@@ -1,5 +1,6 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { hasRole } from '@qlp/api-client';
 import { useAuthStore } from '../stores/auth';
 import { cn } from '../lib/utils';
 import {
@@ -23,7 +24,7 @@ export default function Layout() {
     { to: '/profile', icon: User, label: t('nav.profile') },
   ];
 
-  if (user?.role === 'parent') {
+  if (hasRole(user, 'parent')) {
     links.push({ to: '/children', icon: Baby, label: t('nav.children') });
   }
 

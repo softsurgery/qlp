@@ -1,17 +1,10 @@
 import { create } from 'zustand';
+import { isAdminUser, type AuthUser } from '@qlp/api-client';
 import { useAuthPersistStore } from '@qlp/hooks';
 
-interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-}
-
 interface AuthState {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: AuthUser | null;
+  setUser: (user: AuthUser | null) => void;
   logout: () => void;
   isAuthenticated: () => boolean;
   isAdmin: () => boolean;
@@ -30,5 +23,5 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ user: null });
   },
   isAuthenticated: () => !!get().user && useAuthPersistStore.getState().isAuthenticated,
-  isAdmin: () => get().user?.role === 'admin',
+  isAdmin: () => isAdminUser(get().user),
 }));

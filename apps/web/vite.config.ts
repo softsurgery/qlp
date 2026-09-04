@@ -10,13 +10,13 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ["@qlp/api-client", "@qlp/hooks", "@qlp/lib", "@qlp/shared"],
+    exclude: ["@qlp/api-client", "@qlp/hooks", "@qlp/lib"],
   },
   server: {
     port: 5173,
     proxy: {
       "/api": {
-        target: "http://localhost:3001",
+        target: "http://localhost:8080",
         changeOrigin: true,
         rewrite: (p) => p.replace(/^\/api/, ""),
       },

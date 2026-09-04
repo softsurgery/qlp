@@ -1,12 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthPersistStore } from '@qlp/hooks';
-import { useAuthStore } from './stores/auth';
-import Layout from './components/Layout';
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import UsersPage from './pages/UsersPage';
-import TutorsPage from './pages/TutorsPage';
-import CurriculumPage from './pages/CurriculumPage';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuthPersistStore } from "@qlp/hooks";
+import { useAuthStore } from "./stores/auth";
+import Layout from "./components/Layout";
+import LoginPage from "./pages/LoginPage";
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
   const isReady = useAuthPersistStore((s) => s.isReady);
@@ -31,10 +27,10 @@ export default function App() {
           </AdminRoute>
         }
       >
-        <Route index element={<DashboardPage />} />
-        <Route path="users" element={<UsersPage />} />
-        <Route path="tutors" element={<TutorsPage />} />
-        <Route path="curriculum" element={<CurriculumPage />} />
+        <Route index element={<div>Dashboard</div>} />
+        <Route path="users" element={<div>Users</div>} />
+        <Route path="tutors" element={<div>Tutors</div>} />
+        <Route path="curriculum" element={<div>Curriculum</div>} />
       </Route>
     </Routes>
   );

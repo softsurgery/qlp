@@ -1,19 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthPersistStore } from '@qlp/hooks';
-import { useAuthStore } from './stores/auth';
-import Layout from './components/Layout';
-import AuthPage from './pages/AuthPage';
-import DashboardPage from './pages/DashboardPage';
-import CurriculumPage from './pages/CurriculumPage';
-import TrackPage from './pages/TrackPage';
-import LessonPage from './pages/LessonPage';
-import TutorsPage from './pages/TutorsPage';
-import BookingsPage from './pages/BookingsPage';
-import ChatPage from './pages/ChatPage';
-import ProfilePage from './pages/ProfilePage';
-import AchievementsPage from './pages/AchievementsPage';
-import ChildrenPage from './pages/ChildrenPage';
-import VideoCallPage from './pages/VideoCallPage';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuthPersistStore } from "@qlp/hooks";
+import { useAuthStore } from "./stores/auth";
+import Layout from "./components/Layout";
+import AuthPage from "./pages/AuthPage";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const isReady = useAuthPersistStore((s) => s.isReady);
@@ -36,18 +25,18 @@ export default function App() {
           </PrivateRoute>
         }
       >
-        <Route index element={<DashboardPage />} />
-        <Route path="curriculum" element={<CurriculumPage />} />
-        <Route path="curriculum/:slug" element={<TrackPage />} />
-        <Route path="lessons/:id" element={<LessonPage />} />
-        <Route path="tutors" element={<TutorsPage />} />
-        <Route path="bookings" element={<BookingsPage />} />
-        <Route path="chat" element={<ChatPage />} />
-        <Route path="chat/:conversationId" element={<ChatPage />} />
-        <Route path="profile" element={<ProfilePage />} />
-        <Route path="achievements" element={<AchievementsPage />} />
-        <Route path="children" element={<ChildrenPage />} />
-        <Route path="video/:bookingId" element={<VideoCallPage />} />
+        <Route index element={<div>Dashboard</div>} />
+        <Route path="curriculum" element={<div>Curriculum</div>} />
+        <Route path="curriculum/:slug" element={<div>Track</div>} />
+        <Route path="lessons/:id" element={<div>Lesson</div>} />
+        <Route path="tutors" element={<div>Tutors</div>} />
+        <Route path="bookings" element={<div>Bookings</div>} />
+        <Route path="chat" element={<div>Chat</div>} />
+        <Route path="chat/:conversationId" element={<div>Chat</div>} />
+        <Route path="profile" element={<div>Chat</div>} />
+        <Route path="achievements" element={<div>Achievements</div>} />
+        <Route path="children" element={<div>Children</div>} />
+        <Route path="video/:bookingId" element={<div>Video</div>} />
       </Route>
     </Routes>
   );
