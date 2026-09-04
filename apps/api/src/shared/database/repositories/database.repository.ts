@@ -12,7 +12,6 @@ import {
   SelectQueryBuilder,
 } from 'typeorm';
 import { DatabaseInterfaceRepository } from '../interfaces/database.repository.interface';
-import { IWhereClause } from '../interfaces/database-query-options.interface';
 import { normalizeWhereForTypeOrm } from '../utils/database-query-builder';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
@@ -165,10 +164,6 @@ export abstract class DatabaseAbstractRepository<
     await this.getRepository().clear();
   }
 
-  public async restore(id: string | number): Promise<void> {
-    await this.getRepository().restore(id);
-  }
-
   public async softDelete(id: string | number): Promise<T | null> {
     const deleted = await this.getRepository().softDelete(id);
     if (!deleted) {
@@ -191,6 +186,14 @@ export abstract class DatabaseAbstractRepository<
     );
 
     return entities;
+  }
+
+  public async restore(id: string | number): Promise<T | null> {
+    const restored = await this.getRepository().restore(id);
+    if (!restored) {
+      throw new NotFoundException();
+    }
+    return this.findOneById(id);
   }
 
   async updateAssociations<U extends { id: number | string } & Record<string, unknown>>({

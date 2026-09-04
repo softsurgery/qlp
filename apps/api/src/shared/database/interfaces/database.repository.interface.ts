@@ -33,7 +33,7 @@ export interface DatabaseInterfaceRepository<T extends ObjectLiteral> {
   delete(id: string | number): Promise<T | null>;
   deleteMany(ids: (string | number)[]): Promise<void>;
   deleteAll(): Promise<void>;
-  restore(id: string | number): Promise<void>;
+  restore(id: string | number): Promise<T | null>;
   softDelete(id: string | number): Promise<T | null>;
   softDeleteMany(ids: (string | number)[]): Promise<T[]>;
 

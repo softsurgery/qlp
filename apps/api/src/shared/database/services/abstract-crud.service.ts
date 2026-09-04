@@ -90,4 +90,8 @@ export class AbstractCrudService<T extends ObjectLiteral> {
     if (!entity) throw new Error('Entity not found');
     return this.repository.remove(entity);
   }
+
+  async restore(id: string | number): Promise<T | null> {
+    return this.repository.restore(id);
+  }
 }
