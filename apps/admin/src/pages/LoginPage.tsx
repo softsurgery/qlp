@@ -1,54 +1,57 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useAuthPersistStore } from "@qlp/hooks";
-import { useAuthStore } from "../stores/auth";
+import { useForgotPassword, useSignIn } from "../hooks/useAuth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const setUser = useAuthStore((s) => s.setUser);
-  const [loading, setLoading] = useState(false);
+  const signIn = useSignIn();
+  const forgot = useForgotPassword();
   const [forgotPassword, setForgotPassword] = useState(false);
   const [form, setForm] = useState({ usernameOrEmail: "", password: "" });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      if (forgotPassword) {
-        const res = await authApi.forgotPassword({
-          usernameOrEmail: form.usernameOrEmail,
-        });
-        toast.success(
-          res.data.success
-            ? `Reset email sent to ${res.data.email}`
-            : "Unable to send reset email",
-        );
-        if (res.data.success) setForgotPassword(false);
-        return;
-      }
+  const loading = signIn.isPending || forgot.isPending;
 
-      const res = await authApi.signIn({
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (forgotPassword) {
+      forgot.mutate(
+        { usernameOrEmail: form.usernameOrEmail },
+        {
+          onSuccess: (res) => {
+            toast.success(
+              res.success
+                ? `Reset email sent to ${res.email}`
+                : "Unable to send reset email",
+            );
+            if (res.success) setForgotPassword(false);
+          },
+          onError: () => toast.error("Unable to send reset email"),
+        },
+      );
+      return;
+    }
+
+    signIn.mutate(
+      {
         usernameOrEmail: form.usernameOrEmail,
         password: form.password,
-      });
-      if (!isAdminUser(res.data.user)) {
-        toast.error("Admin access only");
-        return;
-      }
-      useAuthPersistStore
-        .getState()
-        .setTokens(res.data.access_token, res.data.refresh_token);
-      setUser(res.data.user ?? null);
-      toast.success("Welcome back");
-      navigate("/");
-    } catch {
-      toast.error(
-        forgotPassword ? "Unable to send reset email" : "Invalid credentials",
-      );
-    } finally {
-      setLoading(false);
-    }
+      },
+      {
+        onSuccess: () => {
+          toast.success("Welcome back");
+          navigate("/");
+        },
+        onError: (error) => {
+          toast.error(
+            error instanceof Error && error.message === "Admin access only"
+              ? "Admin access only"
+              : "Invalid credentials",
+          );
+        },
+      },
+    );
   };
 
   return (

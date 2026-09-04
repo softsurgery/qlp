@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../stores/auth';
+import { useAuthUser, useLogout } from '../hooks/useAuth';
 import { cn } from '../lib/utils';
 import { LayoutDashboard, Users, GraduationCap, BookOpen, LogOut, Shield } from 'lucide-react';
 
@@ -11,8 +11,8 @@ const links = [
 ];
 
 export default function Layout() {
-  const user = useAuthStore((s) => s.user);
-  const logout = useAuthStore((s) => s.logout);
+  const { data: user } = useAuthUser();
+  const logout = useLogout();
   const navigate = useNavigate();
 
   return (

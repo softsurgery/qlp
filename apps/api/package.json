@@ -9,6 +9,11 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "cli": "node --no-experimental-strip-types -r ts-node/register -r tsconfig-paths/register src/cli.ts",
+    "seed:all": "pnpm cli seed:permissions && pnpm cli seed:roles && pnpm cli seed:admin",
+    "seed:permissions": "pnpm cli seed:permissions",
+    "seed:roles": "pnpm cli seed:roles",
+    "seed:admin": "pnpm cli seed:admin",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -75,6 +80,8 @@
     "jest": "^29.7.0",
     "prettier": "^3.4.2",
     "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.20.0"
   }

@@ -2,16 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useAuthPersistStore } from "@qlp/hooks";
-import { authApi } from "../lib/api";
-import { useAuthStore } from "../stores/auth";
+import { useSignIn, useSignUp } from "../hooks/useAuth";
 
 export default function AuthPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const setUser = useAuthStore((s) => s.setUser);
+  const signIn = useSignIn();
+  const signUp = useSignUp();
   const [isLogin, setIsLogin] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -20,45 +18,41 @@ export default function AuthPage() {
     lastName: "",
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      if (isLogin) {
-        const res = await authApi.signIn({
-          email: form.email,
-          password: form.password,
-        });
-        useAuthPersistStore
-          .getState()
-          .setTokens(res.data.access_token, res.data.refresh_token);
-        setUser(res.data.user);
-        toast.success("Welcome back!");
-        navigate("/");
-        return;
-      }
+  const loading = signIn.isPending || signUp.isPending;
 
-      await authApi.signUp({
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (isLogin) {
+      signIn.mutate(
+        { email: form.email, password: form.password },
+        {
+          onSuccess: () => {
+            toast.success("Welcome back!");
+            navigate("/");
+          },
+          onError: () => toast.error("Authentication failed"),
+        },
+      );
+      return;
+    }
+
+    signUp.mutate(
+      {
         email: form.email,
         password: form.password,
         username: form.username,
-        firstName: form.firstName || undefined,
-        lastName: form.lastName || undefined,
-      });
-
-      try {
-        await authApi.sendVerifyEmail({ email: form.email });
-      } catch {
-        // Account is created even if the verification email fails to send.
-      }
-
-      toast.success(t("auth.accountCreated"));
-      setIsLogin(true);
-    } catch {
-      toast.error("Authentication failed");
-    } finally {
-      setLoading(false);
-    }
+        firstName: form.firstName,
+        lastName: form.lastName,
+      },
+      {
+        onSuccess: () => {
+          toast.success(t("auth.accountCreated"));
+          setIsLogin(true);
+        },
+        onError: () => toast.error("Authentication failed"),
+      },
+    );
   };
 
   return (
@@ -81,6 +75,7 @@ export default function AuthPage() {
                   }
                   minLength={3}
                   maxLength={50}
+                  required
                 />
                 <input
                   className="border border-border rounded-lg px-3 py-2 text-sm"
@@ -91,6 +86,7 @@ export default function AuthPage() {
                   }
                   minLength={3}
                   maxLength={50}
+                  required
                 />
               </div>
               <input
