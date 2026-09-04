@@ -10,7 +10,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ["@qlp/api-client", "@qlp/hooks", "@qlp/lib"],
+    exclude: ["@qlp/api-client", "@qlp/components", "@qlp/hooks", "@qlp/lib", "@qlp/ui"],
   },
   server: {
     port: 5174,

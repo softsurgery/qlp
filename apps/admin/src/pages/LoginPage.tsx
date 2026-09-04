@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { Button, Input } from "@qlp/ui";
+import { Card, CardDescription, CardHeader, CardTitle } from "@qlp/components";
 import { useForgotPassword, useSignIn } from "../hooks/useAuth";
 
 export default function LoginPage() {
@@ -56,18 +58,17 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-secondary">
-      <div className="w-full max-w-md p-8 bg-background rounded-xl shadow-lg border border-border">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-primary">QLP Admin</h1>
-          <p className="text-muted-foreground mt-1 text-sm">
+      <Card>
+        <CardHeader>
+          <CardTitle>QLP Admin</CardTitle>
+          <CardDescription>
             {forgotPassword
               ? "Enter your username or email to reset your password"
               : "Sign in with an administrator account"}
-          </p>
-        </div>
+          </CardDescription>
+        </CardHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            className="w-full border border-border rounded-lg px-3 py-2 text-sm"
+          <Input
             placeholder="Username or email"
             value={form.usernameOrEmail}
             onChange={(e) =>
@@ -76,20 +77,15 @@ export default function LoginPage() {
             required
           />
           {!forgotPassword && (
-            <input
+            <Input
               type="password"
-              className="w-full border border-border rounded-lg px-3 py-2 text-sm"
               placeholder="Password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               required
             />
           )}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
-          >
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading
               ? forgotPassword
                 ? "Sending..."
@@ -97,17 +93,17 @@ export default function LoginPage() {
               : forgotPassword
                 ? "Send reset email"
                 : "Sign in"}
-          </button>
+          </Button>
         </form>
         <p className="text-center text-sm mt-4">
-          <button
+          <Button
+            variant="link"
             onClick={() => setForgotPassword(!forgotPassword)}
-            className="text-primary font-medium hover:underline"
           >
             {forgotPassword ? "Back to sign in" : "Forgot password?"}
-          </button>
+          </Button>
         </p>
-      </div>
+      </Card>
     </div>
   );
 }

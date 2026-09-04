@@ -1,6 +1,6 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthUser, useLogout } from '../hooks/useAuth';
-import { cn } from '../lib/utils';
+import { cn } from '@qlp/ui';
 import { LayoutDashboard, Users, GraduationCap, BookOpen, LogOut, Shield } from 'lucide-react';
 
 const links = [

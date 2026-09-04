@@ -2,7 +2,7 @@ import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { hasRole } from "../lib/api";
 import { useAuthUser, useLogout } from "../hooks/useAuth";
-import { cn } from "../lib/utils";
+import { cn } from "@qlp/ui";
 import {
   BookOpen,
   Users,

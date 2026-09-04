@@ -1,16 +1,10 @@
 export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  theme: {
-    extend: {
-      colors: {
-        primary: 'hsl(var(--primary))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-      },
-      borderRadius: {
-        lg: 'var(--radius)',
-      },
-    },
-  },
+  presets: [require('../../packages/ui/tailwind.preset.cjs')],
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+    '../../packages/ui/src/**/*.{js,ts,jsx,tsx}',
+    '../../packages/components/src/**/*.{js,ts,jsx,tsx}',
+  ],
   plugins: [require('tailwindcss-animate')],
 };

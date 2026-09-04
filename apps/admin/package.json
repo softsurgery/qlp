@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@qlp/api-client": "workspace:*",
+    "@qlp/components": "workspace:*",
     "@qlp/hooks": "workspace:*",
+    "@qlp/ui": "workspace:*",
     "@tanstack/react-query": "^5.56.2",
     "clsx": "^2.1.1",
     "lucide-react": "^0.441.0",

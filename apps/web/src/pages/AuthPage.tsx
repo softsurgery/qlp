@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { Button, Input } from "@qlp/ui";
+import { Card, CardDescription, CardHeader, CardTitle } from "@qlp/components";
 import { useSignIn, useSignUp } from "../hooks/useAuth";
 
 export default function AuthPage() {
@@ -57,17 +59,16 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-secondary">
-      <div className="w-full max-w-md p-8 bg-background rounded-xl shadow-lg border border-border">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-primary">{t("appName")}</h1>
-          <p className="text-muted-foreground mt-1">{t("tagline")}</p>
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("appName")}</CardTitle>
+          <CardDescription>{t("tagline")}</CardDescription>
+        </CardHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <>
               <div className="grid grid-cols-2 gap-3">
-                <input
-                  className="border border-border rounded-lg px-3 py-2 text-sm"
+                <Input
                   placeholder={t("auth.firstName")}
                   value={form.firstName}
                   onChange={(e) =>
@@ -77,8 +78,7 @@ export default function AuthPage() {
                   maxLength={50}
                   required
                 />
-                <input
-                  className="border border-border rounded-lg px-3 py-2 text-sm"
+                <Input
                   placeholder={t("auth.lastName")}
                   value={form.lastName}
                   onChange={(e) =>
@@ -89,8 +89,7 @@ export default function AuthPage() {
                   required
                 />
               </div>
-              <input
-                className="w-full border border-border rounded-lg px-3 py-2 text-sm"
+              <Input
                 placeholder={t("auth.username")}
                 value={form.username}
                 onChange={(e) => setForm({ ...form, username: e.target.value })}
@@ -100,41 +99,32 @@ export default function AuthPage() {
               />
             </>
           )}
-          <input
+          <Input
             type="email"
-            className="w-full border border-border rounded-lg px-3 py-2 text-sm"
             placeholder={t("auth.email")}
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             required
           />
-          <input
+          <Input
             type="password"
-            className="w-full border border-border rounded-lg px-3 py-2 text-sm"
             placeholder={t("auth.password")}
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             required
             minLength={6}
           />
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
-          >
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "..." : isLogin ? t("auth.login") : t("auth.register")}
-          </button>
+          </Button>
         </form>
         <p className="text-center text-sm mt-4">
           {isLogin ? t("auth.noAccount") : t("auth.hasAccount")}{" "}
-          <button
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-primary font-medium hover:underline"
-          >
+          <Button variant="link" onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? t("auth.register") : t("auth.login")}
-          </button>
+          </Button>
         </p>
-      </div>
+      </Card>
     </div>
   );
 }
