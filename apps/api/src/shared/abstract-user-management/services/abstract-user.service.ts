@@ -9,7 +9,6 @@ import { AbstractCrudService } from 'src/shared/database/services/abstract-crud.
 
 @Injectable()
 export abstract class AbstractUserService extends AbstractCrudService<AbstractUserEntity> {
-  private abstractUserRepository: DatabaseAbstractRepository<AbstractUserEntity>;
   constructor(abstractUserRepository: DatabaseAbstractRepository<AbstractUserEntity>) {
     super(abstractUserRepository);
   }
@@ -17,7 +16,7 @@ export abstract class AbstractUserService extends AbstractCrudService<AbstractUs
   async save(createUserDto: Partial<AbstractUserEntity>): Promise<AbstractUserEntity> {
     const hashedPassword = createUserDto.password && (await hashPassword(createUserDto.password));
     createUserDto.password = hashedPassword;
-    return this.abstractUserRepository.save(createUserDto);
+    return this.repository.save(createUserDto);
   }
 
   @Transactional()
@@ -25,7 +24,7 @@ export abstract class AbstractUserService extends AbstractCrudService<AbstractUs
     id: string,
     updateUserDto: Partial<AbstractUserEntity>,
   ): Promise<AbstractUserEntity | null> {
-    return this.abstractUserRepository?.update(id, updateUserDto);
+    return this.repository.update(id, updateUserDto);
   }
 
   //Extended Methods ===========================================================================
@@ -33,7 +32,7 @@ export abstract class AbstractUserService extends AbstractCrudService<AbstractUs
   async findOneByUsernameOrEmail(
     usernameOrEmail: string,
   ): Promise<AbstractUserEntity | null | undefined> {
-    return this.abstractUserRepository.findOne({
+    return this.repository.findOne({
       where: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
     });
   }
@@ -43,9 +42,9 @@ export abstract class AbstractUserService extends AbstractCrudService<AbstractUs
     withDeleted = false,
     query?: Pick<IQueryObject, 'join'>,
   ): Promise<AbstractUserEntity | null | undefined> {
-    const queryBuilder = new QueryBuilder(this.abstractUserRepository.getMetadata());
+    const queryBuilder = new QueryBuilder(this.repository.getMetadata());
     const queryOptions = query ? queryBuilder.build(query) : {};
-    return this.abstractUserRepository.findOne({
+    return this.repository.findOne({
       where: { email },
       relations: queryOptions.relations,
       withDeleted,
@@ -57,9 +56,9 @@ export abstract class AbstractUserService extends AbstractCrudService<AbstractUs
     withDeleted: boolean = false,
     query?: Pick<IQueryObject, 'join'>,
   ): Promise<AbstractUserEntity | null | undefined> {
-    const queryBuilder = new QueryBuilder(this.abstractUserRepository.getMetadata());
+    const queryBuilder = new QueryBuilder(this.repository.getMetadata());
     const queryOptions = query ? queryBuilder.build(query) : {};
-    return this.abstractUserRepository.findOne({
+    return this.repository.findOne({
       where: { username },
       relations: queryOptions.relations,
       withDeleted,
@@ -67,23 +66,23 @@ export abstract class AbstractUserService extends AbstractCrudService<AbstractUs
   }
 
   async activate(id: string): Promise<AbstractUserEntity | null | undefined> {
-    return this.abstractUserRepository.update(id, { isActive: true });
+    return this.repository.update(id, { isActive: true });
   }
 
   async deactivate(id: string): Promise<AbstractUserEntity | null | undefined> {
-    return this.abstractUserRepository.update(id, {
+    return this.repository.update(id, {
       isActive: false,
     });
   }
 
   async approve(id: string): Promise<AbstractUserEntity | null | undefined> {
-    return this.abstractUserRepository.update(id, {
+    return this.repository.update(id, {
       isApproved: true,
     });
   }
 
   async disapprove(id: string): Promise<AbstractUserEntity | null | undefined> {
-    return this.abstractUserRepository.update(id, {
+    return this.repository.update(id, {
       isApproved: false,
     });
   }
@@ -94,7 +93,7 @@ export abstract class AbstractUserService extends AbstractCrudService<AbstractUs
   ): Promise<AbstractUserEntity | null | undefined> {
     const user = await this.findOneById(id);
     const hashedPassword = await hashPassword(password);
-    return this.abstractUserRepository.update(id, {
+    return this.repository.update(id, {
       ...user,
       password: hashedPassword,
     });

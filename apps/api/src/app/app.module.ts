@@ -14,6 +14,7 @@ import { StorageModule } from 'src/shared/storage/storage.module';
 import { MailModule } from 'src/shared/mail/mail.module';
 import { resolveMX } from 'src/shared/mail/utils/mx-resolve.util';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { SeedersModule } from 'src/seeders/seeders.module';
 
 @Module({
   imports: [
@@ -92,6 +93,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     MailModule,
     StorageModule,
+    SeedersModule,
   ],
 })
 export class AppModule {}

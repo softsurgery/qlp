@@ -3,6 +3,11 @@ import { IsOptional, IsString, Length, IsArray } from 'class-validator';
 import { RolePermissionEntity } from '../../entities/role-permission.entity';
 
 export class CreateRoleDto {
+  @ApiProperty({ type: String, required: false })
+  @IsOptional()
+  @IsString()
+  id?: string;
+
   @ApiProperty({ type: String })
   @IsString()
   @Length(3, 50)

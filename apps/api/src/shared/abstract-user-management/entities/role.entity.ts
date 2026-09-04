@@ -1,12 +1,20 @@
+import { randomUUID } from 'crypto';
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { RolePermissionEntity } from './role-permission.entity';
 import { AbstractUserEntity } from './abstract-user.entity';
 
 @Entity('roles')
 export class RoleEntity extends EntityHelper {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
+
+  @BeforeInsert()
+  assignId() {
+    if (!this.id) {
+      this.id = randomUUID();
+    }
+  }
 
   @Column({ unique: true })
   label: string;

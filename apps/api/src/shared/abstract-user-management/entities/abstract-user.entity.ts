@@ -1,11 +1,13 @@
+import { randomUUID } from 'crypto';
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import {
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   TableInheritance,
 } from 'typeorm';
 import { RoleEntity } from './role.entity';
@@ -16,8 +18,15 @@ import { NotificationEntity } from 'src/shared/notifications/entities/notificati
 @Entity('users')
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class AbstractUserEntity extends EntityHelper {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
+
+  @BeforeInsert()
+  assignId() {
+    if (!this.id) {
+      this.id = randomUUID();
+    }
+  }
 
   @Column({ nullable: true })
   firstName?: string;
