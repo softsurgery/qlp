@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useAuthPersistStore } from '@qlp/hooks';
 
 interface User {
   id: string;
@@ -25,10 +26,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ user });
   },
   logout: () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
+    useAuthPersistStore.getState().logout();
     localStorage.removeItem('user');
     set({ user: null });
   },
-  isAuthenticated: () => !!get().user && !!localStorage.getItem('access_token'),
+  isAuthenticated: () => !!get().user && useAuthPersistStore.getState().isAuthenticated,
 }));

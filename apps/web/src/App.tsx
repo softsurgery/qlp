@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuthPersistStore } from '@qlp/hooks';
 import { useAuthStore } from './stores/auth';
 import Layout from './components/Layout';
 import AuthPage from './pages/AuthPage';
@@ -15,8 +16,12 @@ import ChildrenPage from './pages/ChildrenPage';
 import VideoCallPage from './pages/VideoCallPage';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const isAuth = useAuthStore((s) => s.isAuthenticated());
-  return isAuth ? <>{children}</> : <Navigate to="/auth" />;
+  const isReady = useAuthPersistStore((s) => s.isReady);
+  const isAuthed = useAuthPersistStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
+
+  if (!isReady) return null;
+  return isAuthed && user ? <>{children}</> : <Navigate to="/auth" />;
 }
 
 export default function App() {

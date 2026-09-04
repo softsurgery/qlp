@@ -9,6 +9,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  optimizeDeps: {
+    exclude: ['@qlp/api-client', '@qlp/hooks', '@qlp/lib', '@qlp/shared'],
+  },
   server: {
     port: 5174,
     proxy: {

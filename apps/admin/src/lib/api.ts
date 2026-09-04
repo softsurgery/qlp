@@ -1,43 +1,16 @@
-import axios from 'axios';
+import { createApiClient } from '@qlp/api-client';
+import { useAuthPersistStore } from '@qlp/hooks';
 
-const TOKEN_KEY = 'admin_access_token';
-const REFRESH_KEY = 'admin_refresh_token';
-
-const api = axios.create({
+const api = createApiClient({
   baseURL: import.meta.env.VITE_API_URL || '/api',
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
-
-api.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(REFRESH_KEY);
-      localStorage.removeItem('admin_user');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
+  refreshPath: '/auth/refresh-token',
+  onUnauthorized: () => {
+    useAuthPersistStore.getState().logout();
+    window.location.href = '/login';
   },
-);
+});
 
-export default api;
+export const authApi = api.auth;
+export const adminApi = api.admin;
 
-export const authApi = {
-  login: (email: string, password: string) => api.post('/auth/login', { email, password }),
-};
-
-export const adminApi = {
-  getUsers: () => api.get('/admin/users'),
-  setUserActive: (id: string, isActive: boolean) => api.patch(`/admin/users/${id}/active`, { isActive }),
-  getPendingTutors: () => api.get('/admin/tutors/pending'),
-  verifyTutor: (id: string, status: string) => api.patch(`/admin/tutors/${id}/verify`, { status }),
-  getCurriculum: () => api.get('/admin/curriculum'),
-};
-
-export { TOKEN_KEY, REFRESH_KEY };
+export default api.http;

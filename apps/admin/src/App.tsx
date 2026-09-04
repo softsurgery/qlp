@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuthPersistStore } from '@qlp/hooks';
 import { useAuthStore } from './stores/auth';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
@@ -8,9 +9,12 @@ import TutorsPage from './pages/TutorsPage';
 import CurriculumPage from './pages/CurriculumPage';
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
-  const isAuth = useAuthStore((s) => s.isAuthenticated());
+  const isReady = useAuthPersistStore((s) => s.isReady);
+  const isAuthed = useAuthPersistStore((s) => s.isAuthenticated);
   const isAdmin = useAuthStore((s) => s.isAdmin());
-  if (!isAuth) return <Navigate to="/login" replace />;
+
+  if (!isReady) return null;
+  if (!isAuthed) return <Navigate to="/login" replace />;
   if (!isAdmin) return <Navigate to="/login" replace />;
   return <>{children}</>;
 }

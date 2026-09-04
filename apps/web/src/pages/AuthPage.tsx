@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { useAuthPersistStore } from '@qlp/hooks';
 import { authApi } from '../lib/api';
 import { useAuthStore } from '../stores/auth';
 
@@ -26,8 +27,7 @@ export default function AuthPage() {
       const res = isLogin
         ? await authApi.login(form.email, form.password)
         : await authApi.register(form);
-      localStorage.setItem('access_token', res.data.access_token);
-      localStorage.setItem('refresh_token', res.data.refresh_token);
+      useAuthPersistStore.getState().setTokens(res.data.access_token, res.data.refresh_token);
       setUser(res.data.user);
       toast.success(isLogin ? 'Welcome back!' : 'Account created!');
       navigate('/');

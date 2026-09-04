@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { io, Socket } from 'socket.io-client';
+import { useAuthPersistStore } from '@qlp/hooks';
 import { chatApi } from '../lib/api';
 import { Send } from 'lucide-react';
 
@@ -40,7 +41,7 @@ export default function ChatPage() {
   }, [conversationId]);
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
+    const token = useAuthPersistStore.getState().accessToken;
     if (!token) return;
 
     socketRef.current = io(import.meta.env.VITE_WS_URL || 'http://localhost:3001', {

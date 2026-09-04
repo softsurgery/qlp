@@ -29,9 +29,9 @@ PDF sources: `docs/Quran_Platform_Architecture_and_Delivery_Plan.pdf`, `docs/Qur
 
 ```bash
 docker compose up -d
-npm install
+pnpm install
 cp apps/api/.env.example apps/api/.env
-npm run dev
+pnpm dev
 ```
 
 - Web: http://localhost:5173
@@ -52,6 +52,8 @@ npm run dev
 
 ## Monorepo layout
 
+Turborepo + pnpm workspace (`apps/*`, `packages/*`).
+
 ```
 qlp/
 ├── apps/
@@ -59,7 +61,10 @@ qlp/
 │   ├── web/          # Learner-facing React app (:5173)
 │   └── admin/        # Admin console React app (:5174)
 ├── packages/
+│   ├── api-client/   # Shared HTTP client for web & admin
 │   └── shared/       # Shared enums & types
+├── pnpm-workspace.yaml
+├── turbo.json
 ├── docs/
 └── docker-compose.yml
 ```
@@ -69,6 +74,11 @@ qlp/
 | `@qlp/web` | 5173 | Students, parents, tutors |
 | `@qlp/admin` | 5174 | Platform administrators |
 | `@qlp/api` | 3001 | Shared backend API |
+
+| Package | Description |
+|---------|-------------|
+| `@qlp/api-client` | Shared HTTP client used by web and admin |
+| `@qlp/shared` | Shared enums and types |
 
 ## Environment
 
@@ -84,7 +94,10 @@ LIVEKIT_API_SECRET=
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | API + web + admin |
-| `npm run dev:web` | Learner app only |
-| `npm run dev:admin` | Admin app only |
-| `npm run build` | Build all packages |
+| `pnpm dev` | API + web + admin |
+| `pnpm dev:web` | Learner app only |
+| `pnpm dev:admin` | Admin app only |
+| `pnpm dev:api` | API only |
+| `pnpm build` | Build all packages and apps |
+| `pnpm lint` | Lint all apps |
+| `pnpm test` | Run tests |

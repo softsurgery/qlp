@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { authApi, TOKEN_KEY, REFRESH_KEY } from '../lib/api';
+import { useAuthPersistStore } from '@qlp/hooks';
+import { authApi } from '../lib/api';
 import { useAuthStore } from '../stores/auth';
 
 export default function LoginPage() {
@@ -19,8 +20,7 @@ export default function LoginPage() {
         toast.error('Admin access only');
         return;
       }
-      localStorage.setItem(TOKEN_KEY, res.data.access_token);
-      localStorage.setItem(REFRESH_KEY, res.data.refresh_token);
+      useAuthPersistStore.getState().setTokens(res.data.access_token, res.data.refresh_token);
       setUser(res.data.user);
       toast.success('Welcome back');
       navigate('/');
