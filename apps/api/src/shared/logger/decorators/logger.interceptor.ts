@@ -25,7 +25,7 @@ export class LogInterceptor implements NestInterceptor {
         const request: AdvancedRequest = context.switchToHttp().getRequest();
         const { method, url, logInfo } = request;
 
-        if (event === EventType.SIGNIN) {
+        if (event === EventType.CLIENT_SIGNIN || event === EventType.ADMIN_SIGNIN) {
           const payload: AccessTokenPayload = getTokenPayload(request);
 
           void this.loggerService.save({

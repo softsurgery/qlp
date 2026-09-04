@@ -9,7 +9,7 @@ export class ResponseLogDto extends ResponseDtoHelper {
   @Expose()
   id: number;
 
-  @ApiProperty({ type: String, enum: EventType, example: EventType.SIGNIN })
+  @ApiProperty({ type: String, enum: EventType })
   @Expose()
   event: EventType;
 
