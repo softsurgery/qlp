@@ -10,6 +10,7 @@ import { DataSource } from 'typeorm';
 import { DatabaseModule } from 'src/shared/database/database.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RouterModule } from 'src/routers/router.module';
+import { StorageModule } from 'src/shared/storage/storage.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { RouterModule } from 'src/routers/router.module';
       signOptions: { expiresIn: '1d' },
     }),
     RouterModule.forRoot(),
+    StorageModule,
   ],
 })
 export class AppModule {}
