@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 interface UseDataTableStateOptions {
   order?: boolean;
@@ -22,10 +22,13 @@ export function useDataTableState(
     {},
   );
 
-  const defaultSort = {
-    order: options.order ?? true,
-    sortKey: options.sortKey ?? "id",
-  };
+  const defaultSort = useMemo(
+    () => ({
+      order: options.order ?? true,
+      sortKey: options.sortKey ?? "id",
+    }),
+    [options.order, options.sortKey],
+  );
 
   const hasActiveFiltersOrSort = useMemo(
     () =>
@@ -36,12 +39,12 @@ export function useDataTableState(
     [columnFilters, defaultSort.order, defaultSort.sortKey, searchTerm, sortDetails],
   );
 
-  const clearFiltersAndSort = () => {
+  const clearFiltersAndSort = useCallback(() => {
     setSearchTerm("");
     setColumnFilters({});
     setSortDetails(defaultSort);
     setPage(1);
-  };
+  }, [defaultSort]);
 
   return {
     page,

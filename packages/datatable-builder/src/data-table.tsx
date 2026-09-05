@@ -52,26 +52,6 @@ export function DataTable<TData, TValue>({
   //set pagination in footer
   const { setContent } = useFooter();
   const { t } = useTranslation("common");
-  React.useEffect(() => {
-    if (footerPagination)
-      setContent?.(
-        <DataTablePagination
-          table={table}
-          context={context}
-          className="px-10"
-        />,
-      );
-    return () => {
-      setContent?.(null);
-    };
-  }, [
-    footerPagination,
-    context.totalPageCount,
-    context.size,
-    context.page,
-    context.hasActiveFiltersOrSort,
-    context.clearFiltersAndSort,
-  ]);
 
   const [rowSelection, setRowSelection] = React.useState({});
   const initialDefaultVisibility = React.useMemo(
@@ -140,6 +120,35 @@ export function DataTable<TData, TValue>({
       context,
     },
   });
+
+  React.useEffect(() => {
+    if (!footerPagination) {
+      setContent?.(null);
+      return;
+    }
+    setContent?.(
+      <DataTablePagination
+        table={table}
+        context={context}
+        className="px-10"
+      />,
+    );
+  }, [
+    footerPagination,
+    context.totalPageCount,
+    context.size,
+    context.page,
+    context.hasActiveFiltersOrSort,
+    context.clearFiltersAndSort,
+    setContent,
+  ]);
+
+  React.useEffect(() => {
+    return () => {
+      setContent?.(null);
+    };
+  }, [setContent]);
+
   return (
     <div className={cn(className, "space-y-4")}>
       <DataTableToolbar table={table} data={data} context={context} />

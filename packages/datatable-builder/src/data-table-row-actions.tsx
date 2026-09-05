@@ -39,17 +39,23 @@ export function DataTableRowActions<TData>({
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
+          type="button"
           variant="ghost"
           className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
         >
           <Ellipsis className="h-4 w-4" />
+          <span className="sr-only">{t("commands.actions")}</span>
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="center" className="w-40 font-medium ">
+      <DropdownMenuContent
+        align="end"
+        className="w-40 font-medium"
+        onCloseAutoFocus={(event) => event.preventDefault()}
+      >
         <DropdownMenuLabel className="text-center font-black text-xs">
           {t("commands.actions")}
         </DropdownMenuLabel>
