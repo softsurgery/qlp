@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthSession } from "./hooks/useAuth";
-import Layout from "./components/Layout";
+import Layout from "./components/layout/Layout";
 import AuthPage from "./pages/AuthPage";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {

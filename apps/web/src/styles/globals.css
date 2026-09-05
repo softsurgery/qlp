@@ -24,6 +24,14 @@
     --input: 160 15% 90%;
     --ring: 158 64% 28%;
     --radius: 0.5rem;
+    --sidebar-background: 158 20% 97%;
+    --sidebar-foreground: 160 30% 10%;
+    --sidebar-primary: 158 64% 28%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 158 20% 92%;
+    --sidebar-accent-foreground: 160 30% 10%;
+    --sidebar-border: 160 15% 90%;
+    --sidebar-ring: 158 64% 28%;
   }
 
   .dark {
@@ -46,14 +54,22 @@
     --border: 160 12% 18%;
     --input: 160 12% 18%;
     --ring: 158 64% 40%;
+    --sidebar-background: 160 18% 10%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 158 64% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 160 14% 16%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 160 12% 18%;
+    --sidebar-ring: 158 64% 40%;
   }
 
   * {
     @apply border-border;
   }
 
-  [dir='rtl'] {
-    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  [dir="rtl"] {
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
   }
 
   body {
