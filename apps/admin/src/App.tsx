@@ -2,6 +2,10 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useIsAdminSession } from "./hooks/useAuth";
 import Layout from "./components/layout/Layout";
 import LoginPage from "./pages/LoginPage";
+import UsersPage from "./pages/UsersPage";
+import UserCreatePage from "./pages/UserCreatePage";
+import UserEditPage from "./pages/UserEditPage";
+import RolesPage from "./pages/RolesPage";
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, isAdmin } = useIsAdminSession();
@@ -39,7 +43,10 @@ export default function App() {
         }
       >
         <Route index element={<div>Dashboard</div>} />
-        <Route path="users" element={<div>Users</div>} />
+        <Route path="users" element={<UsersPage />} />
+        <Route path="users/new" element={<UserCreatePage />} />
+        <Route path="users/:userId/edit" element={<UserEditPage />} />
+        <Route path="roles" element={<RolesPage />} />
         <Route path="tutors" element={<div>Tutors</div>} />
         <Route path="curriculum" element={<div>Curriculum</div>} />
       </Route>

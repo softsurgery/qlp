@@ -1,10 +1,16 @@
 import type { CSSProperties } from "react";
 import { Outlet } from "react-router-dom";
 import { SidebarInset, SidebarProvider } from "@qlp/ui/components/sidebar";
+import { useFooter, useIntro } from "@qlp/contexts";
 import { AppSidebar } from "@/components/layout/sidebar/AppSidebar";
 import { SiteHeader } from "@/components/layout/sidebar/SiteHeader";
+import { AppProviders } from "@/components/providers/AppProviders";
+import { cn } from "@/lib/utils";
 
-export default function Layout() {
+function LayoutShell() {
+  const { title, description } = useIntro();
+  const { content } = useFooter();
+
   return (
     <SidebarProvider
       style={
@@ -17,14 +23,31 @@ export default function Layout() {
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex min-h-0 flex-1 flex-col gap-4 p-4 md:p-6">
+            {(title || description) && (
+              <div className="space-y-1">
+                {title && <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>}
+                {description && (
+                  <p className="text-sm text-muted-foreground">{description}</p>
+                )}
+              </div>
+            )}
+            <div className={cn("flex min-h-0 flex-1 flex-col")}>
               <Outlet />
             </div>
           </div>
+          {content}
         </div>
       </SidebarInset>
     </SidebarProvider>
+  );
+}
+
+export default function Layout() {
+  return (
+    <AppProviders>
+      <LayoutShell />
+    </AppProviders>
   );
 }

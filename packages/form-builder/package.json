@@ -13,7 +13,9 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@qlp/ui": "workspace:*"
+    "@qlp/ui": "workspace:*",
+    "i18next": "^23.15.1",
+    "react-i18next": "^15.0.2"
   },
   "peerDependencies": {
     "react": "^18.3.1",

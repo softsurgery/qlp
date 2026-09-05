@@ -4,6 +4,7 @@ import { SidebarTrigger } from "@qlp/ui/components/sidebar";
 
 const TITLES: { prefix: string; title: string }[] = [
   { prefix: "/users", title: "Users" },
+  { prefix: "/roles", title: "Roles" },
   { prefix: "/tutors", title: "Tutor Verification" },
   { prefix: "/curriculum", title: "Curriculum" },
 ];

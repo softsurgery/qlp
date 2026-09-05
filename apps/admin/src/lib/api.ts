@@ -38,7 +38,7 @@ function clearSession() {
   writeStoredUser(null);
 }
 
-const api = createApiClient({
+const client = createApiClient({
   baseURL: import.meta.env.VITE_API_URL || "/api",
   refreshPath: "/admin/auth/refresh-token",
   onUnauthorized: () => {
@@ -47,9 +47,11 @@ const api = createApiClient({
   },
 });
 
+export const api = client;
+
 export const adminAuthApi = {
   async signIn(dto: { usernameOrEmail: string; password: string }) {
-    const { data } = await api.http.post<AdminSignInResponse>(
+    const { data } = await client.http.post<AdminSignInResponse>(
       "/admin/auth/sign-in",
       dto,
     );
@@ -59,7 +61,7 @@ export const adminAuthApi = {
     return data;
   },
   async forgotPassword(dto: { usernameOrEmail: string }) {
-    const { data } = await api.http.post<{ email: string; success: boolean }>(
+    const { data } = await client.http.post<{ email: string; success: boolean }>(
       "/admin/auth/forgot-password",
       dto,
     );
@@ -68,4 +70,4 @@ export const adminAuthApi = {
 };
 
 export { clearSession };
-export default api.http;
+export default client.http;

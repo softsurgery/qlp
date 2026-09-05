@@ -17,6 +17,9 @@
     "@qlp/contexts": "workspace:*",
     "@qlp/hooks": "workspace:*",
     "@qlp/ui": "workspace:*",
+    "@tanstack/react-table": "^8.20.5",
+    "i18next": "^23.15.1",
+    "react-i18next": "^15.0.2",
     "xlsx": "^0.18.5"
   },
   "peerDependencies": {

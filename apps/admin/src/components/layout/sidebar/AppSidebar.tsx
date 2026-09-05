@@ -5,6 +5,7 @@ import {
   GraduationCap,
   LayoutDashboard,
   Shield,
+  ShieldCheck,
   Users,
 } from "lucide-react";
 import {
@@ -23,6 +24,7 @@ import { NavUser } from "@/components/layout/sidebar/NavUser";
 const items = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/users", icon: Users, label: "Users" },
+  { to: "/roles", icon: ShieldCheck, label: "Roles" },
   { to: "/tutors", icon: GraduationCap, label: "Tutor Verification" },
   { to: "/curriculum", icon: BookOpen, label: "Curriculum" },
 ];
