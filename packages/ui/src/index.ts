@@ -103,3 +103,27 @@ export { RadioGroup, RadioGroupItem } from "./components/radio-group";
 export { Switch } from "./components/switch";
 export { Textarea } from "./components/textarea";
 export { Progress } from "./components/progress";
+export {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./components/table";
+export { Toggle } from "./components/toggle";
+export {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./components/command";
+export {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "./components/drawer";
