@@ -1,6 +1,7 @@
 export { cn } from "./lib/utils";
 export { Button, buttonVariants } from "./components/button";
 export { Input } from "./components/input";
+export { Label } from "./components/label";
 export { Separator } from "./components/separator";
 export {
   Sheet,
@@ -70,3 +71,35 @@ export {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./components/dropdown-menu";
+export {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./components/accordion";
+export {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./components/select";
+export {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxValue,
+  useComboboxAnchor,
+} from "./components/combobox";
+export { DatePicker } from "./components/date-picker";
+export { Calendar, CalendarDayButton } from "./components/calendar";
+export { Popover, PopoverContent, PopoverTrigger } from "./components/popover";
+export { RadioGroup, RadioGroupItem } from "./components/radio-group";
+export { Switch } from "./components/switch";
+export { Textarea } from "./components/textarea";
+export { Progress } from "./components/progress";
