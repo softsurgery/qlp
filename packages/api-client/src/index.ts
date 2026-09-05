@@ -14,4 +14,7 @@ export { createResources } from "./resources/index.js";
 export type { ApiResources } from "./resources/index.js";
 export type { AuthResource } from "./resources/auth.js";
 export type { AdminAuthResource } from "./resources/admin-auth.js";
+export type { UserResource } from "./resources/users.js";
+export type { RoleResource } from "./resources/roles.js";
+export type { PermissionResource } from "./resources/permission.js";
 export * from "./types/index.js";

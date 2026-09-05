@@ -9,9 +9,12 @@ interface ResponseAbstractUsertDto extends DatabaseEntity {
   lastName?: string;
   dateOfBirth?: Date;
   isActive?: boolean;
+  isApproved?: boolean;
   username: string;
   email: string;
   emailVerified?: Date;
+  roleId?: string;
+  role?: ResponseRoleDto;
 }
 
 interface CreateAbstractUserDto {
@@ -19,6 +22,7 @@ interface CreateAbstractUserDto {
   lastName?: string;
   dateOfBirth?: Date;
   isActive?: boolean;
+  isApproved?: boolean;
   password?: string;
   username: string;
   email: string;
@@ -49,4 +53,39 @@ export interface UpdateUserDto extends Partial<CreateUserDto> {}
 export enum Gender {
   Male = "Male",
   Female = "Female",
+}
+
+// role dtos ************************************************************************************
+
+export interface ResponseRoleDto extends DatabaseEntity {
+  id: string;
+  label: string;
+  description?: string;
+  permissions: ResponseRolePermissionDto[];
+}
+
+export interface ResponseRolePermissionDto {
+  id: number;
+  role?: ResponseRoleDto;
+  roleId: string;
+  permission?: ResponsePermissionDto;
+  permissionId: string;
+}
+
+export interface CreateRoleDto {
+  label: string;
+  description?: string;
+  permissions: { permissionId: string }[];
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface UpdateRoleDto extends Partial<CreateRoleDto> {}
+
+// permission dtos ************************************************************************************
+
+export interface ResponsePermissionDto extends DatabaseEntity {
+  id: string;
+  label: string;
+  description?: string;
+  roles?: ResponseRolePermissionDto[];
 }
