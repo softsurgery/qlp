@@ -1,15 +1,17 @@
-import { NestApplication, NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { ClassSerializerInterceptor, Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app/app.module';
 import { useContainer } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import { branding } from './utils/branding';
 import { MigrationService } from './shared/database/services/database-migration.service';
+import { existsSync } from 'fs';
 import { join } from 'path';
 
 async function bootstrap() {
-  const app: NestApplication = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
@@ -22,7 +24,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const env = configService.get<string>('app.env') || process.env.NODE_ENV || 'development';
 
-  const host = configService.get<string>('app.http.host') || 'localhost';
   const port = configService.get<number>('app.http.port') || 5000;
 
   const globalPrefix = configService.get<string>('app.globalPrefix') ?? 'api';
@@ -40,7 +41,7 @@ async function bootstrap() {
       .setTitle(docName)
       .setDescription(docDesc)
       .setVersion(docVersion)
-      .addServer(`http://${host}:${port}/`, 'Local environment')
+      .addServer('/', 'Current origin')
       .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'access_token')
       .build();
 
@@ -50,10 +51,18 @@ async function bootstrap() {
         extraModels: [],
       });
 
+      const publicDir = existsSync(join(__dirname, 'public'))
+        ? join(__dirname, 'public')
+        : join(__dirname, '..', 'public');
+      app.useStaticAssets(publicDir);
+
       SwaggerModule.setup(docPrefix, app, document, {
         explorer: true,
         customSiteTitle: docName,
-        customJs: [`/swagger-custom.js`],
+        customJs: '/swagger-custom.js',
+        swaggerOptions: {
+          persistAuthorization: true,
+        },
       });
     } catch (error) {
       logger.error(error);
