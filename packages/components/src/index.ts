@@ -1,1 +1,1 @@
-export { Card, CardHeader, CardTitle, CardDescription } from "./card";
+export { Spinner } from "./Spinner";

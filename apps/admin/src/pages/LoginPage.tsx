@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Button, Input } from "@qlp/ui";
-import { Card, CardDescription, CardHeader, CardTitle } from "@qlp/components";
+import {
+  Button,
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+} from "@qlp/ui";
 import { useForgotPassword, useSignIn } from "../hooks/useAuth";
 
 export default function LoginPage() {

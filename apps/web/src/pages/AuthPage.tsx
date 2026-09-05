@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Button, Input } from "@qlp/ui";
-import { Card, CardDescription, CardHeader, CardTitle } from "@qlp/components";
+import { Card, CardDescription, CardHeader, CardTitle } from "@qlp/ui";
 import { useSignIn, useSignUp } from "../hooks/useAuth";
 
 export default function AuthPage() {
