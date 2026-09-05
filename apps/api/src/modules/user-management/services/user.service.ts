@@ -47,6 +47,10 @@ export class UserService extends AbstractUserService {
     const existingUser = (await this.findOneById(id)) as UserEntity;
     if (!existingUser) throw new UserNotFoundException();
 
+    if (rest.password) {
+      rest.password = await hashPassword(rest.password);
+    }
+
     const updatedUser = await this.userRepository.update(id, rest);
     //confirm new picture
     if (updateUserDto.pictureId && updateUserDto.pictureId != existingUser.pictureId) {
