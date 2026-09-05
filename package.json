@@ -8,6 +8,7 @@
     "dev:api": "turbo run dev --filter=@qlp/api",
     "dev:web": "turbo run dev --filter=@qlp/web",
     "dev:admin": "turbo run dev --filter=@qlp/admin",
+    "dev:landing": "turbo run dev --filter=@qlp/landing",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "turbo run test"
