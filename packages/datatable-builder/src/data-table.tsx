@@ -150,9 +150,9 @@ export function DataTable<TData, TValue>({
   }, [setContent]);
 
   return (
-    <div className={cn(className, "space-y-4")}>
+    <div className={cn("flex flex-col gap-4", className)}>
       <DataTableToolbar table={table} data={data} context={context} />
-      <div className={cn("rounded-lg border", containerClassName)}>
+      <div className={cn("min-h-0 rounded-lg border", containerClassName)}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

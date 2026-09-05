@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { Copy } from "lucide-react";
 import { DataTable, type DataTableConfig } from "@qlp/datatable-builder";
-import { useIntro } from "@qlp/contexts";
+import { useIntro, useUI } from "@qlp/contexts";
 import type {
   CreateRoleDto,
   ResponseRoleDto,
@@ -29,11 +29,16 @@ interface RolesProps {
 export default function Roles({ className }: RolesProps) {
   const { t, ready } = useTranslation("role");
   const { setIntro, clearIntro } = useIntro();
+  const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
 
   React.useEffect(() => {
     setIntro?.(t("page.title"), t("page.description"));
-    return () => clearIntro?.();
-  }, [clearIntro, ready, setIntro, t]);
+    setEnableMainOverflow?.(false);
+    return () => {
+      clearIntro?.();
+      clearEnableMainOverflow?.();
+    };
+  }, [clearEnableMainOverflow, clearIntro, ready, setEnableMainOverflow, setIntro, t]);
 
   const roleStore = useRoleStore();
   const {
@@ -57,7 +62,7 @@ export default function Roles({ className }: RolesProps) {
 
   const {
     data: rolesResponse,
-    isFetching: isRolesPending,
+    isPending: isRolesPending,
     refetch: refetchRoles,
   } = useQuery({
     queryKey: [
@@ -211,10 +216,10 @@ export default function Roles({ className }: RolesProps) {
     isRolesPending || paging || resizing || searching || sorting;
 
   return (
-    <div className={cn("flex flex-1 flex-col overflow-hidden", className)}>
+    <div className={cn("flex min-h-0 flex-1 flex-col overflow-hidden", className)}>
       <DataTable
-        className="flex flex-1 flex-col overflow-hidden p-1"
-        containerClassName="overflow-auto"
+        className="flex min-h-0 flex-1 flex-col overflow-hidden p-1"
+        containerClassName="min-h-0 flex-1 overflow-auto"
         columns={columns}
         data={roles}
         context={context}

@@ -19,7 +19,7 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const { t } = useTranslation("common");
   return (
-    <div className="flex items-center justify-between gap-2">
+    <div className="flex shrink-0 items-center justify-between gap-2">
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder={t("datatable.search", { entity: context.pluralName })}

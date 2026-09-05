@@ -10,7 +10,7 @@ import {
   type DataTableColumnFilterOption,
   type DataTableConfig,
 } from "@qlp/datatable-builder";
-import { useIntro } from "@qlp/contexts";
+import { useIntro, useUI } from "@qlp/contexts";
 import type {
   ResponseUserDto,
   ServerErrorResponse,
@@ -36,6 +36,7 @@ interface UsersProps {
 export const Users = ({ className }: UsersProps) => {
   const navigate = useNavigate();
   const { setIntro, clearIntro } = useIntro();
+  const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
   const { t, ready } = useTranslation("user-management");
 
   React.useEffect(() => {
@@ -43,8 +44,12 @@ export const Users = ({ className }: UsersProps) => {
       t("userManagement.page.users"),
       t("userManagement.page.description"),
     );
-    return () => clearIntro?.();
-  }, [clearIntro, ready, setIntro, t]);
+    setEnableMainOverflow?.(false);
+    return () => {
+      clearIntro?.();
+      clearEnableMainOverflow?.();
+    };
+  }, [clearEnableMainOverflow, clearIntro, ready, setEnableMainOverflow, setIntro, t]);
 
   const userStore = useUserStore();
   const {
@@ -77,7 +82,7 @@ export const Users = ({ className }: UsersProps) => {
 
   const {
     data: usersResponse,
-    isFetching: isUsersPending,
+    isPending: isUsersPending,
     refetch: refetchUsers,
   } = useQuery({
     queryKey: [
@@ -282,10 +287,10 @@ export const Users = ({ className }: UsersProps) => {
     isUsersPending || paging || resizing || searching || sorting || filtering;
 
   return (
-    <div className={cn("flex flex-col flex-1 overflow-hidden", className)}>
+    <div className={cn("flex min-h-0 flex-1 flex-col overflow-hidden", className)}>
       <DataTable
-        className="flex flex-col flex-1 overflow-auto p-1"
-        containerClassName="overflow-auto"
+        className="flex min-h-0 flex-1 flex-col overflow-hidden p-1"
+        containerClassName="min-h-0 flex-1 overflow-auto"
         columns={columns}
         data={users}
         context={context}

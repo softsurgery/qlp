@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Repeat2, Save } from "lucide-react";
 import { FormBuilder, mapToSelectOptions } from "@qlp/form-builder";
-import { useFooter, useIntro } from "@qlp/contexts";
+import { useFooter, useIntro, useUI } from "@qlp/contexts";
 import { Button } from "@qlp/ui";
 import { Spinner } from "@qlp/components";
 import type { CreateUserDto, ServerErrorResponse } from "@qlp/api-client";
@@ -30,17 +30,20 @@ export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) =>
   const { roles, isFetchRolesPending } = useRoles();
   const { setContent } = useFooter();
   const { setIntro, clearIntro } = useIntro();
+  const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
 
   React.useEffect(() => {
     setIntro?.(
       tUser("userManagement.sheet.createUserTitle"),
       tUser("userManagement.sheet.createUserDescription"),
     );
+    setEnableMainOverflow?.(true);
     return () => {
       clearIntro?.();
+      clearEnableMainOverflow?.();
       resetUser();
     };
-  }, [clearIntro, resetUser, setIntro, tUser]);
+  }, [clearEnableMainOverflow, clearIntro, resetUser, setEnableMainOverflow, setIntro, tUser]);
 
   const { userCreateFormStructure } = useCreateUserFormStructure({
     userStore,
