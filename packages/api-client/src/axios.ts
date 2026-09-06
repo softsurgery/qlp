@@ -53,6 +53,10 @@ export function createAxios({
         config.headers.set("x-timezone", timezone);
       }
 
+      if (config.data instanceof FormData) {
+        config.headers.delete("Content-Type");
+      }
+
       return config;
     },
     (err) => Promise.reject(err),

@@ -7,6 +7,9 @@ export interface Upload extends DatabaseEntity {
   relativePath: string;
   mimetype: string;
   size: number;
+  isTemporary?: boolean;
+  isPrivate?: boolean;
+  folderId?: number;
 }
 
 export interface ResponseGenericUploadDto extends DatabaseEntity {

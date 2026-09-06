@@ -3,6 +3,7 @@ import { createAdminAuthResource } from "./admin-auth.js";
 import { createAuthResource } from "./auth.js";
 import { createPermissionResource } from "./permission.js";
 import { createRoleResource } from "./roles.js";
+import { createUploadResource } from "./storage.js";
 import { createUserResource } from "./users.js";
 
 export function createResources(http: AxiosInstance) {
@@ -12,6 +13,7 @@ export function createResources(http: AxiosInstance) {
     user: createUserResource(http),
     role: createRoleResource(http),
     permission: createPermissionResource(http),
+    upload: createUploadResource(http),
   };
 }
 
