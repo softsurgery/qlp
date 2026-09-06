@@ -24,11 +24,11 @@ export function DataTableViewOptions<TData>({
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
           <Eye />
-          {t("commands.display")}
+          <span className="text-xs">{t("commands.display")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center">
-        <DropdownMenuLabel className="text-center">
+        <DropdownMenuLabel className="text-center text-xs">
           {t("datatable.visibleColumns")}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -48,7 +48,9 @@ export function DataTableViewOptions<TData>({
                 }
                 onSelect={(event) => event.preventDefault()}
               >
-                {column.columnDef.meta?.title ?? column.id}
+                <span className="text-xs">
+                  {column.columnDef.meta?.title ?? column.id}
+                </span>
               </DropdownMenuCheckboxItem>
             );
           })}
