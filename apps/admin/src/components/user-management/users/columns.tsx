@@ -1,4 +1,3 @@
-import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
@@ -26,6 +25,9 @@ export const useUserColumns = (
   return [
     {
       accessorKey: "photo",
+      meta: {
+        title: t("userManagement.columns.photo"),
+      },
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -45,6 +47,7 @@ export const useUserColumns = (
     {
       accessorKey: "username",
       meta: {
+        title: t("userManagement.columns.username"),
         filterKey: "username",
         filterField: "username",
         filterType: "string",
@@ -64,7 +67,12 @@ export const useUserColumns = (
     },
     {
       accessorKey: "email",
-      meta: { filterKey: "email", filterField: "email", filterType: "string" },
+      meta: {
+        title: t("userManagement.columns.email"),
+        filterKey: "email",
+        filterField: "email",
+        filterType: "string",
+      },
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -79,6 +87,7 @@ export const useUserColumns = (
     {
       accessorKey: "firstName",
       meta: {
+        title: t("userManagement.columns.firstName"),
         filterKey: "firstName",
         filterField: "firstName",
         filterType: "string",
@@ -105,6 +114,7 @@ export const useUserColumns = (
     {
       accessorKey: "lastName",
       meta: {
+        title: t("userManagement.columns.lastName"),
         filterKey: "lastName",
         filterField: "lastName",
         filterType: "string",
@@ -131,6 +141,7 @@ export const useUserColumns = (
     {
       accessorKey: "dateOfBirth",
       meta: {
+        title: t("userManagement.columns.dateOfBirth"),
         filterKey: "dateOfBirth",
         filterField: "dateOfBirth",
         filterType: "date-range",
@@ -158,6 +169,7 @@ export const useUserColumns = (
     {
       accessorKey: "role",
       meta: {
+        title: t("userManagement.columns.role"),
         filterKey: "role",
         filterType: "select",
         filterMultiSelect: true,
@@ -185,6 +197,7 @@ export const useUserColumns = (
     {
       accessorKey: "isActive",
       meta: {
+        title: t("userManagement.columns.isActive"),
         filterKey: "isActive",
         filterType: "options",
         filterOptions: [
@@ -213,6 +226,7 @@ export const useUserColumns = (
     {
       accessorKey: "isApproved",
       meta: {
+        title: t("userManagement.columns.isApproved"),
         filterKey: "isApproved",
         filterType: "options",
         filterOptions: [
@@ -233,7 +247,9 @@ export const useUserColumns = (
           variant={row.original.isApproved ? "default" : "secondary"}
           className={cn("font-bold")}
         >
-          {row.original.isApproved ? tCommon("answer.yes") : tCommon("answer.no")}
+          {row.original.isApproved
+            ? tCommon("answer.yes")
+            : tCommon("answer.no")}
         </Badge>
       ),
       enableSorting: true,
@@ -241,6 +257,7 @@ export const useUserColumns = (
     {
       accessorKey: "createdAt",
       meta: {
+        title: t("userManagement.columns.createdAt"),
         filterKey: "createdAt",
         filterField: "createdAt",
         filterType: "date-range",
@@ -256,7 +273,11 @@ export const useUserColumns = (
       cell: ({ row }) => (
         <DataTableCell
           variant={DataTableCellVariant.DATE_TIME}
-          value={new Date(row.original.createdAt)}
+          value={
+            row.original.createdAt
+              ? new Date(row.original.createdAt)
+              : undefined
+          }
         />
       ),
       enableSorting: true,
@@ -264,6 +285,7 @@ export const useUserColumns = (
     {
       accessorKey: "updatedAt",
       meta: {
+        title: t("userManagement.columns.updatedAt"),
         filterKey: "updatedAt",
         filterField: "updatedAt",
         filterType: "date-range",
@@ -279,7 +301,11 @@ export const useUserColumns = (
       cell: ({ row }) => (
         <DataTableCell
           variant={DataTableCellVariant.DATE_TIME}
-          value={new Date(row.original.createdAt)}
+          value={
+            row.original.updatedAt
+              ? new Date(row.original.updatedAt)
+              : undefined
+          }
         />
       ),
       enableSorting: true,

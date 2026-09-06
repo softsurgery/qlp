@@ -1,6 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import {
+  DataTableCell,
+  DataTableCellVariant,
   DataTableColumnHeader,
   DataTableRowActions,
   type DataTableConfig,
@@ -24,6 +26,9 @@ export const useRoleColumns = (
   return [
     {
       accessorKey: "label",
+      meta: {
+        title: t("columns.label"),
+      },
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -37,6 +42,9 @@ export const useRoleColumns = (
     },
     {
       accessorKey: "description",
+      meta: {
+        title: t("columns.description"),
+      },
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -52,6 +60,9 @@ export const useRoleColumns = (
     },
     {
       accessorKey: "permissions",
+      meta: {
+        title: t("columns.permissions"),
+      },
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
@@ -113,6 +124,62 @@ export const useRoleColumns = (
         );
       },
       enableSorting: false,
+    },
+    {
+      accessorKey: "createdAt",
+      meta: {
+        title: t("columns.createdAt"),
+        filterKey: "createdAt",
+        filterField: "createdAt",
+        filterType: "date-range",
+      },
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={t("columns.createdAt")}
+          attribute="createdAt"
+          context={context}
+        />
+      ),
+      cell: ({ row }) => (
+        <DataTableCell
+          variant={DataTableCellVariant.DATE_TIME}
+          value={
+            row.original.createdAt
+              ? new Date(row.original.createdAt)
+              : undefined
+          }
+        />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "updatedAt",
+      meta: {
+        title: t("columns.updatedAt"),
+        filterKey: "updatedAt",
+        filterField: "updatedAt",
+        filterType: "date-range",
+      },
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={t("columns.updatedAt")}
+          attribute="updatedAt"
+          context={context}
+        />
+      ),
+      cell: ({ row }) => (
+        <DataTableCell
+          variant={DataTableCellVariant.DATE_TIME}
+          value={
+            row.original.updatedAt
+              ? new Date(row.original.updatedAt)
+              : undefined
+          }
+        />
+      ),
+      enableSorting: true,
     },
     {
       id: "actions",

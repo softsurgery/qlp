@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { Copy } from "lucide-react";
-import { DataTable, useDataTableState, type DataTableConfig } from "@qlp/datatable-builder";
+import { buildDataTableFilterString, DataTable, useDataTableState, type DataTableConfig } from "@qlp/datatable-builder";
 import { useIntro, useUI } from "@qlp/contexts";
 import { useDebounce } from "@qlp/hooks";
 import type {
@@ -49,6 +49,8 @@ export default function Roles({ className }: RolesProps) {
     setSortDetails,
     searchTerm,
     setSearchTerm,
+    columnFilters,
+    setColumnFilters,
     tableReset,
   } = useDataTableState("roles-table", { order: true, sortKey: "id" });
 
@@ -58,6 +60,13 @@ export default function Roles({ className }: RolesProps) {
     useDebounce(sortDetails);
   const { value: debouncedSearchTerm, loading: searching } =
     useDebounce(searchTerm);
+  const { value: debouncedColumnFilters, loading: filtering } =
+    useDebounce(columnFilters);
+
+  const filterString = React.useMemo(
+    () => buildDataTableFilterString("", debouncedColumnFilters),
+    [debouncedColumnFilters],
+  );
 
   const {
     data: rolesResponse,
@@ -71,6 +80,7 @@ export default function Roles({ className }: RolesProps) {
       debouncedSortDetails.order,
       debouncedSortDetails.sortKey,
       debouncedSearchTerm,
+      debouncedColumnFilters,
     ],
     queryFn: () =>
       api.role.findPaginated({
@@ -78,6 +88,7 @@ export default function Roles({ className }: RolesProps) {
         limit: debouncedSize.toString(),
         sort: `${debouncedSortDetails.sortKey},${debouncedSortDetails.order ? "ASC" : "DESC"}`,
         search: debouncedSearchTerm,
+        filter: filterString,
       }),
   });
 
@@ -198,6 +209,17 @@ export default function Roles({ className }: RolesProps) {
     sortKey: sortDetails.sortKey,
     setSortDetails: (order, sortKey) => setSortDetails({ order, sortKey }),
     ...tableReset,
+    columnFilters,
+    setColumnFilter: (filterKey, filterParam) => {
+      setPage(1);
+      setColumnFilters((previous) => {
+        if (!filterParam) {
+          const { [filterKey]: _, ...rest } = previous;
+          return rest;
+        }
+        return { ...previous, [filterKey]: filterParam };
+      });
+    },
     targetEntity: (role) => {
       roleStore.set("response", role);
       roleStore.set<UpdateRoleDto>("updateDto", {
@@ -212,7 +234,7 @@ export default function Roles({ className }: RolesProps) {
 
   const columns = useRoleColumns(context);
   const isPending =
-    isRolesPending || paging || resizing || searching || sorting;
+    isRolesPending || paging || resizing || searching || sorting || filtering;
 
   return (
     <div className={cn("flex min-h-0 flex-1 flex-col overflow-hidden", className)}>

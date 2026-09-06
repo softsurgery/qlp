@@ -20,8 +20,8 @@
       "role": "Role",
       "isActive": "Active",
       "isApproved": "Approved",
-      "createdAt": "Created",
-      "updatedAt": "Updated"
+      "createdAt": "Created at",
+      "updatedAt": "Updated at"
     },
     "errors": {
       "notDefined": "Not defined",

@@ -10,7 +10,9 @@
     "description": "الوصف",
     "noDescription": "لا يوجد وصف",
     "permissions": "الصلاحيات",
-    "noPermissions": "لا توجد صلاحيات"
+    "noPermissions": "لا توجد صلاحيات",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "تاريخ التحديث"
   },
   "actions": {
     "duplicate": "تكرار"

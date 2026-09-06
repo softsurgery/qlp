@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
 }
+
 export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
@@ -41,14 +42,13 @@ export function DataTableViewOptions<TData>({
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
-                className="capitalize"
                 checked={column.getIsVisible()}
                 onCheckedChange={(value: boolean) =>
                   column.toggleVisibility(!!value)
                 }
                 onSelect={(event) => event.preventDefault()}
               >
-                {column.id}
+                {column.columnDef.meta?.title ?? column.id}
               </DropdownMenuCheckboxItem>
             );
           })}

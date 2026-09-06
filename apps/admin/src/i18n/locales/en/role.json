@@ -10,7 +10,9 @@
     "description": "Description",
     "noDescription": "No description",
     "permissions": "Permissions",
-    "noPermissions": "No permissions"
+    "noPermissions": "No permissions",
+    "createdAt": "Created at",
+    "updatedAt": "Updated at"
   },
   "actions": {
     "duplicate": "Duplicate"

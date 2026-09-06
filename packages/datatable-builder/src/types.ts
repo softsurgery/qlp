@@ -19,6 +19,7 @@ export interface DataTableColumnFilterOption {
 export type DataTableColumnFilterType = 'options' | 'string' | 'select' | 'date-range';
 
 export interface DataTableColumnMeta<T> {
+  title?: string;
   exportLabel?: string;
   exportKey?: string;
   exportValue?: (row: T) => unknown;
