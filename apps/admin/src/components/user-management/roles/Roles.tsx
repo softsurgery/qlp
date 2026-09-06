@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { Copy } from "lucide-react";
 import { buildDataTableFilterString, DataTable, useDataTableState, type DataTableConfig } from "@qlp/datatable-builder";
-import { useIntro, useUI } from "@qlp/contexts";
+import { useBreadcrumb, useIntro, useUI } from "@qlp/contexts";
 import { useDebounce } from "@qlp/hooks";
 import type {
   CreateRoleDto,
@@ -27,17 +27,34 @@ interface RolesProps {
 
 export default function Roles({ className }: RolesProps) {
   const { t, ready } = useTranslation("role");
+  const { t: tUser } = useTranslation("user-management");
   const { setIntro, clearIntro } = useIntro();
+  const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
 
   React.useEffect(() => {
     setIntro?.(t("page.title"), t("page.description"));
+    setRoutes?.([
+      { title: tUser("userManagement.nav.title"), href: "/user-management/users" },
+      { title: t("page.title") },
+    ]);
     setEnableMainOverflow?.(false);
     return () => {
       clearIntro?.();
+      clearRoutes?.();
       clearEnableMainOverflow?.();
     };
-  }, [clearEnableMainOverflow, clearIntro, ready, setEnableMainOverflow, setIntro, t]);
+  }, [
+    clearEnableMainOverflow,
+    clearIntro,
+    clearRoutes,
+    ready,
+    setEnableMainOverflow,
+    setIntro,
+    setRoutes,
+    t,
+    tUser,
+  ]);
 
   const roleStore = useRoleStore();
   const {

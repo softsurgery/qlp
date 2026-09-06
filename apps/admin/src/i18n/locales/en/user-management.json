@@ -1,5 +1,10 @@
 {
   "userManagement": {
+    "nav": {
+      "title": "User Management",
+      "users": "Users",
+      "roles": "Roles"
+    },
     "page": {
       "title": "User management",
       "users": "Users",

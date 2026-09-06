@@ -11,7 +11,7 @@ import {
   type DataTableColumnFilterOption,
   type DataTableConfig,
 } from "@qlp/datatable-builder";
-import { useIntro, useUI } from "@qlp/contexts";
+import { useBreadcrumb, useIntro, useUI } from "@qlp/contexts";
 import { useDebounce } from "@qlp/hooks";
 import type {
   ResponseUserDto,
@@ -36,6 +36,7 @@ interface UsersProps {
 export const Users = ({ className }: UsersProps) => {
   const navigate = useNavigate();
   const { setIntro, clearIntro } = useIntro();
+  const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
   const { t, ready } = useTranslation("user-management");
 
@@ -44,17 +45,24 @@ export const Users = ({ className }: UsersProps) => {
       t("userManagement.page.users"),
       t("userManagement.page.description"),
     );
+    setRoutes?.([
+      { title: t("userManagement.nav.title"), href: "/user-management/users" },
+      { title: t("userManagement.nav.users") },
+    ]);
     setEnableMainOverflow?.(false);
     return () => {
       clearIntro?.();
+      clearRoutes?.();
       clearEnableMainOverflow?.();
     };
   }, [
     clearEnableMainOverflow,
     clearIntro,
+    clearRoutes,
     ready,
     setEnableMainOverflow,
     setIntro,
+    setRoutes,
     t,
   ]);
 
@@ -213,9 +221,11 @@ export const Users = ({ className }: UsersProps) => {
   const context: DataTableConfig<ResponseUserDto> = {
     singularName: t("userManagement.page.user"),
     pluralName: t("userManagement.page.users"),
-    inspectCallback: (entity) => navigate(`/users/${entity.id}/edit`),
-    createCallback: () => navigate("/users/new"),
-    updateCallback: (entity) => navigate(`/users/${entity.id}/edit`),
+    inspectCallback: (entity) =>
+      navigate(`/user-management/users/${entity.id}/edit`),
+    createCallback: () => navigate("/user-management/users/new"),
+    updateCallback: (entity) =>
+      navigate(`/user-management/users/${entity.id}/edit`),
     deleteCallback: openDeleteUserDialog,
     additionalActions: {
       1: [

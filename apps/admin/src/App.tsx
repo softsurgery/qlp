@@ -43,10 +43,12 @@ export default function App() {
         }
       >
         <Route index element={<div>Dashboard</div>} />
-        <Route path="users" element={<UsersPage />} />
-        <Route path="users/new" element={<UserCreatePage />} />
-        <Route path="users/:userId/edit" element={<UserEditPage />} />
-        <Route path="roles" element={<RolesPage />} />
+        <Route path="user-management">
+          <Route path="users" element={<UsersPage />} />
+          <Route path="users/new" element={<UserCreatePage />} />
+          <Route path="users/:userId/edit" element={<UserEditPage />} />
+          <Route path="roles" element={<RolesPage />} />
+        </Route>
         <Route path="tutors" element={<div>Tutors</div>} />
         <Route path="curriculum" element={<div>Curriculum</div>} />
       </Route>

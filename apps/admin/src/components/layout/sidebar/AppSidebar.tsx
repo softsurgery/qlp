@@ -6,8 +6,10 @@ import {
   LayoutDashboard,
   Shield,
   ShieldCheck,
+  User,
   Users,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Sidebar,
   SidebarContent,
@@ -22,15 +24,31 @@ import { LanguageSwitcher } from "@qlp/components";
 import { NavMain } from "@/components/layout/sidebar/NavMain";
 import { NavUser } from "@/components/layout/sidebar/NavUser";
 
-const items = [
-  { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/users", icon: Users, label: "Users" },
-  { to: "/roles", icon: ShieldCheck, label: "Roles" },
-  { to: "/tutors", icon: GraduationCap, label: "Tutor Verification" },
-  { to: "/curriculum", icon: BookOpen, label: "Curriculum" },
-];
-
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+  const { t } = useTranslation("user-management");
+
+  const items = [
+    { to: "/", icon: LayoutDashboard, label: "Dashboard" },
+    {
+      icon: Users,
+      label: t("userManagement.nav.title"),
+      items: [
+        {
+          to: "/user-management/users",
+          icon: User,
+          label: t("userManagement.nav.users"),
+        },
+        {
+          to: "/user-management/roles",
+          icon: ShieldCheck,
+          label: t("userManagement.nav.roles"),
+        },
+      ],
+    },
+    { to: "/tutors", icon: GraduationCap, label: "Tutor Verification" },
+    { to: "/curriculum", icon: BookOpen, label: "Curriculum" },
+  ];
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

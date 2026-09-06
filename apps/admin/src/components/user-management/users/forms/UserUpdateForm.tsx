@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Repeat2, Save } from "lucide-react";
 import { FormBuilder, mapToSelectOptions } from "@qlp/form-builder";
-import { useFooter, useIntro, useUI } from "@qlp/contexts";
+import { useBreadcrumb, useFooter, useIntro, useUI } from "@qlp/contexts";
 import { Button } from "@qlp/ui";
 import { Spinner } from "@qlp/components";
 import type { ServerErrorResponse, UpdateUserDto } from "@qlp/api-client";
@@ -37,6 +37,7 @@ export const UserUpdateForm = ({
   const { roles, isFetchRolesPending } = useRoles();
   const { setContent } = useFooter();
   const { setIntro, clearIntro } = useIntro();
+  const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
 
   React.useEffect(() => {
@@ -44,13 +45,28 @@ export const UserUpdateForm = ({
       tUser("userManagement.sheet.updateUserTitle"),
       tUser("userManagement.sheet.updateUserDescription"),
     );
+    setRoutes?.([
+      { title: tUser("userManagement.nav.title"), href: "/user-management/users" },
+      { title: tUser("userManagement.nav.users"), href: "/user-management/users" },
+      { title: tUser("userManagement.sheet.updateUserTitle") },
+    ]);
     setEnableMainOverflow?.(true);
     return () => {
       clearIntro?.();
+      clearRoutes?.();
       clearEnableMainOverflow?.();
       resetUser();
     };
-  }, [clearEnableMainOverflow, clearIntro, resetUser, setEnableMainOverflow, setIntro, tUser]);
+  }, [
+    clearEnableMainOverflow,
+    clearIntro,
+    clearRoutes,
+    resetUser,
+    setEnableMainOverflow,
+    setIntro,
+    setRoutes,
+    tUser,
+  ]);
 
   const { data: fetchedUser, isPending: isFetchUserPending } = useQuery({
     queryKey: ["user", userId],
@@ -92,7 +108,7 @@ export const UserUpdateForm = ({
       toast.success(tUser("userManagement.messages.userUpdatedSuccess"));
       userStore.reset();
       if (onSuccess) onSuccess();
-      else navigate("/users");
+      else navigate("/user-management/users");
     },
     onError: (error: ServerErrorResponse) => {
       toast.error(

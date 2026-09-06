@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Repeat2, Save } from "lucide-react";
 import { FormBuilder, mapToSelectOptions } from "@qlp/form-builder";
-import { useFooter, useIntro, useUI } from "@qlp/contexts";
+import { useBreadcrumb, useFooter, useIntro, useUI } from "@qlp/contexts";
 import { Button } from "@qlp/ui";
 import { Spinner } from "@qlp/components";
 import type { CreateUserDto, ServerErrorResponse } from "@qlp/api-client";
@@ -30,6 +30,7 @@ export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) =>
   const { roles, isFetchRolesPending } = useRoles();
   const { setContent } = useFooter();
   const { setIntro, clearIntro } = useIntro();
+  const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
 
   React.useEffect(() => {
@@ -37,13 +38,28 @@ export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) =>
       tUser("userManagement.sheet.createUserTitle"),
       tUser("userManagement.sheet.createUserDescription"),
     );
+    setRoutes?.([
+      { title: tUser("userManagement.nav.title"), href: "/user-management/users" },
+      { title: tUser("userManagement.nav.users"), href: "/user-management/users" },
+      { title: tUser("userManagement.sheet.createUserTitle") },
+    ]);
     setEnableMainOverflow?.(true);
     return () => {
       clearIntro?.();
+      clearRoutes?.();
       clearEnableMainOverflow?.();
       resetUser();
     };
-  }, [clearEnableMainOverflow, clearIntro, resetUser, setEnableMainOverflow, setIntro, tUser]);
+  }, [
+    clearEnableMainOverflow,
+    clearIntro,
+    clearRoutes,
+    resetUser,
+    setEnableMainOverflow,
+    setIntro,
+    setRoutes,
+    tUser,
+  ]);
 
   const { userCreateFormStructure } = useCreateUserFormStructure({
     userStore,
@@ -60,7 +76,7 @@ export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) =>
       toast.success(tUser("userManagement.messages.userCreatedSuccess"));
       userStore.reset();
       if (onSuccess) onSuccess();
-      else navigate("/users");
+      else navigate("/user-management/users");
     },
     onError: (error: ServerErrorResponse) => {
       toast.error(

@@ -40,7 +40,9 @@ function LayoutShell() {
           >
             {(title || description) && (
               <div className="shrink-0 space-y-1">
-                {title && <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>}
+                {title && (
+                  <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
+                )}
                 {description && (
                   <p className="text-sm text-muted-foreground">{description}</p>
                 )}
