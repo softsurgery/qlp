@@ -1,10 +1,16 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
 export default defineConfig({
-  plugins: [react()],
-  publicDir: path.resolve(__dirname, "../../packages/ui/public"),
+  plugins: [tailwindcss(), react()],
+  css: {
+    postcss: {
+      plugins: [],
+    },
+  },
+  publicDir: path.resolve(__dirname, "public"),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
