@@ -23,3 +23,17 @@
   --sidebar-border: 240 3.7% 15.9%;
   --sidebar-ring: 217.2 91.2% 59.8%;
 }
+
+.container {
+  width: 100% !important;
+  max-width: 1920px !important;
+  margin-inline: auto !important;
+  padding-inline: 0 !important;
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */
+  .fullscreen {
+    height: -webkit-fill-available;
+  }
+}

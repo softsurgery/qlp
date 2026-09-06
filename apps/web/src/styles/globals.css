@@ -1,4 +1,5 @@
 @import "@qlp/ui/styles/scrollbar.css";
+@import "@qlp/ui/styles/input-styles.css";
 
 @tailwind base;
 @tailwind components;
