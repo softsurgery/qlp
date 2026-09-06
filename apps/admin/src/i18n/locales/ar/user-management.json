@@ -83,6 +83,8 @@
       "rolePlaceholder": "اختر دوراً",
       "requirePasswordCheckTitle": "تعيين كلمة مرور جديدة",
       "requirePasswordCheckDescription": "اتركه دون تحديد للإبقاء على كلمة المرور الحالية",
+      "photo": "الصورة",
+      "photoDescription": "انقر على الصورة لرفع صورة الملف الشخصي",
       "step1Title": "الحساب",
       "step1FieldTitle": "الملف الشخصي",
       "step2Title": "بيانات الدخول"

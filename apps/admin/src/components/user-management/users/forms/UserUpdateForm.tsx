@@ -15,6 +15,7 @@ import { useUserStore } from "@/hooks/stores/useUserStore";
 import { useRoles } from "@/hooks/useRoles";
 import { useUpdateUserFormStructure } from "./useUpdateUserFormStructure";
 import { updateUserSchema } from "@/types/validations/user.validation";
+import { useProfilePictureUpload } from "@/hooks/useProfilePictureUpload";
 
 interface UserUpdateFormProps {
   userId?: string;
@@ -70,13 +71,15 @@ export const UserUpdateForm = ({
 
   const { data: fetchedUser, isPending: isFetchUserPending } = useQuery({
     queryKey: ["user", userId],
-    queryFn: () => api.user.findById(userId, "role"),
+    queryFn: () => api.user.findById(userId, "role,picture"),
     enabled: Boolean(userId),
   });
 
   React.useEffect(() => {
     if (!fetchedUser) return;
     setUser("response", fetchedUser);
+    setUser("picture", fetchedUser.picture);
+    setUser("progress", 0);
     setUser<UpdateUserDto>("updateDto", {
       firstName: fetchedUser.firstName,
       lastName: fetchedUser.lastName,
@@ -91,6 +94,11 @@ export const UserUpdateForm = ({
     });
   }, [fetchedUser, setUser]);
 
+  const {
+    mutate: uploadProfilePicture,
+    isPending: isProfilePictureUploadPending,
+  } = useProfilePictureUpload({ userStore, mode: "update" });
+
   const { userUpdateFormStructure } = useUpdateUserFormStructure({
     userStore,
     roles: mapToSelectOptions({
@@ -98,6 +106,8 @@ export const UserUpdateForm = ({
       labelKey: "label",
       valueKey: "id",
     }),
+    uploadProfilePicture,
+    isProfilePictureUploadPending,
   });
 
   const { mutate: updateMutation, isPending } = useMutation({
@@ -126,6 +136,8 @@ export const UserUpdateForm = ({
     userStore.set("confirmPassword", "");
     userStore.set("setManualPassword", false);
     userStore.set("response", fetchedUser);
+    userStore.set("picture", fetchedUser.picture);
+    userStore.set("progress", 0);
     userStore.set<UpdateUserDto>("updateDto", {
       firstName: fetchedUser.firstName,
       lastName: fetchedUser.lastName,
@@ -161,16 +173,30 @@ export const UserUpdateForm = ({
   React.useEffect(() => {
     setContent?.(
       <div className="flex items-center justify-end gap-2 px-4 py-2">
-        <Button variant="secondary" onClick={handleReset} disabled={isPending}>
+        <Button
+          variant="secondary"
+          onClick={handleReset}
+          disabled={isPending || isProfilePictureUploadPending}
+        >
           <Repeat2 /> {tCommon("commands.reset")}
         </Button>
-        <Button onClick={handleSubmit} disabled={isPending}>
+        <Button
+          onClick={handleSubmit}
+          disabled={isPending || isProfilePictureUploadPending}
+        >
           <Save /> {tCommon("commands.save")}
         </Button>
       </div>,
     );
     return () => setContent?.(null);
-  }, [handleReset, handleSubmit, isPending, setContent, tCommon]);
+  }, [
+    handleReset,
+    handleSubmit,
+    isPending,
+    isProfilePictureUploadPending,
+    setContent,
+    tCommon,
+  ]);
 
   return (
     <div className={cn("flex flex-col flex-1 gap-2", className)}>

@@ -3,6 +3,7 @@ import {
   Field,
   FieldVariant,
   FormStructure,
+  AvatarFieldProps,
   PasswordFieldProps,
   SelectFieldProps,
   SelectOption,
@@ -10,18 +11,64 @@ import {
 } from "@qlp/form-builder";
 import { useTranslation } from "react-i18next";
 import { UserStore } from "@/hooks/stores/useUserStore";
+import { identifyUserAvatar } from "@/lib/user";
+import { resolveUploadImageUrl } from "@/hooks/useProfilePictureUpload";
 
 interface UseCreateUserFormStructureProps {
   userStore: UserStore;
   roles: SelectOption[];
+  uploadProfilePicture: (input: {
+    files: File[];
+    onProgress: (progress: number) => void;
+  }) => void;
+  isProfilePictureUploadPending: boolean;
 }
 
 export const useCreateUserFormStructure = ({
   userStore,
   roles,
+  uploadProfilePicture,
+  isProfilePictureUploadPending,
 }: UseCreateUserFormStructureProps) => {
   const { t } = useTranslation("user-management");
   const getError = (err?: string[]) => err?.[0];
+
+  const photoField: Field<AvatarFieldProps> = {
+    id: "photo",
+    label: t("userManagement.forms.photo"),
+    variant: FieldVariant.AVATAR,
+    className: "bg-muted border-2 w-40 h-40 my-2 rounded-full",
+    wrapperClassName: "flex flex-col gap-2 items-center",
+    required: false,
+    description: t("userManagement.forms.photoDescription"),
+    error: getError(userStore.createDtoErrors?.pictureId),
+    props: {
+      image: userStore.picture,
+      progress: userStore.progress,
+      disabled: isProfilePictureUploadPending,
+      fallback: identifyUserAvatar({
+        firstName: userStore.createDto.firstName,
+        lastName: userStore.createDto.lastName,
+        username: userStore.createDto.username,
+        email: userStore.createDto.email,
+      }),
+      resolveImageUrl: resolveUploadImageUrl,
+      onFileChange: (value) => {
+        userStore.set("picture", value);
+        userStore.setNested("createDtoErrors.pictureId", []);
+      },
+      onUpload: (file, onProgress) => {
+        userStore.set("progress", 0);
+        uploadProfilePicture({
+          files: [file],
+          onProgress: (progress: number) => {
+            userStore.set("progress", progress);
+            onProgress(progress);
+          },
+        });
+      },
+    },
+  };
 
   const firstNameField: Field<TextFieldProps> = {
     id: "firstname",
@@ -165,6 +212,7 @@ export const useCreateUserFormStructure = ({
         title: { value: t("userManagement.forms.step1Title") },
         includeHeader: true,
         rows: [
+          { fields: [photoField] },
           { fields: [firstNameField, lastNameField] },
           { fields: [emailField, dateOfBirthField] },
         ],

@@ -10,6 +10,7 @@ export const createUserSchema = z
     confirmPassword: z.string().optional(),
     roleId: z.string().min(1, "Role is required"),
     dateOfBirth: z.union([z.string(), z.date()]).optional().nullable(),
+    pictureId: z.number().optional(),
   })
   .refine(
     (data) => !data.confirmPassword || data.password === data.confirmPassword,
@@ -32,6 +33,7 @@ export const updateUserSchema = (requirePassword: boolean) =>
       confirmPassword: z.string().optional(),
       roleId: z.string().min(1, "Role is required"),
       dateOfBirth: z.union([z.string(), z.date()]).optional().nullable(),
+      pictureId: z.number().optional(),
     })
     .refine(
       (data) =>

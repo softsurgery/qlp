@@ -3,10 +3,10 @@ import type {
   CreateUserDto,
   ResponseUserDto,
   UpdateUserDto,
+  Upload,
 } from "@qlp/api-client";
+import type { FieldErrors } from "@qlp/form-builder";
 import { setNestedValue } from "@/lib/store";
-
-type FieldErrors = Record<string, string[] | undefined>;
 
 export interface UserStoreState {
   response?: ResponseUserDto;
@@ -16,6 +16,8 @@ export interface UserStoreState {
   updateDtoErrors: FieldErrors;
   confirmPassword: string;
   setManualPassword: boolean;
+  picture?: File | Upload | string;
+  progress: number;
 }
 
 const initialCreateDto: CreateUserDto = {
@@ -32,6 +34,8 @@ const initialState: UserStoreState = {
   updateDtoErrors: {},
   confirmPassword: "",
   setManualPassword: false,
+  picture: undefined,
+  progress: 0,
 };
 
 export interface UserStore extends UserStoreState {

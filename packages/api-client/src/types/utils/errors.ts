@@ -8,3 +8,8 @@ export interface ServerErrorResponse {
     status?: number;
   };
 }
+
+export interface ServerResponse<T> {
+  data?: T;
+  message?: string;
+}

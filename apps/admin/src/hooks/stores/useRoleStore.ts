@@ -5,9 +5,9 @@ import type {
   ResponseRoleDto,
   UpdateRoleDto,
 } from "@qlp/api-client";
+import type { FieldErrors } from "@qlp/form-builder";
 import { setNestedValue } from "@/lib/store";
 
-type FieldErrors = Record<string, string[] | undefined>;
 type PermissionMode = "create" | "update";
 
 export interface RoleStoreState {

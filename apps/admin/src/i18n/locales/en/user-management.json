@@ -83,6 +83,8 @@
       "rolePlaceholder": "Select a role",
       "requirePasswordCheckTitle": "Set a new password",
       "requirePasswordCheckDescription": "Leave unchecked to keep the current password",
+      "photo": "Photo",
+      "photoDescription": "Click the avatar to upload a profile picture",
       "step1Title": "Account",
       "step1FieldTitle": "Profile",
       "step2Title": "Credentials"

@@ -116,6 +116,7 @@ export const Users = ({ className }: UsersProps) => {
         sort: `${debouncedSortDetails.sortKey},${debouncedSortDetails.order ? "ASC" : "DESC"}`,
         search: debouncedSearchTerm,
         filter: filterString,
+        join: "role,picture",
       }),
   });
 

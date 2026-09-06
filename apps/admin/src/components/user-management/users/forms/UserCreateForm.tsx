@@ -15,6 +15,7 @@ import { useUserStore } from "@/hooks/stores/useUserStore";
 import { useRoles } from "@/hooks/useRoles";
 import { useCreateUserFormStructure } from "./useCreateUserFormStructure";
 import { createUserSchema } from "@/types/validations/user.validation";
+import { useProfilePictureUpload } from "@/hooks/useProfilePictureUpload";
 
 interface UserCreateFormProps {
   className?: string;
@@ -61,6 +62,11 @@ export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) =>
     tUser,
   ]);
 
+  const {
+    mutate: uploadProfilePicture,
+    isPending: isProfilePictureUploadPending,
+  } = useProfilePictureUpload({ userStore, mode: "create" });
+
   const { userCreateFormStructure } = useCreateUserFormStructure({
     userStore,
     roles: mapToSelectOptions({
@@ -68,6 +74,8 @@ export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) =>
       labelKey: "label",
       valueKey: "id",
     }),
+    uploadProfilePicture,
+    isProfilePictureUploadPending,
   });
 
   const { mutate: createMutation, isPending } = useMutation({
@@ -103,16 +111,30 @@ export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) =>
   React.useEffect(() => {
     setContent?.(
       <div className="flex items-center justify-end gap-2 px-4 py-2">
-        <Button variant="secondary" onClick={handleReset} disabled={isPending}>
+        <Button
+          variant="secondary"
+          onClick={handleReset}
+          disabled={isPending || isProfilePictureUploadPending}
+        >
           <Repeat2 /> {tCommon("commands.reset")}
         </Button>
-        <Button onClick={handleSubmit} disabled={isPending}>
+        <Button
+          onClick={handleSubmit}
+          disabled={isPending || isProfilePictureUploadPending}
+        >
           <Save /> {tCommon("commands.save")}
         </Button>
       </div>,
     );
     return () => setContent?.(null);
-  }, [handleReset, handleSubmit, isPending, setContent, tCommon]);
+  }, [
+    handleReset,
+    handleSubmit,
+    isPending,
+    isProfilePictureUploadPending,
+    setContent,
+    tCommon,
+  ]);
 
   return (
     <div className={cn("flex flex-col flex-1 gap-2", className)}>

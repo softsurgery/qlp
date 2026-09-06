@@ -41,6 +41,7 @@ export const useUserColumns = (
         cell: ({ row }) => (
           <UserAvatarCell
             pictureId={row.original.pictureId}
+            picture={row.original.picture}
             fallback={identifyUserAvatar(row.original)}
           />
         ),
