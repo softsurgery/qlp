@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Globe, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
@@ -20,7 +20,7 @@ import {
 import { useAuthUser, useLogout } from "../../../hooks/useAuth";
 
 export function NavUser() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { data: user } = useAuthUser();
   const logout = useLogout();
   const navigate = useNavigate();
@@ -34,10 +34,6 @@ export function NavUser() {
   const handleLogout = () => {
     logout();
     navigate("/auth");
-  };
-
-  const toggleLang = () => {
-    i18n.changeLanguage(i18n.language === "ar" ? "en" : "ar");
   };
 
   return (
@@ -81,10 +77,6 @@ export function NavUser() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={toggleLang}>
-              <Globe />
-              {i18n.language === "ar" ? "English" : "العربية"}
-            </DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               {t("nav.logout")}

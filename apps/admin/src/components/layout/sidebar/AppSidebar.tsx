@@ -18,6 +18,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@qlp/ui/components/sidebar";
+import { LanguageSwitcher } from "@qlp/components";
 import { NavMain } from "@/components/layout/sidebar/NavMain";
 import { NavUser } from "@/components/layout/sidebar/NavUser";
 
@@ -55,6 +56,9 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         <NavMain items={items} />
       </SidebarContent>
       <SidebarFooter>
+        <div className="px-1 group-data-[collapsible=icon]:hidden">
+          <LanguageSwitcher />
+        </div>
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

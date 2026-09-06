@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { resolveSupportedLng } from "@qlp/components/i18n";
 import { SidebarInset, SidebarProvider } from "@qlp/ui/components/sidebar";
 import { AppSidebar } from "./sidebar/AppSidebar";
 import { SiteHeader } from "./sidebar/SiteHeader";
@@ -19,7 +20,7 @@ export default function Layout() {
     >
       <AppSidebar
         variant="inset"
-        side={i18n.language === "ar" ? "right" : "left"}
+        side={resolveSupportedLng(i18n.language) === "ar" ? "right" : "left"}
       />
       <SidebarInset>
         <SiteHeader />

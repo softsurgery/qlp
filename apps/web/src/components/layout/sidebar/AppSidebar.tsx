@@ -23,6 +23,7 @@ import {
 } from "@qlp/ui/components/sidebar";
 import { hasRole } from "../../../lib/api";
 import { useAuthUser } from "../../../hooks/useAuth";
+import { LanguageSwitcher } from "@qlp/components";
 import { NavMain } from "./NavMain";
 import { NavUser } from "./NavUser";
 
@@ -69,6 +70,9 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         <NavMain items={items} />
       </SidebarContent>
       <SidebarFooter>
+        <div className="px-1 group-data-[collapsible=icon]:hidden">
+          <LanguageSwitcher />
+        </div>
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

@@ -1,5 +1,7 @@
 import type { CSSProperties } from "react";
 import { Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { resolveSupportedLng } from "@qlp/components/i18n";
 import { SidebarInset, SidebarProvider } from "@qlp/ui/components/sidebar";
 import { useFooter, useIntro, useUI } from "@qlp/contexts";
 import { AppSidebar } from "@/components/layout/sidebar/AppSidebar";
@@ -11,6 +13,7 @@ function LayoutShell() {
   const { title, description } = useIntro();
   const { content } = useFooter();
   const { enableMainOverflow } = useUI();
+  const { i18n } = useTranslation();
 
   return (
     <SidebarProvider
@@ -22,7 +25,10 @@ function LayoutShell() {
         } as CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
+      <AppSidebar
+        variant="inset"
+        side={resolveSupportedLng(i18n.language) === "ar" ? "right" : "left"}
+      />
       <SidebarInset className="min-h-0 overflow-hidden">
         <SiteHeader />
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden">

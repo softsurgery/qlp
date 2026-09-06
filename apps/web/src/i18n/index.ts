@@ -1,6 +1,7 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
+import { componentsResources } from "@qlp/components/i18n";
 import { uiResources } from "@qlp/ui/i18n";
 import { i18nConfig } from "./config";
 import translationAr from "./locales/ar/translation.json";
@@ -16,10 +17,12 @@ i18n
       en: {
         translation: translationEn,
         common: uiResources.en,
+        components: componentsResources.en,
       },
       ar: {
         translation: translationAr,
         common: uiResources.ar,
+        components: componentsResources.ar,
       },
     },
   });
