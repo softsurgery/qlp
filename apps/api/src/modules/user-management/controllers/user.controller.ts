@@ -77,21 +77,9 @@ export class UserController {
     @Body() createUserDto: CreateUserDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseUserDto> {
-    const user = toDto(ResponseUserDto, await this.userService.save(createUserDto));
+    const user = toDto(ResponseUserDto, await this.userService.extendedSave(createUserDto));
     req.logInfo = { id: user.id, firstName: user.firstName };
     return user;
-  }
-
-  @Put(':id')
-  @LogEvent(EventType.USER_UPDATED)
-  async update(
-    @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
-    @Request() req: AdvancedRequest,
-  ): Promise<ResponseUserDto | null> {
-    const user = await this.userService.update(id, updateUserDto);
-    req.logInfo = { id: user?.id, firstName: user?.firstName };
-    return toDto(ResponseUserDto, user);
   }
 
   @Put('/activate/:id')
@@ -113,6 +101,40 @@ export class UserController {
   ): Promise<ResponseUserDto | null> {
     req.logInfo = { id };
     return toDto(ResponseUserDto, await this.userService.deactivate(id));
+  }
+
+  @Put('/approve/:id')
+  @LogEvent(EventType.USER_APPROVED)
+  async approve(
+    @Param('id') id: string,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseUserDto | null> {
+    const user = await this.userService.approve(id);
+    req.logInfo = { id: user?.id, firstName: user?.firstName };
+    return toDto(ResponseUserDto, user);
+  }
+
+  @Put('/disapprove/:id')
+  @LogEvent(EventType.USER_DISAPPROVED)
+  async disapprove(
+    @Param('id') id: string,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseUserDto | null> {
+    const user = await this.userService.disapprove(id);
+    req.logInfo = { id: user?.id, firstName: user?.firstName };
+    return toDto(ResponseUserDto, user);
+  }
+
+  @Put(':id')
+  @LogEvent(EventType.USER_UPDATED)
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseUserDto | null> {
+    const user = await this.userService.extendedUpdate(id, updateUserDto);
+    req.logInfo = { id: user?.id, firstName: user?.firstName };
+    return toDto(ResponseUserDto, user);
   }
 
   @Delete(':id')
