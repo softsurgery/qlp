@@ -49,7 +49,14 @@ export const Users = ({ className }: UsersProps) => {
       clearIntro?.();
       clearEnableMainOverflow?.();
     };
-  }, [clearEnableMainOverflow, clearIntro, ready, setEnableMainOverflow, setIntro, t]);
+  }, [
+    clearEnableMainOverflow,
+    clearIntro,
+    ready,
+    setEnableMainOverflow,
+    setIntro,
+    t,
+  ]);
 
   const userStore = useUserStore();
   const {
@@ -163,13 +170,15 @@ export const Users = ({ className }: UsersProps) => {
   const handleReset = () => userStore.reset();
 
   const { deleteUserDialog, openDeleteUserDialog } = useUserDeleteDialog({
-    userFullname: `${userStore.response?.firstName ?? ""} ${userStore.response?.lastName ?? ""}`.trim(),
+    userFullname:
+      `${userStore.response?.firstName ?? ""} ${userStore.response?.lastName ?? ""}`.trim(),
     deleteUser: () => deleteUser(userStore.response?.id),
     isDeletePending: isDeletionPending,
   });
 
   const { activateUserDialog, openActivateUserDialog } = useActivateUserDialog({
-    userFullname: `${userStore.response?.firstName ?? ""} ${userStore.response?.lastName ?? ""}`.trim(),
+    userFullname:
+      `${userStore.response?.firstName ?? ""} ${userStore.response?.lastName ?? ""}`.trim(),
     activateUser: () => activateUser(userStore.response?.id),
     isActivationPending,
     resetUser: handleReset,
@@ -177,14 +186,16 @@ export const Users = ({ className }: UsersProps) => {
 
   const { deactivateUserDialog, openDeactivateUserDialog } =
     useDeactivateUserDialog({
-      userFullname: `${userStore.response?.firstName ?? ""} ${userStore.response?.lastName ?? ""}`.trim(),
+      userFullname:
+        `${userStore.response?.firstName ?? ""} ${userStore.response?.lastName ?? ""}`.trim(),
       deactivateUser: () => deactivateUser(userStore.response?.id),
       isDeactivationPending,
       resetUser: handleReset,
     });
 
   const { approveUserDialog, openApproveUserDialog } = useApproveUserDialog({
-    representation: `${userStore.response?.firstName ?? ""} ${userStore.response?.lastName ?? ""}`.trim(),
+    representation:
+      `${userStore.response?.firstName ?? ""} ${userStore.response?.lastName ?? ""}`.trim(),
     approveUser: () => approveUser(userStore.response?.id),
     isApprovalPending,
     resetUser: handleReset,
@@ -192,7 +203,8 @@ export const Users = ({ className }: UsersProps) => {
 
   const { disapproveUserDialog, openDisapproveUserDialog } =
     useDisapproveUserDialog({
-      representation: `${userStore.response?.firstName ?? ""} ${userStore.response?.lastName ?? ""}`.trim(),
+      representation:
+        `${userStore.response?.firstName ?? ""} ${userStore.response?.lastName ?? ""}`.trim(),
       disapproveUser: () => disapproveUser(userStore.response?.id),
       isDisapprovalPending,
       resetUser: handleReset,
@@ -287,10 +299,12 @@ export const Users = ({ className }: UsersProps) => {
     isUsersPending || paging || resizing || searching || sorting || filtering;
 
   return (
-    <div className={cn("flex min-h-0 flex-1 flex-col overflow-hidden", className)}>
+    <div
+      className={cn("flex min-h-0 flex-1 flex-col overflow-hidden", className)}
+    >
       <DataTable
         className="flex min-h-0 flex-1 flex-col overflow-hidden p-1"
-        containerClassName="min-h-0 flex-1 overflow-auto"
+        containerClassName="min-h-0 overflow-auto"
         columns={columns}
         data={users}
         context={context}

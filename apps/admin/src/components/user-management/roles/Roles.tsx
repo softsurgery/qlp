@@ -219,7 +219,7 @@ export default function Roles({ className }: RolesProps) {
     <div className={cn("flex min-h-0 flex-1 flex-col overflow-hidden", className)}>
       <DataTable
         className="flex min-h-0 flex-1 flex-col overflow-hidden p-1"
-        containerClassName="min-h-0 flex-1 overflow-auto"
+        containerClassName="min-h-0 overflow-auto"
         columns={columns}
         data={roles}
         context={context}

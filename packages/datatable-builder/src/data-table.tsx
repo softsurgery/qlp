@@ -152,17 +152,17 @@ export function DataTable<TData, TValue>({
   return (
     <div className={cn("flex flex-col gap-4", className)}>
       <DataTableToolbar table={table} data={data} context={context} />
-      <div className={cn("min-h-0 rounded-lg border", containerClassName)}>
-        <Table>
+      <div className={cn("min-h-0 overflow-auto rounded-lg border", containerClassName)}>
+        <Table className="border-separate border-spacing-0">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
-                      className="text-xs"
+                      className="sticky top-0 z-20 border-b bg-background text-xs"
                     >
                       {header.isPlaceholder
                         ? null

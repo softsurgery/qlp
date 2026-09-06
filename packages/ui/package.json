@@ -14,7 +14,8 @@
     ".": "./src/index.ts",
     "./lib/utils": "./src/lib/utils.ts",
     "./components/*": "./src/components/*.tsx",
-    "./hooks/*": "./src/hooks/*.ts"
+    "./hooks/*": "./src/hooks/*.ts",
+    "./styles/*": "./src/styles/*"
   },
   "scripts": {
     "build": "tsc",
