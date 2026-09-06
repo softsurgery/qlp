@@ -12,7 +12,7 @@ import {
 import { Badge } from "@qlp/ui";
 import type { ResponseUserDto } from "@qlp/api-client";
 import { cn } from "@/lib/utils";
-import { identifyUserAvatar } from "@/lib/user";
+import { identifyUserAvatar } from "@qlp/lib";
 import UserAvatarCell from "./UserAvatarCell";
 import React from "react";
 

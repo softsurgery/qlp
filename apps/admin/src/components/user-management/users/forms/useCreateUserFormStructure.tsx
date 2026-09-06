@@ -11,7 +11,7 @@ import {
 } from "@qlp/form-builder";
 import { useTranslation } from "react-i18next";
 import { UserStore } from "@/hooks/stores/useUserStore";
-import { identifyUserAvatar } from "@/lib/user";
+import { identifyUserAvatar } from "@qlp/lib";
 import { resolveUploadImageUrl } from "@/hooks/useProfilePictureUpload";
 
 interface UseCreateUserFormStructureProps {

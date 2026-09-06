@@ -36,6 +36,9 @@ importers:
       '@qlp/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@qlp/lib':
+        specifier: workspace:*
+        version: link:../../packages/lib
       '@qlp/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -381,6 +384,9 @@ importers:
       '@qlp/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@qlp/lib':
+        specifier: workspace:*
+        version: link:../../packages/lib
       '@qlp/ui':
         specifier: workspace:*
         version: link:../../packages/ui

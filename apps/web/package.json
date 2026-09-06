@@ -13,6 +13,7 @@
     "@qlp/api-client": "workspace:*",
     "@qlp/components": "workspace:*",
     "@qlp/hooks": "workspace:*",
+    "@qlp/lib": "workspace:*",
     "@qlp/ui": "workspace:*",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.4",

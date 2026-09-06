@@ -1,6 +1,11 @@
-import type { ResponseUserDto } from "@qlp/api-client";
+export type IdentifiableUser = {
+  firstName?: string | null;
+  lastName?: string | null;
+  username?: string | null;
+  email?: string | null;
+};
 
-export function identifyUser(user?: Partial<ResponseUserDto> | null) {
+export function identifyUser(user?: IdentifiableUser | null) {
   if (!user) return "Unknown";
   if (user.firstName && user.lastName) {
     return `${user.firstName} ${user.lastName}`;
@@ -8,7 +13,7 @@ export function identifyUser(user?: Partial<ResponseUserDto> | null) {
   return user.username || user.email || "Unknown";
 }
 
-export function identifyUserAvatar(user?: Partial<ResponseUserDto> | null) {
+export function identifyUserAvatar(user?: IdentifiableUser | null) {
   if (!user) return "U";
   const first = user.firstName?.charAt(0);
   const last = user.lastName?.charAt(0);
