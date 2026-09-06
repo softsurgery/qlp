@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Separator } from "@qlp/ui";
+import { ModeToggle, Separator } from "@qlp/ui";
 import { SidebarTrigger } from "@qlp/ui/components/sidebar";
 
 const TITLES: { prefix: string; key: string }[] = [
@@ -28,6 +28,9 @@ export function SiteHeader() {
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mx-2 h-4" />
         <h1 className="text-base font-medium">{t(titleKey)}</h1>
+        <div className="ml-auto">
+          <ModeToggle />
+        </div>
       </div>
     </header>
   );

@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Input,
+  ModeToggle,
 } from "@qlp/ui";
 import { useForgotPassword, useSignIn } from "../hooks/useAuth";
 
@@ -63,7 +64,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-secondary">
+    <div className="relative min-h-screen flex items-center justify-center bg-secondary">
+      <div className="absolute right-4 top-4">
+        <ModeToggle />
+      </div>
       <Card>
         <CardHeader>
           <CardTitle>QLP Admin</CardTitle>

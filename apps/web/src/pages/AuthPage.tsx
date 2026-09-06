@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Button, Input } from "@qlp/ui";
+import { Button, Input, ModeToggle } from "@qlp/ui";
 import { Card, CardDescription, CardHeader, CardTitle } from "@qlp/ui";
 import { useSignIn, useSignUp } from "../hooks/useAuth";
 
@@ -58,7 +58,10 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-secondary">
+    <div className="relative min-h-screen flex items-center justify-center bg-secondary">
+      <div className="absolute right-4 top-4">
+        <ModeToggle />
+      </div>
       <Card>
         <CardHeader>
           <CardTitle>{t("appName")}</CardTitle>

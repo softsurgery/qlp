@@ -12,6 +12,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  ModeToggle,
 } from "@qlp/ui";
 import { toast } from "sonner";
 
@@ -79,9 +80,12 @@ export default function HomePage() {
       <header className="border-b border-border">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <p className="text-sm font-semibold tracking-wide">QLP</p>
-          <Button asChild variant="outline" size="sm">
-            <a href="#builders">See builders</a>
-          </Button>
+          <div className="flex items-center gap-2">
+            <ModeToggle />
+            <Button asChild variant="outline" size="sm">
+              <a href="#builders">See builders</a>
+            </Button>
+          </div>
         </div>
       </header>
 

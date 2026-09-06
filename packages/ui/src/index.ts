@@ -130,3 +130,6 @@ export {
   DrawerHeader,
   DrawerTitle,
 } from "./components/drawer";
+export { ThemeProvider, useTheme } from "./components/theme-provider";
+export { ModeToggle } from "./components/mode-toggle";
+export { Toaster } from "./components/sonner";
