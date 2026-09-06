@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   BreadcrumbContext,
   FooterContext,
@@ -14,22 +14,44 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   const [floating, setFloating] = useState<React.ReactNode>(null);
   const [enableMainOverflow, setEnableMainOverflow] = useState(false);
 
+  const clearContent = useCallback(() => setFooter(null), []);
+  const clearRoutes = useCallback(() => setRoutes([]), []);
+  const setIntro = useCallback((title: string, description: string) => {
+    setIntroState((prev) =>
+      prev.title === title && prev.description === description
+        ? prev
+        : { title, description },
+    );
+  }, []);
+  const clearIntro = useCallback(() => {
+    setIntroState((prev) =>
+      prev.title === "" && prev.description === ""
+        ? prev
+        : { title: "", description: "" },
+    );
+  }, []);
+  const clearFloating = useCallback(() => setFloating(null), []);
+  const clearEnableMainOverflow = useCallback(
+    () => setEnableMainOverflow(false),
+    [],
+  );
+
   const footerValue = useMemo(
     () => ({
       content: footer,
       setContent: setFooter,
-      clearContent: () => setFooter(null),
+      clearContent,
     }),
-    [footer],
+    [clearContent, footer],
   );
 
   const breadcrumbValue = useMemo(
     () => ({
       routes,
       setRoutes,
-      clearRoutes: () => setRoutes([]),
+      clearRoutes,
     }),
-    [routes],
+    [clearRoutes, routes],
   );
 
   const introValue = useMemo(
@@ -37,22 +59,21 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       title: intro.title,
       description: intro.description,
       floating,
-      setIntro: (title: string, description: string) =>
-        setIntroState({ title, description }),
+      setIntro,
       setFloating,
-      clearIntro: () => setIntroState({ title: "", description: "" }),
-      clearFloating: () => setFloating(null),
+      clearIntro,
+      clearFloating,
     }),
-    [floating, intro.description, intro.title],
+    [clearFloating, clearIntro, floating, intro.description, intro.title, setIntro],
   );
 
   const uiValue = useMemo(
     () => ({
       enableMainOverflow,
       setEnableMainOverflow,
-      clearEnableMainOverflow: () => setEnableMainOverflow(false),
+      clearEnableMainOverflow,
     }),
-    [enableMainOverflow],
+    [clearEnableMainOverflow, enableMainOverflow],
   );
 
   return (
