@@ -15,7 +15,14 @@
       "selectPlaceholder": "اختر",
       "valuePlaceholder": "القيمة",
       "dateFrom": "من",
-      "dateTo": "إلى"
+      "dateTo": "إلى",
+      "operators": {
+        "$eq": "يساوي",
+        "!$eq": "لا يساوي",
+        "$cont": "يحتوي",
+        "$gt": "أكبر من",
+        "$lt": "أصغر من"
+      }
     },
     "export": {
       "noData": "لا توجد بيانات للتصدير",

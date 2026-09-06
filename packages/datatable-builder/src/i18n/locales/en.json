@@ -15,7 +15,14 @@
       "selectPlaceholder": "Select",
       "valuePlaceholder": "Value",
       "dateFrom": "From",
-      "dateTo": "To"
+      "dateTo": "To",
+      "operators": {
+        "$eq": "Equals",
+        "!$eq": "Not equal",
+        "$cont": "Contains",
+        "$gt": "Greater than",
+        "$lt": "Less than"
+      }
     },
     "export": {
       "noData": "No data to export",
