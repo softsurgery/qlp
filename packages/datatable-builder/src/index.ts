@@ -4,5 +4,6 @@ export { DataTableNoContextFacetedFilter } from "./data-table-no-context-faceted
 export { default as DataTableCell } from "./core/data-table-cell";
 export { DataTableColumnHeader } from "./data-table-column-header";
 export { DataTableRowActions } from "./data-table-row-actions";
+export { useDataTableState } from "./use-data-table-state";
 export * from "./column-filter";
 export * from "./types";

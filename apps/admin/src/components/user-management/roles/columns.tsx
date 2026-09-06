@@ -61,7 +61,8 @@ export const useRoleColumns = (
         />
       ),
       cell: ({ row }) => {
-        const entries = row.original.permissions?.map((p) => p.permission) ?? [];
+        const entries =
+          row.original.permissions?.map((p) => p.permission) ?? [];
         if (entries.length === 0) {
           return <div className="opacity-70">{t("columns.noPermissions")}</div>;
         }
@@ -70,15 +71,23 @@ export const useRoleColumns = (
         return (
           <div className="flex flex-wrap gap-1">
             {visiblePermissions.map((entry, index) => (
-              <Badge key={index} variant="secondary" className="whitespace-nowrap font-normal">
-                {formatPermissionLabel(entry?.label) || tCommon("general.unknown")}
+              <Badge
+                key={index}
+                variant="secondary"
+                className="whitespace-nowrap font-normal"
+              >
+                {formatPermissionLabel(entry?.label) ||
+                  tCommon("general.unknown")}
               </Badge>
             ))}
             {hiddenPermissions.length > 0 && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Badge variant="outline" className="cursor-pointer whitespace-nowrap font-normal">
+                    <Badge
+                      variant="outline"
+                      className="cursor-pointer whitespace-nowrap font-normal"
+                    >
                       +{hiddenPermissions.length} {tCommon("general.more")}
                     </Badge>
                   </TooltipTrigger>
@@ -92,7 +101,8 @@ export const useRoleColumns = (
                         variant="secondary"
                         className="justify-center whitespace-nowrap font-normal"
                       >
-                        {formatPermissionLabel(entry?.label) || tCommon("general.unknown")}
+                        {formatPermissionLabel(entry?.label) ||
+                          tCommon("general.unknown")}
                       </Badge>
                     ))}
                   </TooltipContent>

@@ -3,8 +3,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { Copy } from "lucide-react";
-import { DataTable, type DataTableConfig } from "@qlp/datatable-builder";
+import { DataTable, useDataTableState, type DataTableConfig } from "@qlp/datatable-builder";
 import { useIntro, useUI } from "@qlp/contexts";
+import { useDebounce } from "@qlp/hooks";
 import type {
   CreateRoleDto,
   ResponseRoleDto,
@@ -19,8 +20,6 @@ import { useRoleDeleteDialog } from "./modals/RoleDeleteDialog";
 import { useRoleDuplicateDialog } from "./modals/RoleDuplicateDialog";
 import { useRoleCreateSheet } from "./modals/RoleCreateSheet";
 import { useRoleStore } from "@/hooks/stores/useRoleStore";
-import { useDebounce } from "@/hooks/useDebounce";
-import { useDataTableState } from "@/hooks/useDataTableState";
 
 interface RolesProps {
   className?: string;

@@ -7,10 +7,12 @@ import { ArrowDown, ArrowUp } from "lucide-react";
 import {
   buildDataTableFilterString,
   DataTable,
+  useDataTableState,
   type DataTableColumnFilterOption,
   type DataTableConfig,
 } from "@qlp/datatable-builder";
 import { useIntro, useUI } from "@qlp/contexts";
+import { useDebounce } from "@qlp/hooks";
 import type {
   ResponseUserDto,
   ServerErrorResponse,
@@ -25,8 +27,6 @@ import { useDeactivateUserDialog } from "./modals/UserDeactivateDialog";
 import { useApproveUserDialog } from "./modals/UserApproveDialog";
 import { useDisapproveUserDialog } from "./modals/UserDisapproveDialog";
 import { useUserStore } from "@/hooks/stores/useUserStore";
-import { useDebounce } from "@/hooks/useDebounce";
-import { useDataTableState } from "@/hooks/useDataTableState";
 import { useRoles } from "@/hooks/useRoles";
 
 interface UsersProps {
