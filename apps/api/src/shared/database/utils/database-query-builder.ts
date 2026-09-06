@@ -99,6 +99,10 @@ export class QueryBuilder {
       const searchValue = query.search as string;
       const searchableFields = this.getSearchableFields(this.entityMetadata);
 
+      if (!searchableFields.length) {
+        return output;
+      }
+
       const searchConditions = searchableFields.map((field: string) =>
         this.createSearchCondition(field, searchValue),
       );
@@ -260,26 +264,52 @@ export class QueryBuilder {
 
   private createSearchCondition(field: string, searchValue: string): IWhereCondition {
     const condition: IWhereCondition = {};
-
-    if (isNaN(Number(searchValue))) {
-      if (/^\d{4}-\d{2}-\d{2}/.test(searchValue)) {
-        this.assignObjectKey(condition, field, new Date(searchValue));
-      } else {
-        this.assignObjectKey(condition, field, ILike(`%${searchValue}%`));
-      }
-    } else {
-      this.assignObjectKey(condition, field, Number(searchValue));
-    }
-
+    this.assignObjectKey(condition, field, ILike(`%${searchValue}%`));
     return condition;
   }
 
   private getSearchableFields(metadata: EntityMetadata): string[] {
+    const stringColumns = metadata.columns
+      .filter((column) => isSearchableColumnType(column.type))
+      .map((column) => column.propertyName);
+
     if (this.searchFields?.length) {
-      return this.searchFields;
+      return this.searchFields.filter((field) => {
+        if (field.includes('.')) {
+          return true;
+        }
+        return stringColumns.includes(field);
+      });
     }
 
-    return metadata.columns.map((col) => col.propertyName);
+    return stringColumns;
+  }
+}
+
+export function isSearchableColumnType(type: unknown): boolean {
+  if (type === String) {
+    return true;
+  }
+
+  if (typeof type !== 'string') {
+    return false;
+  }
+
+  switch (type.toLowerCase()) {
+    case 'varchar':
+    case 'character varying':
+    case 'character':
+    case 'char':
+    case 'nvarchar':
+    case 'nchar':
+    case 'text':
+    case 'citext':
+    case 'longtext':
+    case 'mediumtext':
+    case 'tinytext':
+      return true;
+    default:
+      return false;
   }
 }
 

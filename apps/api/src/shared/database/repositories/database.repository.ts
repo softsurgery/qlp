@@ -12,7 +12,7 @@ import {
   SelectQueryBuilder,
 } from 'typeorm';
 import { DatabaseInterfaceRepository } from '../interfaces/database.repository.interface';
-import { normalizeWhereForTypeOrm } from '../utils/database-query-builder';
+import { isSearchableColumnType, normalizeWhereForTypeOrm } from '../utils/database-query-builder';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -58,19 +58,8 @@ export abstract class DatabaseAbstractRepository<
     }
 
     return relation.inverseEntityMetadata.columns
-      .filter((column) => this.isSearchableColumnType(column.type))
+      .filter((column) => isSearchableColumnType(column.type))
       .map((column) => `${relationPath}.${column.propertyName}`);
-  }
-
-  private isSearchableColumnType(type: unknown): boolean {
-    return (
-      type === String ||
-      type === 'varchar' ||
-      type === 'text' ||
-      type === 'longtext' ||
-      type === 'mediumtext' ||
-      type === 'tinytext'
-    );
   }
 
   public async getTotalCount(options: FindOneOptions<T> = {}): Promise<number> {
