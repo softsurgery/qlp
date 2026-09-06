@@ -46,8 +46,7 @@ i18n.on("languageChanged", (lng) => {
   document.documentElement.lang = lng;
 });
 
-if (i18n.language === "ar") {
-  document.documentElement.dir = "rtl";
-}
+document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+document.documentElement.lang = i18n.language;
 
 export default i18n;

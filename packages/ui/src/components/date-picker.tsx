@@ -8,6 +8,7 @@ import { Button } from "./button";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { cn } from "#lib/utils";
 import { getDateFnsLocale } from "@qlp/lib";
+import { useTranslation } from "react-i18next";
 
 export interface InputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -59,7 +60,10 @@ const DatePicker = React.forwardRef<HTMLInputElement, InputProps>(
       return typeof val === "string" ? val : "";
     };
 
-    const dateFnsLocale = getDateFnsLocale();
+    const { i18n } = useTranslation();
+    const dateFnsLocale = getDateFnsLocale(
+      propLocale ?? i18n.resolvedLanguage ?? i18n.language,
+    );
     const [value, setValue] = React.useState(() => formatValueForInput(_value));
     const [open, setOpen] = React.useState(false);
 
@@ -134,7 +138,7 @@ const DatePicker = React.forwardRef<HTMLInputElement, InputProps>(
         }}
       >
         <PopoverTrigger asChild>
-          <div className="relative w-full">
+          <div className="relative w-full" dir="ltr">
             <Input
               className={cn(
                 "focus-visible:ring-0 focus-visible:ring-ring focus-visible:border-primary focus-visible:ring-offset-0",
@@ -168,7 +172,29 @@ const DatePicker = React.forwardRef<HTMLInputElement, InputProps>(
             </div>
           </div>
         </PopoverTrigger>
-        <PopoverContent align={popoverAlign}>
+        <PopoverContent
+          dir="ltr"
+          align={popoverAlign}
+          onOpenAutoFocus={(event) => event.preventDefault()}
+          onInteractOutside={(event) => {
+            const target = event.target as HTMLElement | null;
+            if (
+              target?.closest("[data-slot=select-content]") ||
+              target?.closest("[data-slot=select-trigger]")
+            ) {
+              event.preventDefault();
+            }
+          }}
+          onFocusOutside={(event) => {
+            const target = event.target as HTMLElement | null;
+            if (
+              target?.closest("[data-slot=select-content]") ||
+              target?.closest("[data-slot=select-trigger]")
+            ) {
+              event.preventDefault();
+            }
+          }}
+        >
           <Calendar
             className="w-full"
             locale={dateFnsLocale}

@@ -20,15 +20,40 @@ const LOCALE_MAP: Record<string, DateFnsLocale> = {
 
 export const SUPPORTED_LOCALES = Object.keys(LOCALE_MAP);
 
-// Get locale from environment variable with fallback
+const DEFAULT_LOCALE = "en";
+
+function normalizeLocale(value?: string | null): string | undefined {
+  const lang = value?.toLowerCase().split("-")[0];
+  return lang && LOCALE_MAP[lang] ? lang : undefined;
+}
+
+function getProcessEnvLang(): string | undefined {
+  const env = (globalThis as { process?: { env?: Record<string, string | undefined> } })
+    .process?.env;
+  return env?.NEXT_PUBLIC_LANG ?? env?.VITE_LANG;
+}
+
+function getBrowserLang(): string | undefined {
+  if (typeof document !== "undefined") {
+    const htmlLang = document.documentElement.lang;
+    if (htmlLang) return htmlLang;
+  }
+  if (typeof navigator !== "undefined") {
+    return navigator.language ?? navigator.languages?.[0];
+  }
+  return undefined;
+}
+
 export const getLocaleFromEnv = (): string => {
-  const lang = (process.env.NEXT_PUBLIC_LANG || "fr").toLowerCase();
-  return LOCALE_MAP[lang] ? lang : "fr";
+  return (
+    normalizeLocale(getProcessEnvLang()) ??
+    normalizeLocale(getBrowserLang()) ??
+    DEFAULT_LOCALE
+  );
 };
 
-// Get date-fns locale object based on language code
 export const getDateFnsLocale = (
   localeCode: LocaleCode = getLocaleFromEnv(),
 ): DateFnsLocale => {
-  return LOCALE_MAP[localeCode] || LOCALE_MAP["fr"];
+  return LOCALE_MAP[normalizeLocale(localeCode) ?? DEFAULT_LOCALE];
 };
