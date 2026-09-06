@@ -1,0 +1,84 @@
+{
+  "page": {
+    "title": "الأدوار",
+    "description": "إدارة الأدوار وصلاحياتها.",
+    "singularName": "دور",
+    "pluralName": "أدوار"
+  },
+  "columns": {
+    "label": "الاسم",
+    "description": "الوصف",
+    "noDescription": "لا يوجد وصف",
+    "permissions": "الصلاحيات",
+    "noPermissions": "لا توجد صلاحيات"
+  },
+  "actions": {
+    "duplicate": "تكرار"
+  },
+  "messages": {
+    "createSuccess": "تم إنشاء الدور",
+    "updateSuccess": "تم تحديث الدور",
+    "deleteSuccess": "تم حذف الدور",
+    "duplicateSuccess": "تم تكرار الدور"
+  },
+  "sheet": {
+    "create": {
+      "title": "إنشاء دور",
+      "description": "حدد الدور وصلاحياته."
+    },
+    "update": {
+      "title": "تحديث الدور",
+      "description": "تعديل الدور المحدد."
+    }
+  },
+  "dialogs": {
+    "delete": {
+      "title": "حذف الدور",
+      "description": "سيؤدي هذا إلى حذف الدور بشكل ناعم.",
+      "confirm": "حذف",
+      "cancel": "إلغاء"
+    }
+  },
+  "forms": {
+    "create": {
+      "title": "تفاصيل الدور",
+      "description": "حدد الاسم والوصف والصلاحيات.",
+      "fields": {
+        "label": {
+          "label": "الاسم",
+          "placeholder": "مسؤول",
+          "description": "اسم دور فريد"
+        },
+        "description": {
+          "label": "الوصف",
+          "placeholder": "ما يمكن لهذا الدور فعله",
+          "description": "ملخص اختياري"
+        },
+        "permissions": {
+          "label": "الصلاحيات",
+          "description": "فعّل الصلاحيات الممنوحة لهذا الدور"
+        }
+      }
+    },
+    "update": {
+      "title": "تفاصيل الدور",
+      "description": "حدّث الاسم والوصف والصلاحيات.",
+      "fields": {
+        "label": {
+          "label": "الاسم",
+          "placeholder": "مسؤول",
+          "description": "اسم دور فريد"
+        },
+        "description": {
+          "label": "الوصف",
+          "placeholder": "ما يمكن لهذا الدور فعله",
+          "description": "ملخص اختياري"
+        },
+        "permissions": {
+          "label": "الصلاحيات",
+          "description": "فعّل الصلاحيات الممنوحة لهذا الدور"
+        }
+      }
+    }
+  }
+}

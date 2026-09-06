@@ -1,0 +1,100 @@
+{
+  "appName": "منصة القرآن",
+  "tagline": "منصة تعليم القرآن الكريم",
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "curriculum": "المنهج",
+    "tutors": "المعلمون",
+    "bookings": "الحجوزات",
+    "chat": "المحادثات",
+    "profile": "الملف الشخصي",
+    "achievements": "الإنجازات",
+    "admin": "الإدارة",
+    "children": "أطفالي",
+    "logout": "تسجيل الخروج"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "role": "أنا",
+    "student": "طالب",
+    "parent": "ولي أمر",
+    "tutor": "معلم",
+    "noAccount": "ليس لديك حساب؟",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "accountCreated": "تم إنشاء الحساب. تحقق من بريدك الإلكتروني ثم سجّل الدخول."
+  },
+  "dashboard": {
+    "welcome": "مرحباً بعودتك",
+    "progress": "تقدمك",
+    "upcoming": "الجلسات القادمة",
+    "recentAchievements": "الإنجازات الأخيرة",
+    "startLearning": "ابدأ التعلم",
+    "findTutor": "ابحث عن معلم"
+  },
+  "curriculum": {
+    "title": "المنهج",
+    "units": "الوحدات",
+    "lessons": "الدروس",
+    "complete": "إكمال الدرس",
+    "completed": "مكتمل",
+    "progress": "التقدم"
+  },
+  "tutors": {
+    "title": "ابحث عن معلم",
+    "book": "حجز جلسة",
+    "languages": "اللغات",
+    "specialties": "التخصصات",
+    "rating": "التقييم",
+    "apply": "التقديم كمعلم"
+  },
+  "bookings": {
+    "title": "حجوزاتي",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "join": "انضم للفيديو",
+    "complete": "إنهاء الجلسة",
+    "status": "الحالة"
+  },
+  "chat": {
+    "title": "الرسائل",
+    "placeholder": "اكتب رسالة...",
+    "send": "إرسال",
+    "noConversations": "لا توجد محادثات"
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "save": "حفظ التغييرات",
+    "displayName": "اسم العرض",
+    "bio": "نبذة",
+    "language": "اللغة المفضلة",
+    "timezone": "المنطقة الزمنية",
+    "level": "مستوى التعلم",
+    "goals": "أهداف التعلم"
+  },
+  "achievements": {
+    "title": "الإنجازات",
+    "earned": "المكتسبة",
+    "available": "المتاحة",
+    "streak": "سلسلة الأيام",
+    "days": "أيام"
+  },
+  "parent": {
+    "title": "أطفالي",
+    "addChild": "إضافة طفل",
+    "viewProgress": "عرض التقدم"
+  },
+  "admin": {
+    "title": "لوحة الإدارة",
+    "users": "المستخدمون",
+    "tutors": "التحقق من المعلمين",
+    "curriculum": "المنهج",
+    "verify": "تحقق",
+    "reject": "رفض"
+  }
+}

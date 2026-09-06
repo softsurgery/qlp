@@ -1,0 +1,47 @@
+{
+  "commands": {
+    "actions": "إجراءات",
+    "inspect": "عرض",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "reset": "إعادة تعيين",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "apply": "تطبيق",
+    "hide": "إخفاء",
+    "display": "عرض"
+  },
+  "common": {
+    "buttons": {
+      "delete": "حذف",
+      "cancel": "إلغاء",
+      "activate": "تفعيل",
+      "deactivate": "تعطيل",
+      "approve": "اعتماد",
+      "disapprove": "إلغاء الاعتماد"
+    }
+  },
+  "answer": {
+    "yes": "نعم",
+    "no": "لا"
+  },
+  "general": {
+    "unknown": "غير معروف",
+    "more": "المزيد"
+  },
+  "table": {
+    "loading": "جاري التحميل",
+    "no_results": "لا توجد نتائج",
+    "filter_placeholder": "تصفية {{entity}}"
+  },
+  "no_results": "لا توجد نتائج",
+  "suggestions": "اقتراحات",
+  "command": {
+    "paletteTitle": "لوحة الأوامر",
+    "paletteDescription": "ابحث عن أمر لتنفيذه..."
+  },
+  "sidebar": {
+    "toggle": "طي الشريط الجانبي"
+  }
+}

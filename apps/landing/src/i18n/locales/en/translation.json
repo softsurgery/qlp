@@ -1,0 +1,63 @@
+{
+  "appName": "QLP",
+  "badge": "New workspace",
+  "nav": {
+    "seeBuilders": "See builders"
+  },
+  "hero": {
+    "title": "Build forms and tables from a schema.",
+    "description": "Landing is the public app. Form Builder and Data Table Builder are shared packages you can use across the workspace."
+  },
+  "formBuilder": {
+    "title": "Form Builder",
+    "description": "Render a complete form from a typed schema."
+  },
+  "dataTable": {
+    "title": "Data Table Builder",
+    "description": "Search, sort, and paginate rows from column definitions.",
+    "searchPlaceholder": "Search workspace items",
+    "columns": {
+      "name": "Name",
+      "kind": "Kind",
+      "status": "Status"
+    }
+  },
+  "contact": {
+    "title": "Talk to us",
+    "description": "Tell us what you are building and we will get back to you.",
+    "submit": "Send message",
+    "success": "Thanks {{name}}, we received your message.",
+    "successFallbackName": "there",
+    "fields": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Ada Lovelace"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "ada@example.com"
+      },
+      "interest": {
+        "label": "Interest",
+        "forms": "Forms",
+        "tables": "Data tables",
+        "both": "Both"
+      },
+      "message": {
+        "label": "Message",
+        "placeholder": "What would you like to build?"
+      },
+      "updates": {
+        "label": "Send me product updates"
+      }
+    }
+  },
+  "features": {
+    "formBuilder": "Form Builder",
+    "dataTable": "Data Table Builder",
+    "landing": "Landing",
+    "package": "Package",
+    "app": "App",
+    "ready": "Ready"
+  }
+}

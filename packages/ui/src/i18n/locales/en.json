@@ -1,0 +1,47 @@
+{
+  "commands": {
+    "actions": "Actions",
+    "inspect": "Inspect",
+    "edit": "Edit",
+    "delete": "Delete",
+    "reset": "Reset",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "apply": "Apply",
+    "hide": "Hide",
+    "display": "Display"
+  },
+  "common": {
+    "buttons": {
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "approve": "Approve",
+      "disapprove": "Disapprove"
+    }
+  },
+  "answer": {
+    "yes": "Yes",
+    "no": "No"
+  },
+  "general": {
+    "unknown": "Unknown",
+    "more": "more"
+  },
+  "table": {
+    "loading": "Loading",
+    "no_results": "No results",
+    "filter_placeholder": "Filter {{entity}}"
+  },
+  "no_results": "No results",
+  "suggestions": "Suggestions",
+  "command": {
+    "paletteTitle": "Command Palette",
+    "paletteDescription": "Search for a command to run..."
+  },
+  "sidebar": {
+    "toggle": "Toggle Sidebar"
+  }
+}

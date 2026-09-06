@@ -1,0 +1,86 @@
+{
+  "userManagement": {
+    "page": {
+      "title": "User management",
+      "users": "Users",
+      "user": "User",
+      "description": "Create and manage platform users.",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "approve": "Approve",
+      "disapprove": "Disapprove"
+    },
+    "columns": {
+      "photo": "Photo",
+      "username": "Username",
+      "email": "Email",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "dateOfBirth": "Date of birth",
+      "role": "Role",
+      "isActive": "Active",
+      "isApproved": "Approved",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
+    },
+    "errors": {
+      "notDefined": "Not defined",
+      "roleNotFound": "Role not found",
+      "generalError": "Something went wrong"
+    },
+    "messages": {
+      "userDeletedSuccess": "User deleted",
+      "userActivatedSuccess": "User activated",
+      "userDeactivatedSuccess": "User deactivated",
+      "userApprovedSuccess": "User approved",
+      "userDisapprovedSuccess": "User disapproved",
+      "userCreatedSuccess": "User created",
+      "userUpdatedSuccess": "User updated"
+    },
+    "dialogs": {
+      "deleteUserTitle": "Delete user",
+      "deleteUserDescription": "This will deactivate the user record.",
+      "activateUserTitle": "Activate user",
+      "activateUserDescription": "The user will be able to sign in again.",
+      "deactivateUserTitle": "Deactivate user",
+      "deactivateUserDescription": "The user will no longer be able to sign in.",
+      "approveUserTitle": "Approve user",
+      "approveUserDescription": "Mark this user as approved.",
+      "disapproveUserTitle": "Disapprove user",
+      "disapproveUserDescription": "Remove approval from this user."
+    },
+    "sheet": {
+      "createUserTitle": "Create user",
+      "createUserDescription": "Add a new platform user.",
+      "updateUserTitle": "Update user",
+      "updateUserDescription": "Edit the selected user."
+    },
+    "forms": {
+      "firstName": "First name",
+      "firstNameDescription": "Optional given name",
+      "lastName": "Last name",
+      "lastNameDescription": "Optional family name",
+      "email": "Email",
+      "emailDescription": "Used for login and notifications",
+      "dateOfBirth": "Date of birth",
+      "dateOfBirthDescription": "Optional",
+      "username": "Username",
+      "usernamePlaceholder": "jdoe",
+      "usernameDescription": "Unique username",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "passwordDescription": "At least 6 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "••••••••",
+      "confirmPasswordDescription": "Repeat the password",
+      "role": "Role",
+      "roleDescription": "Assigned permissions",
+      "rolePlaceholder": "Select a role",
+      "requirePasswordCheckTitle": "Set a new password",
+      "requirePasswordCheckDescription": "Leave unchecked to keep the current password",
+      "step1Title": "Account",
+      "step1FieldTitle": "Profile",
+      "step2Title": "Credentials"
+    }
+  }
+}

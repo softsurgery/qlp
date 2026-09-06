@@ -294,7 +294,7 @@ export const Users = ({ className }: UsersProps) => {
     [roles],
   );
 
-  const columns = useUserColumns(context, t, roleFilterOptions);
+  const columns = useUserColumns(context, roleFilterOptions);
   const isPending =
     isUsersPending || paging || resizing || searching || sorting || filtering;
 

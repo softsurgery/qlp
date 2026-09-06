@@ -1,0 +1,63 @@
+{
+  "appName": "QLP",
+  "badge": "مساحة عمل جديدة",
+  "nav": {
+    "seeBuilders": "عرض الأدوات"
+  },
+  "hero": {
+    "title": "ابنِ النماذج والجداول من مخطط.",
+    "description": "صفحة الهبوط هي التطبيق العام. منشئ النماذج ومنشئ الجداول حزمتان مشتركتان يمكنك استخدامهما عبر مساحة العمل."
+  },
+  "formBuilder": {
+    "title": "منشئ النماذج",
+    "description": "اعرض نموذجاً كاملاً من مخطط مكتوب الأنواع."
+  },
+  "dataTable": {
+    "title": "منشئ الجداول",
+    "description": "ابحث ورتّب وصفّح الصفوف من تعريفات الأعمدة.",
+    "searchPlaceholder": "ابحث في عناصر مساحة العمل",
+    "columns": {
+      "name": "الاسم",
+      "kind": "النوع",
+      "status": "الحالة"
+    }
+  },
+  "contact": {
+    "title": "تواصل معنا",
+    "description": "أخبرنا بما تبنيه وسنعاود الاتصال بك.",
+    "submit": "إرسال الرسالة",
+    "success": "شكراً {{name}}، استلمنا رسالتك.",
+    "successFallbackName": "بك",
+    "fields": {
+      "name": {
+        "label": "الاسم",
+        "placeholder": "Ada Lovelace"
+      },
+      "email": {
+        "label": "البريد الإلكتروني",
+        "placeholder": "ada@example.com"
+      },
+      "interest": {
+        "label": "الاهتمام",
+        "forms": "النماذج",
+        "tables": "الجداول",
+        "both": "كلاهما"
+      },
+      "message": {
+        "label": "الرسالة",
+        "placeholder": "ماذا تود أن تبني؟"
+      },
+      "updates": {
+        "label": "أرسل لي تحديثات المنتج"
+      }
+    }
+  },
+  "features": {
+    "formBuilder": "منشئ النماذج",
+    "dataTable": "منشئ الجداول",
+    "landing": "صفحة الهبوط",
+    "package": "حزمة",
+    "app": "تطبيق",
+    "ready": "جاهز"
+  }
+}

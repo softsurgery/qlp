@@ -1,0 +1,30 @@
+{
+  "datatable": {
+    "noResults": "No results",
+    "search": "Search {{entity}}",
+    "visibleColumns": "Visible columns",
+    "clearCriterias": "Clear filters",
+    "paginationPhrase": "Page {{page}} of {{total}}",
+    "order": {
+      "asc": "Ascending",
+      "desc": "Descending"
+    },
+    "filter": {
+      "title": "Filter",
+      "clear": "Clear",
+      "selectPlaceholder": "Select",
+      "valuePlaceholder": "Value",
+      "dateFrom": "From",
+      "dateTo": "To"
+    },
+    "export": {
+      "noData": "No data to export",
+      "success": "Export completed",
+      "error": "Export failed",
+      "currentPage": "Current page",
+      "allData": "All data",
+      "title": "Export",
+      "description": "Choose what to export"
+    }
+  }
+}

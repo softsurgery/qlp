@@ -1,0 +1,84 @@
+{
+  "page": {
+    "title": "Roles",
+    "description": "Manage roles and their permissions.",
+    "singularName": "Role",
+    "pluralName": "Roles"
+  },
+  "columns": {
+    "label": "Label",
+    "description": "Description",
+    "noDescription": "No description",
+    "permissions": "Permissions",
+    "noPermissions": "No permissions"
+  },
+  "actions": {
+    "duplicate": "Duplicate"
+  },
+  "messages": {
+    "createSuccess": "Role created",
+    "updateSuccess": "Role updated",
+    "deleteSuccess": "Role deleted",
+    "duplicateSuccess": "Role duplicated"
+  },
+  "sheet": {
+    "create": {
+      "title": "Create role",
+      "description": "Define a role and its permissions."
+    },
+    "update": {
+      "title": "Update role",
+      "description": "Edit the selected role."
+    }
+  },
+  "dialogs": {
+    "delete": {
+      "title": "Delete role",
+      "description": "This will soft-delete the role.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
+  },
+  "forms": {
+    "create": {
+      "title": "Role details",
+      "description": "Set the label, description, and permissions.",
+      "fields": {
+        "label": {
+          "label": "Label",
+          "placeholder": "Administrator",
+          "description": "Unique role name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "What this role can do",
+          "description": "Optional summary"
+        },
+        "permissions": {
+          "label": "Permissions",
+          "description": "Toggle the permissions granted by this role"
+        }
+      }
+    },
+    "update": {
+      "title": "Role details",
+      "description": "Update the label, description, and permissions.",
+      "fields": {
+        "label": {
+          "label": "Label",
+          "placeholder": "Administrator",
+          "description": "Unique role name"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "What this role can do",
+          "description": "Optional summary"
+        },
+        "permissions": {
+          "label": "Permissions",
+          "description": "Toggle the permissions granted by this role"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "appName": "QLP",
+  "tagline": "Quran Learning Platform",
+  "nav": {
+    "dashboard": "Dashboard",
+    "curriculum": "Curriculum",
+    "tutors": "Tutors",
+    "bookings": "Bookings",
+    "chat": "Chat",
+    "profile": "Profile",
+    "achievements": "Achievements",
+    "admin": "Admin",
+    "children": "My Children",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Create Account",
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "role": "I am a",
+    "student": "Student",
+    "parent": "Parent",
+    "tutor": "Tutor",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "accountCreated": "Account created. Check your email to verify, then sign in."
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "progress": "Your Progress",
+    "upcoming": "Upcoming Sessions",
+    "recentAchievements": "Recent Achievements",
+    "startLearning": "Start Learning",
+    "findTutor": "Find a Tutor"
+  },
+  "curriculum": {
+    "title": "Curriculum",
+    "units": "Units",
+    "lessons": "Lessons",
+    "complete": "Mark Complete",
+    "completed": "Completed",
+    "progress": "Progress"
+  },
+  "tutors": {
+    "title": "Find a Tutor",
+    "book": "Book Session",
+    "languages": "Languages",
+    "specialties": "Specialties",
+    "rating": "Rating",
+    "apply": "Apply as Tutor"
+  },
+  "bookings": {
+    "title": "My Bookings",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "join": "Join Video",
+    "complete": "Complete Session",
+    "status": "Status"
+  },
+  "chat": {
+    "title": "Messages",
+    "placeholder": "Type a message...",
+    "send": "Send",
+    "noConversations": "No conversations yet"
+  },
+  "profile": {
+    "title": "Profile",
+    "save": "Save Changes",
+    "displayName": "Display Name",
+    "bio": "Bio",
+    "language": "Preferred Language",
+    "timezone": "Timezone",
+    "level": "Learning Level",
+    "goals": "Learning Goals"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "earned": "Earned",
+    "available": "Available",
+    "streak": "Current Streak",
+    "days": "days"
+  },
+  "parent": {
+    "title": "My Children",
+    "addChild": "Add Child",
+    "viewProgress": "View Progress"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "users": "Users",
+    "tutors": "Tutor Verification",
+    "curriculum": "Curriculum",
+    "verify": "Verify",
+    "reject": "Reject"
+  }
+}

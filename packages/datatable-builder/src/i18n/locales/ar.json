@@ -1,0 +1,30 @@
+{
+  "datatable": {
+    "noResults": "لا توجد نتائج",
+    "search": "بحث {{entity}}",
+    "visibleColumns": "الأعمدة الظاهرة",
+    "clearCriterias": "مسح عوامل التصفية",
+    "paginationPhrase": "صفحة {{page}} من {{total}}",
+    "order": {
+      "asc": "تصاعدي",
+      "desc": "تنازلي"
+    },
+    "filter": {
+      "title": "تصفية",
+      "clear": "مسح",
+      "selectPlaceholder": "اختر",
+      "valuePlaceholder": "القيمة",
+      "dateFrom": "من",
+      "dateTo": "إلى"
+    },
+    "export": {
+      "noData": "لا توجد بيانات للتصدير",
+      "success": "اكتمل التصدير",
+      "error": "فشل التصدير",
+      "currentPage": "الصفحة الحالية",
+      "allData": "كل البيانات",
+      "title": "تصدير",
+      "description": "اختر ما تريد تصديره"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "userManagement": {
+    "page": {
+      "title": "إدارة المستخدمين",
+      "users": "المستخدمون",
+      "user": "مستخدم",
+      "description": "إنشاء وإدارة مستخدمي المنصة.",
+      "activate": "تفعيل",
+      "deactivate": "تعطيل",
+      "approve": "اعتماد",
+      "disapprove": "إلغاء الاعتماد"
+    },
+    "columns": {
+      "photo": "الصورة",
+      "username": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "dateOfBirth": "تاريخ الميلاد",
+      "role": "الدور",
+      "isActive": "نشط",
+      "isApproved": "معتمد",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث"
+    },
+    "errors": {
+      "notDefined": "غير محدد",
+      "roleNotFound": "الدور غير موجود",
+      "generalError": "حدث خطأ ما"
+    },
+    "messages": {
+      "userDeletedSuccess": "تم حذف المستخدم",
+      "userActivatedSuccess": "تم تفعيل المستخدم",
+      "userDeactivatedSuccess": "تم تعطيل المستخدم",
+      "userApprovedSuccess": "تم اعتماد المستخدم",
+      "userDisapprovedSuccess": "تم إلغاء اعتماد المستخدم",
+      "userCreatedSuccess": "تم إنشاء المستخدم",
+      "userUpdatedSuccess": "تم تحديث المستخدم"
+    },
+    "dialogs": {
+      "deleteUserTitle": "حذف المستخدم",
+      "deleteUserDescription": "سيؤدي هذا إلى تعطيل سجل المستخدم.",
+      "activateUserTitle": "تفعيل المستخدم",
+      "activateUserDescription": "سيتمكن المستخدم من تسجيل الدخول مرة أخرى.",
+      "deactivateUserTitle": "تعطيل المستخدم",
+      "deactivateUserDescription": "لن يتمكن المستخدم من تسجيل الدخول.",
+      "approveUserTitle": "اعتماد المستخدم",
+      "approveUserDescription": "وضع علامة على هذا المستخدم كمعتمد.",
+      "disapproveUserTitle": "إلغاء اعتماد المستخدم",
+      "disapproveUserDescription": "إزالة الاعتماد عن هذا المستخدم."
+    },
+    "sheet": {
+      "createUserTitle": "إنشاء مستخدم",
+      "createUserDescription": "إضافة مستخدم جديد للمنصة.",
+      "updateUserTitle": "تحديث المستخدم",
+      "updateUserDescription": "تعديل المستخدم المحدد."
+    },
+    "forms": {
+      "firstName": "الاسم الأول",
+      "firstNameDescription": "الاسم الأول اختياري",
+      "lastName": "اسم العائلة",
+      "lastNameDescription": "اسم العائلة اختياري",
+      "email": "البريد الإلكتروني",
+      "emailDescription": "يُستخدم لتسجيل الدخول والإشعارات",
+      "dateOfBirth": "تاريخ الميلاد",
+      "dateOfBirthDescription": "اختياري",
+      "username": "اسم المستخدم",
+      "usernamePlaceholder": "jdoe",
+      "usernameDescription": "اسم مستخدم فريد",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "••••••••",
+      "passwordDescription": "6 أحرف على الأقل",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "confirmPasswordPlaceholder": "••••••••",
+      "confirmPasswordDescription": "أعد إدخال كلمة المرور",
+      "role": "الدور",
+      "roleDescription": "الصلاحيات المعينة",
+      "rolePlaceholder": "اختر دوراً",
+      "requirePasswordCheckTitle": "تعيين كلمة مرور جديدة",
+      "requirePasswordCheckDescription": "اتركه دون تحديد للإبقاء على كلمة المرور الحالية",
+      "step1Title": "الحساب",
+      "step1FieldTitle": "الملف الشخصي",
+      "step2Title": "بيانات الدخول"
+    }
+  }
+}
