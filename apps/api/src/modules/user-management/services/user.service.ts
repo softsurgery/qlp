@@ -51,13 +51,16 @@ export class UserService extends AbstractUserService {
       rest.password = await hashPassword(rest.password);
     }
 
-    const updatedUser = await this.userRepository.update(id, rest);
-    //confirm new picture
-    if (updateUserDto.pictureId && updateUserDto.pictureId != existingUser.pictureId) {
-      await this.storageService.confirm(updateUserDto.pictureId);
+    const updatedUser = await this.userRepository.update(id, {
+      ...rest,
+      pictureId: pictureId ?? existingUser.pictureId,
+    });
+
+    if (pictureId && pictureId !== existingUser.pictureId) {
+      await this.storageService.confirm(pictureId);
       if (existingUser.pictureId) await this.storageService.delete(existingUser.pictureId);
 
-      await this.userStorageFolderService.assignProfilePicture(updateUserDto.pictureId);
+      await this.userStorageFolderService.assignProfilePicture(pictureId);
     }
 
     return updatedUser;

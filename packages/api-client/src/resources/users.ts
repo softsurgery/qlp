@@ -14,6 +14,7 @@ export function createUserResource(http: AxiosInstance) {
     sort,
     filter = "",
     search = "",
+    join = "",
   }: QueryParams): Promise<Paginated<ResponseUserDto>> => {
     const params: { [key: string]: string | undefined } = {
       page,
@@ -23,6 +24,7 @@ export function createUserResource(http: AxiosInstance) {
 
     if (search) params.search = search;
     if (filter) params.filter = filter;
+    if (join) params.join = join;
 
     const response = await http.get<Paginated<ResponseUserDto>>(
       `/admin/user/list`,

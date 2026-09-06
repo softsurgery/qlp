@@ -64,8 +64,11 @@ export class UserController {
   }
 
   @Get(':id')
-  async findOneById(@Param('id') id: string): Promise<ResponseUserDto | null> {
-    return toDto(ResponseUserDto, await this.userService.findOneById(id));
+  async findOneById(
+    @Param('id') id: string,
+    @Query() query: IQueryObject,
+  ): Promise<ResponseUserDto | null> {
+    return toDto(ResponseUserDto, await this.userService.findOneById(id, query.join));
   }
 
   @Post()
