@@ -18,6 +18,7 @@ import {
   Textarea,
 } from "@qlp/ui";
 import { ComboboxMultiSelectField } from "./components/ComboboxMultiSelectField";
+import { AvatarField } from "./components/AvatarField";
 import { PasswordField } from "./components/PasswordField";
 
 interface FieldBuilderProps {
@@ -334,6 +335,23 @@ export const FieldBuilder = ({ field }: FieldBuilderProps) => {
             </div>
           )}
         </div>
+      );
+    case "avatar":
+      return (
+        <AvatarField
+          id={field.id}
+          className={cn(field?.className, field.error && "border-destructive")}
+          error={Boolean(field.error)}
+          image={field.props?.image}
+          progress={field.props?.progress}
+          placeholder={field.props?.placeholder}
+          fallback={field.props?.fallback}
+          accept={field.props?.accept}
+          disabled={field.props?.disabled}
+          resolveImageUrl={field.props?.resolveImageUrl}
+          onFileChange={field.props?.onFileChange}
+          onUpload={field.props?.onUpload}
+        />
       );
 
     case "custom":

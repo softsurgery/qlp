@@ -54,9 +54,12 @@ export enum FieldVariant {
   TEXTAREA = "textarea",
   EDITOR = "editor",
   FILE = "file",
+  AVATAR = "avatar",
   EMPTY = "empty",
   CUSTOM = "custom",
 }
+
+export type FieldErrors = Record<string, string[] | undefined>;
 
 export interface Field<T = any> {
   id: string;
@@ -168,6 +171,39 @@ export interface EditorFieldProps extends BaseFieldProps {
   value?: string;
   onChange?: (e: string) => void;
   maxLength?: number;
+}
+
+export interface FileFieldProps extends BaseFieldProps {
+  accept?: string;
+  progress?: number;
+  onFileChange?: (file: File) => void;
+  onUpload?: (file: File, onProgress: (percent: number) => void) => void;
+}
+
+export type AvatarFieldSource =
+  | File
+  | string
+  | {
+      slug?: string;
+      id?: number;
+      url?: string;
+    }
+  | null;
+
+export interface AvatarFieldProps extends BaseFieldProps {
+  image?: AvatarFieldSource;
+  progress?: number;
+  placeholder?: string;
+  fallback?: string;
+  accept?: string;
+  resolveImageUrl?: (
+    image: Exclude<AvatarFieldSource, File | string | null | undefined>,
+  ) => string | Promise<string>;
+  onFileChange?: (file: File) => void;
+  onUpload?: (
+    file: File,
+    onProgress: (percent: number) => void,
+  ) => void | Promise<void>;
 }
 
 export interface CustomFieldProps extends BaseFieldProps {

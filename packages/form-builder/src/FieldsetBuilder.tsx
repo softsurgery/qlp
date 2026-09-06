@@ -97,7 +97,7 @@ export const FieldsetBuilder = ({
                   <Label className="text-xs font-bold" htmlFor={field.id}>
                     <span>{field.label}</span>
                     {field.required && (
-                      <span className="text-destructive mx-1">*</span>
+                      <span className="text-destructive">*</span>
                     )}
                   </Label>
 
