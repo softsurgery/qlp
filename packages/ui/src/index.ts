@@ -1,4 +1,13 @@
 export { cn } from "./lib/utils";
+export {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "./components/breadcrumb";
 export { Button, buttonVariants } from "./components/button";
 export { Input } from "./components/input";
 export { Label } from "./components/label";
