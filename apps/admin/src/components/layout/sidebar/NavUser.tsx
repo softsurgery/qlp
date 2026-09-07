@@ -1,8 +1,10 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
+  AvatarImage,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -16,8 +18,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@qlp/ui/components/sidebar";
+import { useUploadSrc } from "@qlp/hooks";
 import { useAuthUser, useLogout } from "../../../hooks/content/useAuth";
-import React from "react";
+import { api } from "../../../lib/api";
 import { identifyUser, identifyUserAvatar } from "@qlp/lib";
 
 export function NavUser() {
@@ -25,6 +28,10 @@ export function NavUser() {
   const logout = useLogout();
   const navigate = useNavigate();
   const { isMobile } = useSidebar();
+  const { data: avatarSrc } = useUploadSrc(
+    user?.picture ?? (user?.pictureId ? { id: user.pictureId } : null),
+    api.upload,
+  );
 
   const identification = React.useMemo(() => {
     return identifyUser(user);
@@ -48,7 +55,8 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="h-8 w-8 rounded-full">
+                <AvatarImage src={avatarSrc} alt={fallback} />
                 <AvatarFallback className="rounded-lg">
                   {fallback}
                 </AvatarFallback>
@@ -72,7 +80,8 @@ export function NavUser() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
+                <Avatar className="h-8 w-8 rounded-full">
+                  <AvatarImage src={avatarSrc} alt={fallback} />
                   <AvatarFallback className="rounded-lg">
                     {fallback}
                   </AvatarFallback>
