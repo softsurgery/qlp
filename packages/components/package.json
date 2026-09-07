@@ -14,10 +14,13 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
+    "@qlp/api-client": "workspace:*",
     "@qlp/contexts": "workspace:*",
+    "@qlp/form-builder": "workspace:*",
     "@qlp/ui": "workspace:*",
     "i18next": "^23.15.1",
-    "react-i18next": "^15.0.2"
+    "react-i18next": "^15.0.2",
+    "sonner": "^1.7.1"
   },
   "peerDependencies": {
     "react": "^18.3.1",

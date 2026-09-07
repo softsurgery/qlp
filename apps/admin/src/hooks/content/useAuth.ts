@@ -8,7 +8,7 @@ import {
   readStoredUser,
   writeStoredUser,
   type AuthUser,
-} from "../lib/api";
+} from "../../lib/api";
 
 export function useAuthUser() {
   return useQuery({
@@ -36,12 +36,6 @@ export function useSignIn() {
     onSuccess: (data) => {
       queryClient.setQueryData(AUTH_USER_QUERY_KEY, data.user);
     },
-  });
-}
-
-export function useForgotPassword() {
-  return useMutation({
-    mutationFn: adminAuthApi.forgotPassword,
   });
 }
 

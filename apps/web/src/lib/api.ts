@@ -1,8 +1,4 @@
-import {
-  createApiClient,
-  type ResponseClientSigninDto,
-  type ResponseUserDto,
-} from "@qlp/api-client";
+import { createApiClient, type ResponseUserDto } from "@qlp/api-client";
 import { useAuthPersistStore } from "@qlp/hooks";
 
 export const AUTH_USER_STORAGE_KEY = "user";
@@ -11,10 +7,6 @@ export const AUTH_USER_QUERY_KEY = ["auth", "user"] as const;
 export type AuthUser = ResponseUserDto & {
   role?: { id: string; label: string };
   roleId?: string;
-};
-
-export type ClientSignInResult = ResponseClientSigninDto & {
-  user?: AuthUser;
 };
 
 export function readStoredUser(): AuthUser | null {

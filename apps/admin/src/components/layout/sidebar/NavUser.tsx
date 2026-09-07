@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@qlp/ui/components/sidebar";
-import { useAuthUser, useLogout } from "../../../hooks/useAuth";
+import { useAuthUser, useLogout } from "../../../hooks/content/useAuth";
 import React from "react";
 import { identifyUser, identifyUserAvatar } from "@qlp/lib";
 

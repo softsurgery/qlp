@@ -3,5 +3,32 @@
   "languages": {
     "en": "English",
     "ar": "العربية"
+  },
+  "auth": {
+    "loginTitle": "تسجيل الدخول إلى حسابك",
+    "loginDescription": "أدخل بياناتك أدناه لتسجيل الدخول إلى حسابك",
+    "forgotTitle": "نسيت كلمة المرور",
+    "forgotDescription": "أدخل بريدك الإلكتروني لتلقي رابط إعادة التعيين.",
+    "resetTitle": "إعادة تعيين كلمة المرور",
+    "resetDescription": "أدخل كلمة المرور الجديدة أدناه.",
+    "emailOrUsername": "البريد الإلكتروني / اسم المستخدم",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "login": "تسجيل الدخول",
+    "cancel": "إلغاء",
+    "sendResetLink": "إرسال رابط إعادة التعيين",
+    "sending": "جارٍ الإرسال...",
+    "reset": "إعادة التعيين",
+    "passwordMismatch": "كلمة المرور غير متطابقة",
+    "passwordRequired": "يرجى إدخال كلمة المرور",
+    "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
+    "passwordMinLength": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+    "resetEmailSent": "تم إرسال رسالة إعادة التعيين إلى {{email}}",
+    "identifierRequired": "يرجى إدخال بريدك الإلكتروني أو اسم المستخدم لتلقي رابط إعادة التعيين.",
+    "resetFailed": "فشل إعادة تعيين كلمة المرور",
+    "welcomeBack": "مرحباً بعودتك!",
+    "signInFailed": "حدث خطأ أثناء تسجيل الدخول"
   }
 }

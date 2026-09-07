@@ -9,12 +9,6 @@ export type AuthUser = ResponseUserDto & {
   roleId?: string;
 };
 
-export interface AdminSignInResponse {
-  user?: AuthUser;
-  access_token: string;
-  refresh_token: string;
-}
-
 export function readStoredUser(): AuthUser | null {
   try {
     const raw = localStorage.getItem(AUTH_USER_STORAGE_KEY);
@@ -48,26 +42,7 @@ const client = createApiClient({
 });
 
 export const api = client;
-
-export const adminAuthApi = {
-  async signIn(dto: { usernameOrEmail: string; password: string }) {
-    const { data } = await client.http.post<AdminSignInResponse>(
-      "/admin/auth/sign-in",
-      dto,
-    );
-    useAuthPersistStore
-      .getState()
-      .setTokens(data.access_token, data.refresh_token);
-    return data;
-  },
-  async forgotPassword(dto: { usernameOrEmail: string }) {
-    const { data } = await client.http.post<{ email: string; success: boolean }>(
-      "/admin/auth/forgot-password",
-      dto,
-    );
-    return data;
-  },
-};
+export const adminAuthApi = client.adminAuth;
 
 export { clearSession };
 export default client.http;

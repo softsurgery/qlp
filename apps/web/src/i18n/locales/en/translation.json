@@ -14,11 +14,14 @@
     "logout": "Logout"
   },
   "auth": {
-    "login": "Sign In",
-    "register": "Create Account",
+    "login": "Login",
+    "register": "Sign up",
+    "signUpTitle": "Create your account",
+    "signUpDescription": "Enter your details below to create your account",
     "email": "Email",
     "username": "Username",
     "password": "Password",
+    "confirmPassword": "Confirm Password",
     "firstName": "First Name",
     "lastName": "Last Name",
     "role": "I am a",
@@ -27,7 +30,8 @@
     "tutor": "Tutor",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
-    "accountCreated": "Account created. Check your email to verify, then sign in."
+    "accountCreated": "Account created. Check your email to verify, then sign in.",
+    "signUpFailed": "Unable to create account"
   },
   "dashboard": {
     "welcome": "Welcome back",

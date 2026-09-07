@@ -11,7 +11,6 @@ import {
   readStoredUser,
   writeStoredUser,
   type AuthUser,
-  type ClientSignInResult,
 } from "../lib/api";
 
 export function useAuthUser() {
@@ -29,12 +28,12 @@ export function useSignIn() {
 
   return useMutation({
     mutationFn: async (dto: RequestClientSignInDto) => {
-      const data = (await authApi.signIn(dto)) as ClientSignInResult;
+      const data = await authApi.signIn(dto);
       if (!data.user) {
         clearSession();
         throw new Error("No user returned");
       }
-      writeStoredUser(data.user);
+      writeStoredUser(data.user as AuthUser);
       return data;
     },
     onSuccess: (data) => {

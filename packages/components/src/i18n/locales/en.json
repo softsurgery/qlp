@@ -3,5 +3,32 @@
   "languages": {
     "en": "English",
     "ar": "العربية"
+  },
+  "auth": {
+    "loginTitle": "Login to your account",
+    "loginDescription": "Enter your credentials below to login to your account",
+    "forgotTitle": "Forgot Password",
+    "forgotDescription": "Enter your email to receive a reset link.",
+    "resetTitle": "Reset Password",
+    "resetDescription": "Enter your new password below.",
+    "emailOrUsername": "Email/Username",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot your password?",
+    "login": "Login",
+    "cancel": "Cancel",
+    "sendResetLink": "Send Reset Link",
+    "sending": "Sending...",
+    "reset": "Reset",
+    "passwordMismatch": "Password does not match",
+    "passwordRequired": "Please enter a password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "resetEmailSent": "Reset email sent to {{email}}",
+    "identifierRequired": "Please enter your email or username to receive a reset link.",
+    "resetFailed": "Failed to reset password",
+    "welcomeBack": "Welcome back!",
+    "signInFailed": "An error occurred during sign in"
   }
 }

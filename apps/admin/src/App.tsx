@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useIsAdminSession } from "./hooks/useAuth";
+import { useIsAdminSession } from "./hooks/content/useAuth";
 import Layout from "./components/layout/Layout";
 import LoginPage from "./pages/LoginPage";
 import UsersPage from "./pages/UsersPage";
