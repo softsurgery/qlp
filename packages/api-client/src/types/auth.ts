@@ -1,8 +1,48 @@
 import { ResponseUserDto } from "./user-managemnt.js";
 
 export interface ResponseClientSigninDto {
+  user?: ResponseUserDto;
   access_token: string;
   refresh_token: string;
+}
+
+export interface RequestAdminSignInDto {
+  usernameOrEmail: string;
+  password: string;
+}
+
+export interface ResponseAdminSignInDto {
+  user?: ResponseUserDto;
+  access_token: string;
+  refresh_token: string;
+}
+
+export interface RequestResetTokenDto {
+  usernameOrEmail: string;
+}
+
+export interface ResponseResetTokenDto {
+  email: string;
+  success: boolean;
+}
+
+export interface RequestCheckResetTokenDto {
+  token: string;
+}
+
+export interface ResponseCheckResetTokenDto {
+  token: string;
+  valid: boolean;
+}
+
+export interface RequestResetPasswordDto {
+  token: string;
+  password: string;
+}
+
+export interface ResponseResetPasswordDto {
+  success: boolean;
+  message: string;
 }
 
 export interface RequestClientSignInDto {

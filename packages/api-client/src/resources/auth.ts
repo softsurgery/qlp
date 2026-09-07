@@ -6,6 +6,12 @@ import type {
   RequestClientSignUpDto,
   RequestClientUpdateMailDto,
   RequestClientUpdatePasswordDto,
+  RequestCheckResetTokenDto,
+  RequestResetPasswordDto,
+  RequestResetTokenDto,
+  ResponseCheckResetTokenDto,
+  ResponseResetPasswordDto,
+  ResponseResetTokenDto,
 } from "../types/auth.js";
 import { useAuthPersistStore } from "@qlp/hooks";
 
@@ -61,6 +67,36 @@ export function createAuthResource(http: AxiosInstance) {
     return response.data;
   };
 
+  const forgotPassword = async (
+    request: RequestResetTokenDto,
+  ): Promise<ResponseResetTokenDto> => {
+    const response = await http.post<ResponseResetTokenDto>(
+      "/client-auth/forgot-password",
+      request,
+    );
+    return response.data;
+  };
+
+  const checkResetToken = async (
+    request: RequestCheckResetTokenDto,
+  ): Promise<ResponseCheckResetTokenDto> => {
+    const response = await http.post<ResponseCheckResetTokenDto>(
+      "/client-auth/check-reset-token",
+      request,
+    );
+    return response.data;
+  };
+
+  const resetPassword = async (
+    request: RequestResetPasswordDto,
+  ): Promise<ResponseResetPasswordDto> => {
+    const response = await http.post<ResponseResetPasswordDto>(
+      "/client-auth/reset-password",
+      request,
+    );
+    return response.data;
+  };
+
   return {
     signIn,
     ssoSignIn,
@@ -68,6 +104,9 @@ export function createAuthResource(http: AxiosInstance) {
     sendVerifyEmail,
     updateEmail,
     updatePassword,
+    forgotPassword,
+    checkResetToken,
+    resetPassword,
   };
 }
 

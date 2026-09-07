@@ -101,8 +101,10 @@ export function createAxios({
           }
         }
 
-        authStore.logout();
-        onUnauthorized?.();
+        if (authStore.isAuthenticated || authStore.accessToken) {
+          authStore.logout();
+          onUnauthorized?.();
+        }
       }
 
       return Promise.reject(error);
