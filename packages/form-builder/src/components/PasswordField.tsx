@@ -16,12 +16,12 @@ export const PasswordField = ({
   const [showPassword, setShowPassword] = React.useState(false);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   return (
-    <div className="grid gap-2 text-left">
+    <div className="grid gap-2 text-start">
       <div className="relative">
         <Input
           type={showPassword ? "text" : "password"}
           placeholder={placeholder || t("password.placeholder")}
-          className="pr-10"
+          className="pe-10"
           autoComplete="new-password"
           {...props}
         />
@@ -29,7 +29,7 @@ export const PasswordField = ({
           type="button"
           onClick={togglePasswordVisibility}
           variant={"link"}
-          className="absolute inset-y-0 right-0 flex items-center pr-3"
+          className="absolute inset-y-0 end-0 flex items-center pe-3"
           aria-label={showPassword ? t("password.hide") : t("password.show")}
         >
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
