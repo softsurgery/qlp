@@ -32,7 +32,7 @@ export function DataTableExportButton<TData>({
   data,
   context,
 }: DataTableExportButtonProps<TData>) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("datatable");
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [open, setOpen] = React.useState(false);
   const [isExporting, setIsExporting] = React.useState(false);

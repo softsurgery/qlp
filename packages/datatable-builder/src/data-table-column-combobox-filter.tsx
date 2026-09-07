@@ -42,7 +42,8 @@ export function DataTableColumnComboboxFilter({
   onApply,
   onClose
 }: DataTableColumnComboboxFilterProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("datatable");
+  const { t: tCommon } = useTranslation('common');
   const anchorRef = useComboboxAnchor();
 
   const items = React.useMemo(
@@ -119,7 +120,7 @@ export function DataTableColumnComboboxFilter({
       </Combobox>
       <div className="flex gap-2">
         <Button size="sm" className="flex-1" onClick={handleConfirm}>
-          {t('commands.confirm')}
+          {tCommon('commands.confirm')}
         </Button>
         <Button
           size="sm"

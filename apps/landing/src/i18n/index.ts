@@ -3,7 +3,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import { datatableResources } from "@qlp/datatable-builder/i18n";
 import { formBuilderResources } from "@qlp/form-builder/i18n";
-import { mergeLocaleResources, uiResources } from "@qlp/ui/i18n";
+import { uiResources } from "@qlp/ui/i18n";
 import { i18nConfig } from "./config";
 import translationAr from "./locales/ar/translation.json";
 import translationEn from "./locales/en/translation.json";
@@ -17,19 +17,15 @@ i18n
     resources: {
       en: {
         translation: translationEn,
-        common: mergeLocaleResources(
-          uiResources.en,
-          datatableResources.en,
-          formBuilderResources.en,
-        ),
+        common: uiResources.en,
+        datatable: datatableResources.en,
+        "form-builder": formBuilderResources.en,
       },
       ar: {
         translation: translationAr,
-        common: mergeLocaleResources(
-          uiResources.ar,
-          datatableResources.ar,
-          formBuilderResources.ar,
-        ),
+        common: uiResources.ar,
+        datatable: datatableResources.ar,
+        "form-builder": formBuilderResources.ar,
       },
     },
   });

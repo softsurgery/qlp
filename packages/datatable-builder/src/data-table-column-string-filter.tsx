@@ -29,7 +29,8 @@ export function DataTableColumnStringFilter({
   activeFilter,
   onApply,
 }: DataTableColumnStringFilterProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("datatable");
+  const { t: tCommon } = useTranslation("common");
   const parsedFilter = activeFilter ? parseColumnFilter(activeFilter) : null;
 
   const [operator, setOperator] = React.useState<DataTableStringFilterOperator>(
@@ -96,7 +97,7 @@ export function DataTableColumnStringFilter({
       />
       <div className="flex gap-2">
         <Button size="sm" className="flex-1" onClick={handleApply}>
-          {t("commands.apply")}
+          {tCommon("commands.apply")}
         </Button>
         <Button
           size="sm"

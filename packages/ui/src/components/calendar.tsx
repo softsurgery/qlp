@@ -14,7 +14,6 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { Button, buttonVariants } from "#components/button";
-import { i18nConfig } from "../i18n/config";
 import {
   Select,
   SelectContent,
@@ -102,7 +101,7 @@ function Calendar({
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 }) {
   const defaultClassNames = getDefaultClassNames();
-  const { t } = useTranslation(i18nConfig.namespace);
+  const { t } = useTranslation("common");
 
   return (
     <DayPicker

@@ -14,7 +14,7 @@ export function DataTablePagination<TData>({
   context,
   className,
 }: DataTablePaginationProps<TData>) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("datatable");
   return (
     <div className={cn("flex items-center justify-between", className)}>
       <div className="flex items-center space-x-2 ">

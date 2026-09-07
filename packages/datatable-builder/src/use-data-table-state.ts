@@ -36,7 +36,13 @@ export function useDataTableState(
       Object.keys(columnFilters).length > 0 ||
       sortDetails.sortKey !== defaultSort.sortKey ||
       sortDetails.order !== defaultSort.order,
-    [columnFilters, defaultSort.order, defaultSort.sortKey, searchTerm, sortDetails],
+    [
+      columnFilters,
+      defaultSort.order,
+      defaultSort.sortKey,
+      searchTerm,
+      sortDetails,
+    ],
   );
 
   const clearFiltersAndSort = useCallback(() => {

@@ -18,13 +18,14 @@ interface DataTableViewOptionsProps<TData> {
 export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("datatable");
+  const { t: tCommon } = useTranslation("common");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
           <Eye />
-          <span className="text-xs">{t("commands.display")}</span>
+          <span className="text-xs">{tCommon("commands.display")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center">

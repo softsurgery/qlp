@@ -19,7 +19,8 @@ export function DataTableColumnDateRangeFilter({
   onApply,
   onClose
 }: DataTableColumnDateRangeFilterProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("datatable");
+  const { t: tCommon } = useTranslation('common');
   const parsed = activeFilter ? parseDateRangeFilter(activeFilter) : null;
 
   const [from, setFrom] = React.useState(parsed?.from ?? '');
@@ -86,7 +87,7 @@ export function DataTableColumnDateRangeFilter({
       </div>
       <div className="flex gap-2">
         <Button size="sm" className="flex-1" onClick={handleApply}>
-          {t('commands.apply')}
+          {tCommon('commands.apply')}
         </Button>
         <Button
           size="sm"

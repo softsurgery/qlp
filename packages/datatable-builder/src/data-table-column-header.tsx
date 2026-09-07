@@ -50,7 +50,8 @@ export function DataTableColumnHeader<TData, TValue>({
   filterOptions,
   filterMultiSelect,
 }: DataTableColumnHeaderProps<TData, TValue>) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("datatable");
+  const { t: tCommon } = useTranslation("common");
   const meta = column.columnDef.meta;
 
   const resolvedFilterKey = filterKey ?? meta?.filterKey ?? attribute;
@@ -249,7 +250,7 @@ export function DataTableColumnHeader<TData, TValue>({
             onClick={() => column.toggleVisibility(false)}
           >
             <EyeOff className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            {t("commands.hide")}
+            {tCommon("commands.hide")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

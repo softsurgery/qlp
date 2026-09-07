@@ -1,7 +1,4 @@
 {
-  "table": {
-    "no_results": "No results"
-  },
   "password": {
     "placeholder": "Enter password",
     "show": "Show password",

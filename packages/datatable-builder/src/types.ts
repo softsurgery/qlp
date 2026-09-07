@@ -16,7 +16,8 @@ export interface DataTableColumnFilterOption {
   filter: string;
 }
 
-export type DataTableColumnFilterType = 'options' | 'string' | 'select' | 'date-range';
+export type DataTableColumnFilterType =
+  "options" | "string" | "select" | "date-range";
 
 export interface DataTableColumnMeta<T> {
   title?: string;
@@ -31,7 +32,7 @@ export interface DataTableColumnMeta<T> {
   filterMultiSelect?: boolean;
 }
 
-declare module '@tanstack/react-table' {
+declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData, TValue> extends DataTableColumnMeta<TData> {}
 }
@@ -66,17 +67,19 @@ export interface DataTableConfig<T> {
   targetEntity?: (entity: T) => void;
   invisibleColumns?: string[];
   columnVisibility?: Record<string, boolean>;
-  setColumnVisibility?: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  setColumnVisibility?: React.Dispatch<
+    React.SetStateAction<Record<string, boolean>>
+  >;
   exportConfig?: DataTableExportConfig<T>;
 }
 
 export enum DataTableCellVariant {
-  AVATAR = 'avatar',
-  TEXT = 'text',
-  NUMBER = 'number',
-  DATE = 'date',
-  DATE_TIME = 'date-time',
-  CURRENCY = 'currency',
-  EMAIL = 'email',
-  PHONE = 'phone'
+  AVATAR = "avatar",
+  TEXT = "text",
+  NUMBER = "number",
+  DATE = "date",
+  DATE_TIME = "date-time",
+  CURRENCY = "currency",
+  EMAIL = "email",
+  PHONE = "phone",
 }

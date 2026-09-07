@@ -6,7 +6,6 @@ export const i18nConfig = {
   defaultLng: "en",
   fallbackLng: "en",
   supportedLngs,
-  namespace: "components",
 } as const;
 
 export function resolveSupportedLng(lng?: string): SupportedLng {

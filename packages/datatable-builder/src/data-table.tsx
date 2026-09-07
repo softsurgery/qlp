@@ -51,7 +51,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   //set pagination in footer
   const { setContent } = useFooter();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("datatable");
+  const { t: tCommon } = useTranslation("common");
 
   const [rowSelection, setRowSelection] = React.useState({});
   const initialDefaultVisibility = React.useMemo(
@@ -215,7 +216,7 @@ export function DataTable<TData, TValue>({
                   className="h-24 text-center "
                 >
                   <div className="flex items-center justify-center gap-2 font-bold">
-                    {t("table.loading")} <Spinner />
+                    {tCommon("table.loading")} <Spinner />
                   </div>
                 </TableCell>
               </TableRow>

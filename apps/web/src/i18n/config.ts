@@ -6,7 +6,7 @@ export const i18nConfig = {
   fallbackLng: "en",
   supportedLngs,
   defaultNS: "translation",
-  ns: ["translation", "common", "components"],
+  ns: ["translation", "common", "form-builder", "components"],
   interpolation: { escapeValue: false },
   detection: {
     order: ["localStorage", "navigator"] as string[],

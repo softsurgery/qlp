@@ -14,7 +14,7 @@ interface LanguageSwitcherProps {
 }
 
 export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
-  const { i18n, t } = useTranslation(i18nConfig.namespace);
+  const { i18n, t } = useTranslation("components");
   const currentLanguage = resolveSupportedLng(
     i18n.resolvedLanguage ?? i18n.language,
   );

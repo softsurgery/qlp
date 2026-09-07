@@ -12,7 +12,7 @@ export const PasswordField = ({
   placeholder,
   ...props
 }: PasswordFieldProps) => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("form-builder");
   const [showPassword, setShowPassword] = React.useState(false);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   return (

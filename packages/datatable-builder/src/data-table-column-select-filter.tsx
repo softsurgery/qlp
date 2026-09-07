@@ -28,7 +28,8 @@ export function DataTableColumnSelectFilter({
   onApply,
   onClose
 }: DataTableColumnSelectFilterProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("datatable");
+  const { t: tCommon } = useTranslation('common');
   const [pendingValue, setPendingValue] = React.useState(activeFilter ?? '');
 
   React.useEffect(() => {
@@ -77,7 +78,7 @@ export function DataTableColumnSelectFilter({
       </Select>
       <div className="flex gap-2">
         <Button size="sm" className="flex-1" onClick={handleConfirm}>
-          {t('commands.confirm')}
+          {tCommon('commands.confirm')}
         </Button>
         <Button
           size="sm"

@@ -17,7 +17,8 @@ export function DataTableToolbar<TData>({
   data,
   context,
 }: DataTableToolbarProps<TData>) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("datatable");
+  const { t: tCommon } = useTranslation("common");
   return (
     <div className="flex shrink-0 items-center justify-between gap-2">
       <div className="flex flex-1 items-center space-x-2">
@@ -32,7 +33,7 @@ export function DataTableToolbar<TData>({
         />
         {context.searchTerm && (
           <Button variant="ghost" onClick={() => context?.setSearchTerm?.("")}>
-            {t("commands.reset")}
+            {tCommon("commands.reset")}
             <X className="ml-2 h-4 w-4" />
           </Button>
         )}
