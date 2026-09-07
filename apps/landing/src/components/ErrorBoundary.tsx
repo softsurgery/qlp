@@ -1,6 +1,8 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@qlp/ui";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 type ErrorBoundaryProps = {
   children: ReactNode;
@@ -17,23 +19,26 @@ function ErrorFallback({
   error: Error;
   reset: () => void;
 }) {
+  const { t } = useTranslation();
   console.error(error);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="absolute end-5 top-5 sm:end-8 sm:top-8">
+        <LanguageSwitcher className="text-foreground" />
+      </div>
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          {t("error.title")}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back
-          home.
+          {t("error.description")}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <Button onClick={reset}>Try again</Button>
+          <Button onClick={reset}>{t("error.tryAgain")}</Button>
           <Button asChild variant="outline">
             <Link to="/" onClick={reset}>
-              Go home
+              {t("error.goHome")}
             </Link>
           </Button>
         </div>

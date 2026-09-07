@@ -13,3 +13,10 @@ export const i18nConfig = {
     caches: ["localStorage"],
   },
 } as const;
+
+export function resolveSupportedLng(lng?: string): SupportedLng {
+  const base = lng?.split("-")[0];
+  return supportedLngs.includes(base as SupportedLng)
+    ? (base as SupportedLng)
+    : i18nConfig.fallbackLng;
+}

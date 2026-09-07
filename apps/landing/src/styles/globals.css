@@ -260,9 +260,39 @@
   transform-origin: left;
 }
 
+[dir="rtl"] {
+  --font-display: "Amiri", "Cormorant Garamond", Georgia, serif;
+  --font-sans: "IBM Plex Sans Arabic", "Manrope", ui-sans-serif, sans-serif;
+  font-family: "IBM Plex Sans Arabic", "Manrope", ui-sans-serif, sans-serif;
+}
+
+[dir="rtl"] .font-display,
+[dir="rtl"] .section-title {
+  font-family: "Amiri", "Cormorant Garamond", Georgia, serif;
+  line-height: 1.3;
+}
+
+[dir="rtl"] .nav-link::after {
+  transform-origin: left;
+}
+
+[dir="rtl"] .nav-link:hover::after {
+  transform-origin: right;
+}
+
 .hero-shade {
   background: linear-gradient(
     90deg,
+    color-mix(in oklab, var(--brand-deep) 98%, transparent) 0%,
+    color-mix(in oklab, var(--brand-deep) 88%, transparent) 38%,
+    color-mix(in oklab, var(--brand-ink) 25%, transparent) 75%,
+    color-mix(in oklab, var(--brand-ink) 35%, transparent) 100%
+  );
+}
+
+[dir="rtl"] .hero-shade {
+  background: linear-gradient(
+    270deg,
     color-mix(in oklab, var(--brand-deep) 98%, transparent) 0%,
     color-mix(in oklab, var(--brand-deep) 88%, transparent) 38%,
     color-mix(in oklab, var(--brand-ink) 25%, transparent) 75%,

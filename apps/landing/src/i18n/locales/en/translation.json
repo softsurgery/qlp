@@ -1,63 +1,222 @@
 {
-  "appName": "QLP",
-  "badge": "New workspace",
-  "nav": {
-    "seeBuilders": "See builders"
+  "appName": "Nūr Path",
+  "language": {
+    "select": "Select language",
+    "en": "EN",
+    "ar": "AR"
   },
-  "hero": {
-    "title": "Build forms and tables from a schema.",
-    "description": "Landing is the public app. Form Builder and Data Table Builder are shared packages you can use across the workspace."
-  },
-  "formBuilder": {
-    "title": "Form Builder",
-    "description": "Render a complete form from a typed schema."
-  },
-  "dataTable": {
-    "title": "Data Table Builder",
-    "description": "Search, sort, and paginate rows from column definitions.",
-    "searchPlaceholder": "Search workspace items",
-    "columns": {
-      "name": "Name",
-      "kind": "Kind",
-      "status": "Status"
+  "meta": {
+    "title": "Quran, Tajwīd & Arabic Learning | Nūr Path",
+    "description": "Guided Quran learning in recitation, tajwīd, memorisation, and Quranic Arabic, with practical study methods for learners and families.",
+    "ogDescription": "Build confident recitation, sustainable memorisation, and deeper understanding through Quranic Arabic.",
+    "twitterDescription": "Practical guidance for Quran recitation, tajwīd, memorisation, and Quranic Arabic.",
+    "jsonLdDescription": "Guided Quran education in recitation, tajwīd, memorisation, and Quranic Arabic for learners and families.",
+    "jsonLdWebsiteDescription": "Thoughtful, personal online Quran learning.",
+    "areaServed": "Worldwide",
+    "knowsAbout": {
+      "recitation": "Quran recitation",
+      "tajwid": "Tajwīd",
+      "memorisation": "Quran memorisation",
+      "arabic": "Quranic Arabic",
+      "ijazah": "Quranic Ijazah",
+      "studies": "Quranic studies"
     }
   },
-  "contact": {
-    "title": "Talk to us",
-    "description": "Tell us what you are building and we will get back to you.",
-    "submit": "Send message",
-    "success": "Thanks {{name}}, we received your message.",
-    "successFallbackName": "there",
-    "fields": {
-      "name": {
-        "label": "Name",
-        "placeholder": "Ada Lovelace"
+  "brand": {
+    "homeAria": "Nūr Path home"
+  },
+  "nav": {
+    "primaryAria": "Primary navigation",
+    "mobileAria": "Mobile navigation",
+    "programs": "Programs",
+    "approach": "Our approach",
+    "guides": "Learning guides",
+    "about": "About",
+    "bookConsultation": "Book a free consultation",
+    "closeMenu": "Close menu",
+    "openMenu": "Open menu"
+  },
+  "hero": {
+    "imageAlt": "A learner reflecting on Quran study at a sunlit desk",
+    "eyebrow": "Personal Quran learning",
+    "title": "Learn with clarity.",
+    "titleEmphasis": "Grow with purpose.",
+    "subtitle": "Live Quran, tajwīd, and Arabic learning for non-native speakers, combining authentic instruction with flexible online study.",
+    "startJourney": "Start your journey",
+    "seeHow": "See how it works",
+    "oneToOne": "1-to-1 & small groups",
+    "flexible": "Flexible schedules"
+  },
+  "stats": {
+    "learners": {
+      "value": "5,000+",
+      "label": "Learners supported"
+    },
+    "countries": {
+      "value": "30+",
+      "label": "Countries worldwide"
+    },
+    "teachers": {
+      "value": "50+",
+      "label": "Qualified teachers"
+    },
+    "programmes": {
+      "value": "15+",
+      "label": "Learning programmes"
+    }
+  },
+  "about": {
+    "eyebrow": "More than lessons",
+    "title": "A lifelong connection,",
+    "titleEmphasis": "beautifully nurtured.",
+    "body": "Strong Quran learning grows through a steady rhythm: clear foundations, focused practice, regular review, and understanding that deepens reflection.",
+    "features": {
+      "rhythm": {
+        "title": "Sustainable rhythm",
+        "text": "Small, repeatable goals that fit real schedules."
       },
-      "email": {
-        "label": "Email",
-        "placeholder": "ada@example.com"
+      "progression": {
+        "title": "Focused progression",
+        "text": "One rule, passage, or pattern at a time."
       },
-      "interest": {
-        "label": "Interest",
-        "forms": "Forms",
-        "tables": "Data tables",
-        "both": "Both"
-      },
-      "message": {
-        "label": "Message",
-        "placeholder": "What would you like to build?"
-      },
-      "updates": {
-        "label": "Send me product updates"
+      "reflection": {
+        "title": "Deeper reflection",
+        "text": "Vocabulary and meaning connected to recitation."
       }
     }
   },
-  "features": {
-    "formBuilder": "Form Builder",
-    "dataTable": "Data Table Builder",
-    "landing": "Landing",
-    "package": "Package",
-    "app": "App",
-    "ready": "Ready"
+  "programs": {
+    "eyebrow": "Learning pathways",
+    "title": "A path shaped around",
+    "titleEmphasis": "your goals.",
+    "intro": "Build a memorisation rhythm, refine your pronunciation, or understand more of the Arabic you recite.",
+    "items": {
+      "01": {
+        "title": "Memorise consistently",
+        "arabic": "حِفْظ",
+        "description": "Set a realistic daily target, balance new passages with revision, and build a steady routine that protects long-term recall.",
+        "meta": "Sustainable pace · Structured revision"
+      },
+      "02": {
+        "title": "Refine your tajwīd",
+        "arabic": "تَجْوِيد",
+        "description": "Begin with articulation points, practise one rule in short passages, and use regular correction before habits become fixed.",
+        "meta": "Beginner friendly · Guided correction"
+      },
+      "03": {
+        "title": "Understand Quranic Arabic",
+        "arabic": "عَرَبِيَّة",
+        "description": "Grow recurring Quranic vocabulary, recognise Arabic roots and patterns, and connect language study directly to the verses you recite.",
+        "meta": "Vocabulary · Roots · Reflection"
+      },
+      "04": {
+        "title": "Pursue Quranic ijāzah",
+        "arabic": "إِجَازَة",
+        "description": "Follow an advanced pathway in precise recitation, intensive personal review, and study toward a formal chain of transmission.",
+        "meta": "Advanced · One year or more"
+      },
+      "05": {
+        "title": "Explore Quranic studies",
+        "arabic": "عُلُومُ الْقُرْآن",
+        "description": "Study foundations of tafsīr, reasons for revelation, Makki and Madani passages, and an introduction to the Quranic sciences.",
+        "meta": "Intermediate–advanced · 4–8 months"
+      }
+    }
+  },
+  "approach": {
+    "imageAlt": "A mother and daughter studying Quran together",
+    "badgeValue": "1:1+",
+    "badgeText": "Personal or small-group study.",
+    "eyebrow": "How learning feels",
+    "title": "Authentic teaching.",
+    "titleEmphasis": "Modern access.",
+    "body": "Effective study follows a clear sequence: listen carefully, understand the lesson, practise it in short passages, and use correction to refine what you hear and recite.",
+    "steps": {
+      "01": {
+        "title": "Learn with qualified teachers",
+        "text": "Study with experienced teachers shaped by Al-Madinah programmes and Quranic qualifications."
+      },
+      "02": {
+        "title": "Choose a fitting format",
+        "text": "Use focused one-to-one teaching or a small-group setting, with morning and evening options."
+      },
+      "03": {
+        "title": "Progress with structure",
+        "text": "Follow a programme designed for your level, with practical correction and regular follow-up."
+      }
+    }
+  },
+  "learners": {
+    "eyebrow": "Learning for every season",
+    "title": "A welcoming space for",
+    "titleEmphasis": "every learner.",
+    "body": "Progress does not require mastering everything at once. Begin with recurring words, familiar passages, or a modest memorisation target, then build steadily from there.",
+    "items": {
+      "memorisation": "Daily memorisation targets",
+      "revision": "Weekly revision cycles",
+      "articulation": "Letter articulation practice",
+      "vocabulary": "Arabic roots and vocabulary"
+    },
+    "cta": "Find your learning path",
+    "imageAlt": "A young learner enjoying an online Quran lesson"
+  },
+  "journal": {
+    "eyebrow": "Learning journal",
+    "title": "Practical insight.",
+    "titleEmphasis": "Deeper reflection.",
+    "items": {
+      "memorisation": {
+        "category": "Quran memorisation",
+        "title": "Build a consistent memorisation routine",
+        "summary": "Choose a daily target you can sustain, give revision equal weight, and use a simple weekly review cycle.",
+        "detail": "6 min read · June 12, 2026"
+      },
+      "tajwid": {
+        "category": "Tajwīd",
+        "title": "Begin tajwīd in the right sequence",
+        "summary": "Start with where letters are formed, work through one rule at a time, and seek regular feedback on short passages.",
+        "detail": "5 min read · June 5, 2026"
+      },
+      "arabic": {
+        "category": "Quranic Arabic",
+        "title": "Understand more of what you recite",
+        "summary": "Learn recurring vocabulary in context, notice root patterns, and let reading, listening, and meaning reinforce one another.",
+        "detail": "7 min read · May 28, 2026"
+      }
+    },
+    "badges": {
+      "practice": "Clear, sequenced practice",
+      "guidance": "Guidance for learners and families",
+      "review": "Regular correction and review"
+    }
+  },
+  "cta": {
+    "eyebrow": "Explore the right programme",
+    "title": "Begin gently.",
+    "titleEmphasis": "Build beautifully.",
+    "body": "Share your level and goals to find a suitable pathway in memorisation, tajwīd, Arabic, ijāzah, or Quranic studies.",
+    "button": "Explore enrolment options",
+    "note": "Flexible schedules · Online worldwide"
+  },
+  "footer": {
+    "tagline": "Personal Quran teaching, rooted in care, clarity, and a sincere love of learning.",
+    "explore": "Explore",
+    "formats": "Learning formats",
+    "oneToOne": "One-to-one lessons",
+    "smallGroup": "Small-group classes",
+    "online": "Online · Worldwide",
+    "copyright": "© {{year}} Nūr Path. All rights reserved.",
+    "intention": "Learning with intention, wherever you are."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "goHome": "Go home"
+  },
+  "error": {
+    "title": "This page didn't load",
+    "description": "Something went wrong on our end. You can try refreshing or head back home.",
+    "tryAgain": "Try again",
+    "goHome": "Go home"
   }
 }
