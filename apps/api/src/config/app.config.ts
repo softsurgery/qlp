@@ -19,4 +19,12 @@ export default registerAs('app', (): Record<string, unknown> => ({
     accessExpiration: process.env.JWT_ACCESS_EXPIRATION ?? '1d',
     refreshExpiration: process.env.JWT_REFRESH_EXPIRATION ?? '3d',
   },
+
+  passwordReset: {
+    secret: process.env.PASSWORD_RESET_SECRET ?? process.env.JWT_SECRET ?? 'secret',
+    expiration: process.env.PASSWORD_RESET_EXPIRATION ?? '1h',
+  },
+
+  webAppUrl: process.env.WEB_APP_URL ?? 'http://localhost:5173',
+  adminAppUrl: process.env.ADMIN_APP_URL ?? 'http://localhost:5174',
 }));

@@ -22,6 +22,8 @@ import { RequestResetTokenDto } from '../dtos/web/request-reset-token.dto';
 import { ResponseResetTokenDto } from '../dtos/web/response-reset-token.dto';
 import { RequestCheckResetTokenDto } from '../dtos/web/request-check-reset-token.dto';
 import { ResponseCheckResetTokenDto } from '../dtos/web/response-check-reset-token.dto';
+import { RequestResetPasswordDto } from '../dtos/web/request-reset-password.dto';
+import { ResponseResetPasswordDto } from '../dtos/web/response-reset-password.dto';
 import { AbstractUserEntity } from 'src/shared/abstract-user-management/entities/abstract-user.entity';
 import { identifyUser } from 'src/shared/abstract-user-management/utils/identify-user';
 
@@ -140,5 +142,25 @@ export class AuthController {
     @Body() body: RequestCheckResetTokenDto,
   ): Promise<ResponseCheckResetTokenDto> {
     return this.authService.checkRestTokenValidity(body);
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Reset password',
+    description: 'Set a new password using a valid reset token.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset successfully.',
+    type: ResponseResetPasswordDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Token is invalid or expired.',
+  })
+  async resetPassword(@Body() body: RequestResetPasswordDto): Promise<ResponseResetPasswordDto> {
+    return this.authService.resetPassword(body);
   }
 }

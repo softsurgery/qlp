@@ -31,6 +31,12 @@ import { Response } from 'express';
 import { RequestClientOAuthDto } from '../dtos/client/request-client-oauth.dto';
 import { ConfigService } from '@nestjs/config';
 import { NotificationType } from 'src/app/enums/notification-type.enum';
+import { RequestResetTokenDto } from '../dtos/web/request-reset-token.dto';
+import { ResponseResetTokenDto } from '../dtos/web/response-reset-token.dto';
+import { RequestCheckResetTokenDto } from '../dtos/web/request-check-reset-token.dto';
+import { ResponseCheckResetTokenDto } from '../dtos/web/response-check-reset-token.dto';
+import { RequestResetPasswordDto } from '../dtos/web/request-reset-password.dto';
+import { ResponseResetPasswordDto } from '../dtos/web/response-reset-password.dto';
 
 @ApiTags('client-auth')
 @Controller({ version: '1', path: '/client-auth' })
@@ -214,5 +220,63 @@ export class ClientAuthController {
   })
   async verifyEmail(@Query('token') token: string, @Res() res: Response) {
     return res.redirect(await this.clientAuthService.verifyEmail(token));
+  }
+
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Request password reset',
+    description: 'Send an email with a link to reset the user password.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset email sent.',
+    type: ResponseResetTokenDto,
+  })
+  async requestPasswordReset(@Body() body: RequestResetTokenDto): Promise<ResponseResetTokenDto> {
+    return this.clientAuthService.requestResetToken(body);
+  }
+
+  @Public()
+  @Post('check-reset-token')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Check reset token validity',
+    description: 'Check if the reset token is valid.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Token is valid.',
+    type: ResponseCheckResetTokenDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Token is invalid.',
+  })
+  async checkResetToken(
+    @Body() body: RequestCheckResetTokenDto,
+  ): Promise<ResponseCheckResetTokenDto> {
+    return this.clientAuthService.checkRestTokenValidity(body);
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Reset password',
+    description: 'Set a new password using a valid reset token.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset successfully.',
+    type: ResponseResetPasswordDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Token is invalid or expired.',
+  })
+  async resetPassword(@Body() body: RequestResetPasswordDto): Promise<ResponseResetPasswordDto> {
+    return this.clientAuthService.resetPassword(body);
   }
 }

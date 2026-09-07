@@ -9,6 +9,8 @@ import { UserNotFoundException } from 'src/shared/abstract-user-management/error
 import { ResponseResetTokenDto } from '../dtos/web/response-reset-token.dto';
 import { ResponseCheckResetTokenDto } from '../dtos/web/response-check-reset-token.dto';
 import { RequestCheckResetTokenDto } from '../dtos/web/request-check-reset-token.dto';
+import { RequestResetPasswordDto } from '../dtos/web/request-reset-password.dto';
+import { ResponseResetPasswordDto } from '../dtos/web/response-reset-password.dto';
 import { ForgetPasswordTemplateProps } from 'src/assets/templates/forget-password/type';
 import { identifyUser } from 'src/shared/abstract-user-management/utils/identify-user';
 import { ResponseClientSigninDto } from '../dtos/client/response-client-signin.dto';
@@ -372,8 +374,8 @@ export class ClientAuthService {
         },
       );
 
-      const webAppUrl = this.configService.get('app.webAppUrl');
-      const resetLink = `${webAppUrl}?token=${resetToken}`;
+      const webAppUrl = this.configService.get<string>('app.webAppUrl');
+      const resetLink = `${webAppUrl}/auth?target=reset-password&token=${resetToken}`;
 
       //gather informations
 
@@ -432,6 +434,32 @@ export class ClientAuthService {
       };
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired reset token' + error);
+    }
+  }
+
+  async resetPassword(
+    requestResetPasswordDto: RequestResetPasswordDto,
+  ): Promise<ResponseResetPasswordDto> {
+    try {
+      const payload: { sub: string; email: string } = await this.jwtService.verifyAsync(
+        requestResetPasswordDto.token,
+        {
+          secret: this.configService.get('app.passwordReset.secret'),
+        },
+      );
+
+      const user = await this.userRepository.findOneById(payload.sub);
+      if (!user) {
+        throw new UnauthorizedException('User does not exist');
+      }
+
+      await this.userService.changePassword(user.id, requestResetPasswordDto.password);
+      return { success: true, message: 'Password reset successfully' };
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Invalid or expired reset token');
     }
   }
 }
