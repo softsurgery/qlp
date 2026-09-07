@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthSession } from "./hooks/useAuth";
 import Layout from "./components/layout/Layout";
 import AuthPage from "./pages/AuthPage";
+import SignUpPage from "./pages/SignUpPage";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, user } = useAuthSession();
@@ -26,6 +27,14 @@ export default function App() {
         element={
           <GuestRoute>
             <AuthPage />
+          </GuestRoute>
+        }
+      />
+      <Route
+        path="/sign-up"
+        element={
+          <GuestRoute>
+            <SignUpPage />
           </GuestRoute>
         }
       />

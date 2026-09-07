@@ -32,7 +32,7 @@ function clearSession() {
   writeStoredUser(null);
 }
 
-const api = createApiClient({
+export const api = createApiClient({
   baseURL: import.meta.env.VITE_API_URL || "/api",
   refreshPath: "/client-auth/refresh-token",
   onUnauthorized: () => {

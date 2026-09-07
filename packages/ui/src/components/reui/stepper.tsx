@@ -212,6 +212,8 @@ function StepperItem({
   )
 }
 
+StepperItem.displayName = "StepperItem"
+
 type StepperTriggerProps = useRender.ComponentProps<"button">
 
 function StepperTrigger({

@@ -31,7 +31,15 @@
     "noAccount": "ليس لديك حساب؟",
     "hasAccount": "لديك حساب بالفعل؟",
     "accountCreated": "تم إنشاء الحساب. تحقق من بريدك الإلكتروني ثم سجّل الدخول.",
-    "signUpFailed": "تعذر إنشاء الحساب"
+    "signUpFailed": "تعذر إنشاء الحساب",
+    "next": "التالي",
+    "back": "رجوع",
+    "stepProfile": "اسمك",
+    "stepProfileDescription": "أدخل اسمك الأول واسم العائلة",
+    "stepAccount": "الحساب",
+    "stepAccountDescription": "اختر اسم مستخدم وبريدًا إلكترونيًا",
+    "stepPassword": "كلمة المرور",
+    "stepPasswordDescription": "أنشئ كلمة مرور آمنة"
   },
   "dashboard": {
     "welcome": "مرحباً بعودتك",

@@ -31,7 +31,15 @@
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "accountCreated": "Account created. Check your email to verify, then sign in.",
-    "signUpFailed": "Unable to create account"
+    "signUpFailed": "Unable to create account",
+    "next": "Next",
+    "back": "Back",
+    "stepProfile": "Your name",
+    "stepProfileDescription": "Enter your first and last name",
+    "stepAccount": "Account",
+    "stepAccountDescription": "Choose a username and email",
+    "stepPassword": "Password",
+    "stepPasswordDescription": "Create a secure password"
   },
   "dashboard": {
     "welcome": "Welcome back",

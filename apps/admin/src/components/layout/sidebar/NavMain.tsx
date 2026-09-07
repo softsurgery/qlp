@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { NavLink, useLocation, useMatch } from "react-router-dom";
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import {
@@ -22,6 +21,7 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from "@qlp/ui/components/sidebar";
+import React from "react";
 
 export type NavSubItem = {
   to: string;
@@ -86,7 +86,7 @@ function CollapsibleNavItem({ item }: { item: NavItem }) {
   const isChildActive = children.some((child) =>
     isPathActive(pathname, child.to),
   );
-  const [open, setOpen] = useState(isChildActive);
+  const [open, setOpen] = React.useState(isChildActive);
 
   if (state === "collapsed" && !isMobile) {
     return (

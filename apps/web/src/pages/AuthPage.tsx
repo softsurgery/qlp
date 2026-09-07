@@ -1,4 +1,5 @@
 import { BookOpen } from "lucide-react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   AuthenticationLayout,
@@ -9,12 +10,16 @@ import {
 } from "@qlp/components";
 import { ModeToggle } from "@qlp/ui";
 import { AuthenticationForm } from "../components/auth/AuthenticationForm";
-import { SignUpForm } from "../components/auth/SignUpForm";
 import { authApi } from "../lib/api";
 
 export default function AuthPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { screen, token, goTo } = useAuthScreen();
+
+  if (screen === "sign-up") {
+    return <Navigate to="/sign-up" replace />;
+  }
 
   return (
     <AuthenticationLayout
@@ -33,10 +38,9 @@ export default function AuthPage() {
       {screen === "login" && (
         <AuthenticationForm
           onForgotPassword={() => goTo("forgot-password")}
-          onSignUp={() => goTo("sign-up")}
+          onSignUp={() => navigate("/sign-up")}
         />
       )}
-      {screen === "sign-up" && <SignUpForm onLogin={() => goTo("login")} />}
       {screen === "forgot-password" && (
         <ForgotPasswordForm
           onCancel={() => goTo("login")}
