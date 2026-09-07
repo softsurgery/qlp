@@ -243,7 +243,7 @@ export default function HomePage() {
           width={1600}
           height={1200}
           fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-cover object-center rtl:-scale-x-100"
         />
         <div className="hero-shade absolute inset-0" />
         <div
@@ -420,7 +420,7 @@ export default function HomePage() {
               alt={t("approach.imageAlt")}
               width={1200}
               height={900}
-              className="aspect-[4/5] w-full object-cover"
+              className="aspect-[4/5] w-full object-cover rtl:-scale-x-100"
             />
             <div className="absolute -bottom-6 end-4 max-w-[13rem] bg-brand-gold p-5 text-brand-ink sm:-end-5 sm:p-6">
               <p className="font-display text-4xl font-semibold">
@@ -501,7 +501,7 @@ export default function HomePage() {
               alt={t("learners.imageAlt")}
               width={1200}
               height={900}
-              className="aspect-[4/5] w-full object-cover"
+              className="aspect-[4/5] w-full object-cover rtl:-scale-x-100"
             />
           </div>
         </div>
