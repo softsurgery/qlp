@@ -3,7 +3,12 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { Copy } from "lucide-react";
-import { buildDataTableFilterString, DataTable, useDataTableState, type DataTableConfig } from "@qlp/datatable-builder";
+import {
+  buildDataTableFilterString,
+  DataTable,
+  useDataTableState,
+  type DataTableConfig,
+} from "@qlp/datatable-builder";
 import { useBreadcrumb, useIntro, useUI } from "@qlp/contexts";
 import { useDebounce } from "@qlp/hooks";
 import type {
@@ -35,7 +40,10 @@ export default function Roles({ className }: RolesProps) {
   React.useEffect(() => {
     setIntro?.(t("page.title"), t("page.description"));
     setRoutes?.([
-      { title: tUser("userManagement.nav.title"), href: "/user-management/users" },
+      {
+        title: tUser("userManagement.nav.title"),
+        href: "/user-management/users",
+      },
       { title: t("page.title") },
     ]);
     setEnableMainOverflow?.(false);
@@ -254,7 +262,9 @@ export default function Roles({ className }: RolesProps) {
     isRolesPending || paging || resizing || searching || sorting || filtering;
 
   return (
-    <div className={cn("flex min-h-0 flex-1 flex-col overflow-hidden", className)}>
+    <div
+      className={cn("flex min-h-0 flex-1 flex-col overflow-hidden", className)}
+    >
       <DataTable
         className="flex min-h-0 flex-1 flex-col overflow-hidden p-1"
         containerClassName="min-h-0 overflow-auto"
