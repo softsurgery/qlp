@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -6,7 +7,6 @@ import { PasswordField } from "@qlp/form-builder";
 import { AuthFormHeader } from "@qlp/components";
 import { loginSchema } from "@/types/validations/auth.validation";
 import { useSignIn } from "@/hooks/content/useAuth";
-import React from "react";
 
 interface AuthenticationFormProps {
   className?: string;
@@ -17,8 +17,7 @@ export function AuthenticationForm({
   className,
   onForgotPassword,
 }: AuthenticationFormProps) {
-  const { t } = useTranslation("auth");
-  const { t: tAuth } = useTranslation("components");
+  const { t: tAuth } = useTranslation("auth");
   const navigate = useNavigate();
   const signIn = useSignIn();
   const [usernameOrEmail, setUsernameOrEmail] = React.useState("");
@@ -34,7 +33,7 @@ export function AuthenticationForm({
       { usernameOrEmail, password },
       {
         onSuccess: () => {
-          toast.success(tAuth("auth.welcomeBack"));
+          toast.success(tAuth("welcomeBack"));
           navigate("/");
         },
         onError: (error) => {
@@ -60,13 +59,13 @@ export function AuthenticationForm({
   return (
     <div className={cn("flex flex-col gap-6", className)}>
       <AuthFormHeader
-        title={tAuth("auth.loginTitle")}
-        description={t("loginDescription")}
+        title={tAuth("loginTitle")}
+        description={tAuth("loginDescription")}
       />
 
       <form onSubmit={handleFormSubmit} className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="email">{tAuth("auth.emailOrUsername")}</Label>
+          <Label htmlFor="email">{tAuth("emailOrUsername")}</Label>
           <Input
             id="email"
             type="text"
@@ -80,13 +79,13 @@ export function AuthenticationForm({
 
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="password">{tAuth("auth.password")}</Label>
+            <Label htmlFor="password">{tAuth("password")}</Label>
             <button
               type="button"
               className="ms-auto text-sm underline-offset-4 hover:underline"
               onClick={onForgotPassword}
             >
-              {tAuth("auth.forgotPassword")}
+              {tAuth("forgotPassword")}
             </button>
           </div>
           <PasswordField
@@ -105,7 +104,7 @@ export function AuthenticationForm({
           className="w-full"
           disabled={signIn.isPending || !isFormValid}
         >
-          {tAuth("auth.login")}
+          {tAuth("login")}
         </Button>
       </form>
     </div>

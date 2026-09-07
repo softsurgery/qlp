@@ -10,7 +10,9 @@ export {
 } from "./auth";
 export type {
   AuthenticationLayoutProps,
+  ForgotPasswordFormLabels,
   ForgotPasswordFormProps,
+  ResetPasswordFormLabels,
   ResetPasswordFormProps,
   AuthScreen,
 } from "./auth";

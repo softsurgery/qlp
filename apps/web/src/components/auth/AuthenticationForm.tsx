@@ -21,7 +21,6 @@ export function AuthenticationForm({
   onSignUp,
 }: AuthenticationFormProps) {
   const { t } = useTranslation();
-  const { t: tShared } = useTranslation("components");
   const navigate = useNavigate();
   const signIn = useSignIn();
   const [email, setEmail] = useState("");
@@ -34,7 +33,7 @@ export function AuthenticationForm({
       { email, password },
       {
         onSuccess: () => {
-          toast.success(tShared("auth.welcomeBack"));
+          toast.success(t("auth.welcomeBack"));
           navigate("/");
         },
         onError: (error: ServerErrorResponse) => {
@@ -60,8 +59,8 @@ export function AuthenticationForm({
   return (
     <div className={cn("flex flex-col gap-6", className)}>
       <AuthFormHeader
-        title={tShared("auth.loginTitle")}
-        description={tShared("auth.loginDescription")}
+        title={t("auth.loginTitle")}
+        description={t("auth.loginDescription")}
       />
 
       <form onSubmit={handleFormSubmit} className="grid gap-4">
@@ -86,7 +85,7 @@ export function AuthenticationForm({
               className="ms-auto text-sm underline-offset-4 hover:underline"
               onClick={onForgotPassword}
             >
-              {tShared("auth.forgotPassword")}
+              {t("auth.forgotPassword")}
             </button>
           </div>
           <PasswordField

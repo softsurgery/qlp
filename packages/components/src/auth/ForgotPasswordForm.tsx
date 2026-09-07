@@ -1,11 +1,22 @@
-import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Button, Input, Label, cn } from "@qlp/ui";
 import { AuthFormHeader } from "./AuthFormHeader";
 import React from "react";
 
+export interface ForgotPasswordFormLabels {
+  title: string;
+  description: string;
+  emailOrUsername: string;
+  cancel: string;
+  sendResetLink: string;
+  sending: string;
+  identifierRequired: string;
+  resetEmailSent: (email: string) => string;
+}
+
 export interface ForgotPasswordFormProps {
   className?: string;
+  labels: ForgotPasswordFormLabels;
   onCancel: () => void;
   onSubmit: (usernameOrEmail: string) => Promise<{
     email?: string;
@@ -16,17 +27,17 @@ export interface ForgotPasswordFormProps {
 
 export function ForgotPasswordForm({
   className,
+  labels,
   onCancel,
   onSubmit,
 }: ForgotPasswordFormProps) {
-  const { t } = useTranslation("components");
   const [usernameOrEmail, setUsernameOrEmail] = React.useState("");
   const [isPending, setIsPending] = React.useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!usernameOrEmail.trim()) {
-      toast.error(t("auth.identifierRequired"));
+      toast.error(labels.identifierRequired);
       return;
     }
 
@@ -34,14 +45,14 @@ export function ForgotPasswordForm({
     try {
       const result = await onSubmit(usernameOrEmail.trim());
       if (result.success === false) {
-        toast.error(result.message || t("auth.identifierRequired"));
+        toast.error(result.message || labels.identifierRequired);
         return;
       }
       toast.success(
         result.message ||
           (result.email
-            ? t("auth.resetEmailSent", { email: result.email })
-            : t("auth.sendResetLink")),
+            ? labels.resetEmailSent(result.email)
+            : labels.sendResetLink),
       );
       onCancel();
     } catch (error: any) {
@@ -54,14 +65,11 @@ export function ForgotPasswordForm({
 
   return (
     <div className={cn("flex w-full flex-col gap-6", className)}>
-      <AuthFormHeader
-        title={t("auth.forgotTitle")}
-        description={t("auth.forgotDescription")}
-      />
+      <AuthFormHeader title={labels.title} description={labels.description} />
 
       <form onSubmit={handleSubmit} className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="email">{t("auth.emailOrUsername")}</Label>
+          <Label htmlFor="email">{labels.emailOrUsername}</Label>
           <Input
             id="email"
             type="text"
@@ -79,10 +87,10 @@ export function ForgotPasswordForm({
             onClick={onCancel}
             disabled={isPending}
           >
-            {t("auth.cancel")}
+            {labels.cancel}
           </Button>
           <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? t("auth.sending") : t("auth.sendResetLink")}
+            {isPending ? labels.sending : labels.sendResetLink}
           </Button>
         </div>
       </form>

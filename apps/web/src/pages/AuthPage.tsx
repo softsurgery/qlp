@@ -43,6 +43,16 @@ export default function AuthPage() {
       )}
       {screen === "forgot-password" && (
         <ForgotPasswordForm
+          labels={{
+            title: t("auth.forgotTitle"),
+            description: t("auth.forgotDescription"),
+            emailOrUsername: t("auth.emailOrUsername"),
+            cancel: t("auth.cancel"),
+            sendResetLink: t("auth.sendResetLink"),
+            sending: t("auth.sending"),
+            identifierRequired: t("auth.identifierRequired"),
+            resetEmailSent: (email) => t("auth.resetEmailSent", { email }),
+          }}
           onCancel={() => goTo("login")}
           onSubmit={(usernameOrEmail) =>
             authApi.forgotPassword({ usernameOrEmail })
@@ -51,6 +61,18 @@ export default function AuthPage() {
       )}
       {screen === "reset-password" && token && (
         <ResetPasswordForm
+          labels={{
+            title: t("auth.resetTitle"),
+            description: t("auth.resetDescription"),
+            password: t("auth.password"),
+            confirmPassword: t("auth.confirmPassword"),
+            passwordMismatch: t("auth.passwordMismatch"),
+            passwordRequired: t("auth.passwordRequired"),
+            passwordsDoNotMatch: t("auth.passwordsDoNotMatch"),
+            passwordMinLength: t("auth.passwordMinLength"),
+            cancel: t("auth.cancel"),
+            reset: t("auth.reset"),
+          }}
           token={token}
           onCancel={() => goTo("login")}
           onSubmit={(resetToken, password) =>

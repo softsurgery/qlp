@@ -1,13 +1,26 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Button, Label, cn } from "@qlp/ui";
 import { PasswordField } from "@qlp/form-builder";
 import { AuthFormHeader } from "./AuthFormHeader";
 
+export interface ResetPasswordFormLabels {
+  title: string;
+  description: string;
+  password: string;
+  confirmPassword: string;
+  passwordMismatch: string;
+  passwordRequired: string;
+  passwordsDoNotMatch: string;
+  passwordMinLength: string;
+  cancel: string;
+  reset: string;
+}
+
 export interface ResetPasswordFormProps {
   className?: string;
   token: string;
+  labels: ResetPasswordFormLabels;
   onCancel: () => void;
   onSubmit: (
     token: string,
@@ -18,10 +31,10 @@ export interface ResetPasswordFormProps {
 export function ResetPasswordForm({
   className,
   token,
+  labels,
   onCancel,
   onSubmit,
 }: ResetPasswordFormProps) {
-  const { t } = useTranslation("components");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [isPending, setIsPending] = React.useState(false);
@@ -29,22 +42,22 @@ export function ResetPasswordForm({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!password) {
-      toast.error(t("auth.passwordRequired"));
+      toast.error(labels.passwordRequired);
       return;
     }
     if (password !== confirmPassword) {
-      toast.error(t("auth.passwordsDoNotMatch"));
+      toast.error(labels.passwordsDoNotMatch);
       return;
     }
     if (password.length < 6) {
-      toast.error(t("auth.passwordMinLength"));
+      toast.error(labels.passwordMinLength);
       return;
     }
 
     setIsPending(true);
     try {
       const result = await onSubmit(token, password);
-      toast.success(result.message || t("auth.reset"));
+      toast.success(result.message || labels.reset);
       onCancel();
     } catch (error: any) {
       toast.error(error?.message);
@@ -55,14 +68,11 @@ export function ResetPasswordForm({
 
   return (
     <div className={cn("flex w-full flex-col gap-6", className)}>
-      <AuthFormHeader
-        title={t("auth.resetTitle")}
-        description={t("auth.resetDescription")}
-      />
+      <AuthFormHeader title={labels.title} description={labels.description} />
 
       <form onSubmit={handleSubmit} className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="password">{t("auth.password")}</Label>
+          <Label htmlFor="password">{labels.password}</Label>
           <PasswordField
             id="password"
             value={password}
@@ -72,7 +82,7 @@ export function ResetPasswordForm({
           />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="confirm-password">{t("auth.confirmPassword")}</Label>
+          <Label htmlFor="confirm-password">{labels.confirmPassword}</Label>
           <PasswordField
             id="confirm-password"
             value={confirmPassword}
@@ -83,7 +93,7 @@ export function ResetPasswordForm({
         </div>
         {password !== confirmPassword && (
           <span className="text-xs font-medium leading-3 text-destructive">
-            {t("auth.passwordMismatch")}
+            {labels.passwordMismatch}
           </span>
         )}
 
@@ -95,10 +105,10 @@ export function ResetPasswordForm({
             onClick={onCancel}
             disabled={isPending}
           >
-            {t("auth.cancel")}
+            {labels.cancel}
           </Button>
           <Button type="submit" className="w-full" disabled={isPending}>
-            {t("auth.reset")}
+            {labels.reset}
           </Button>
         </div>
       </form>
