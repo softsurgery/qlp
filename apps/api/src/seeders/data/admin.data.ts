@@ -11,6 +11,7 @@ export const adminSeed = {
     password: 'superpassword',
     roleId: BasicRoles.Admin,
     isActive: true,
+    isApproved: true,
   },
   extended: {
     bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
