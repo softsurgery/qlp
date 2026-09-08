@@ -11,13 +11,17 @@ export class RouterModule {
   static forRoot(): DynamicModule {
     const imports: (DynamicModule | Type | Promise<DynamicModule> | ForwardReference)[] = [];
 
+    const routeModules = [
+      RoutesModule,
+      RoutesTestModule,
+      RoutesPublicModule,
+      RoutesAdminModule,
+      RoutesCallbackModule,
+    ];
+
     if (process.env.HTTP_ENABLE === 'true') {
       imports.push(
-        RoutesModule,
-        RoutesTestModule,
-        RoutesPublicModule,
-        RoutesAdminModule,
-        RoutesCallbackModule,
+        ...routeModules,
         NestJsRouterModule.register([
           {
             path: '/',
@@ -46,7 +50,7 @@ export class RouterModule {
     return {
       module: RouterModule,
       providers: [],
-      exports: [],
+      exports: process.env.HTTP_ENABLE === 'true' ? routeModules : [],
       controllers: [],
       imports,
     };

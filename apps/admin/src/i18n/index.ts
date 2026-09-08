@@ -5,6 +5,7 @@ import { componentsResources } from "@qlp/components/i18n";
 import { datatableResources } from "@qlp/datatable-builder/i18n";
 import { formBuilderResources } from "@qlp/form-builder/i18n";
 import { uiResources } from "@qlp/ui/i18n";
+import { curriculumResources } from "@qlp/curriculum/i18n";
 import { i18nConfig } from "./config";
 import authAr from "./locales/ar/auth.json";
 import roleAr from "./locales/ar/role.json";
@@ -25,6 +26,7 @@ void i18n
         datatable: datatableResources.en,
         "form-builder": formBuilderResources.en,
         components: componentsResources.en,
+        curriculum: curriculumResources.en,
         "user-management": userManagementEn,
         role: roleEn,
         auth: authEn,
@@ -34,6 +36,7 @@ void i18n
         datatable: datatableResources.ar,
         "form-builder": formBuilderResources.ar,
         components: componentsResources.ar,
+        curriculum: curriculumResources.ar,
         "user-management": userManagementAr,
         role: roleAr,
         auth: authAr,

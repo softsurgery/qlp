@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
         "@qlp/api-client",
         "@qlp/components",
         "@qlp/contexts",
+        "@qlp/curriculum",
         "@qlp/datatable-builder",
         "@qlp/form-builder",
         "@qlp/hooks",

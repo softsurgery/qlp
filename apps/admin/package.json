@@ -13,6 +13,7 @@
     "@qlp/api-client": "workspace:*",
     "@qlp/components": "workspace:*",
     "@qlp/contexts": "workspace:*",
+    "@qlp/curriculum": "workspace:*",
     "@qlp/datatable-builder": "workspace:*",
     "@qlp/form-builder": "workspace:*",
     "@qlp/hooks": "workspace:*",

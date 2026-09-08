@@ -17,7 +17,10 @@ export default defineConfig(({ mode }) => {
       exclude: [
         "@qlp/api-client",
         "@qlp/components",
+        "@qlp/curriculum",
+        "@qlp/datatable-builder",
         "@qlp/form-builder",
+        "@qlp/contexts",
         "@qlp/hooks",
         "@qlp/lib",
         "@qlp/ui",

@@ -11,6 +11,7 @@ export const i18nConfig = {
     "datatable",
     "form-builder",
     "components",
+    "curriculum",
     "user-management",
     "role",
     "auth",

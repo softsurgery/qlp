@@ -3,6 +3,9 @@ import { useAuthSession } from "./hooks/useAuth";
 import Layout from "./components/layout/Layout";
 import AuthPage from "./pages/AuthPage";
 import SignUpPage from "./pages/SignUpPage";
+import CurriculumPage from "./pages/CurriculumPage";
+import CurriculumEditPage from "./pages/CurriculumEditPage";
+import CurriculumViewPage from "./pages/CurriculumViewPage";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, user } = useAuthSession();
@@ -47,8 +50,9 @@ export default function App() {
         }
       >
         <Route index element={<div>Dashboard</div>} />
-        <Route path="curriculum" element={<div>Curriculum</div>} />
-        <Route path="curriculum/:slug" element={<div>Track</div>} />
+        <Route path="curriculum" element={<CurriculumPage />} />
+        <Route path="curriculum/:id" element={<CurriculumViewPage />} />
+        <Route path="curriculum/:id/edit" element={<CurriculumEditPage />} />
         <Route path="lessons/:id" element={<div>Lesson</div>} />
         <Route path="tutors" element={<div>Tutors</div>} />
         <Route path="bookings" element={<div>Bookings</div>} />

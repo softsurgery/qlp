@@ -18,4 +18,5 @@ export type { UserResource } from "./resources/users.js";
 export type { RoleResource } from "./resources/roles.js";
 export type { PermissionResource } from "./resources/permission.js";
 export type { UploadResource } from "./resources/storage.js";
+export type { CurriculumResource } from "./resources/curriculum.js";
 export * from "./types/index.js";

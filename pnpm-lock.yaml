@@ -27,6 +27,9 @@ importers:
       '@qlp/contexts':
         specifier: workspace:*
         version: link:../../packages/contexts
+      '@qlp/curriculum':
+        specifier: workspace:*
+        version: link:../../packages/curriculum
       '@qlp/datatable-builder':
         specifier: workspace:*
         version: link:../../packages/datatable-builder
@@ -381,6 +384,15 @@ importers:
       '@qlp/components':
         specifier: workspace:*
         version: link:../../packages/components
+      '@qlp/contexts':
+        specifier: workspace:*
+        version: link:../../packages/contexts
+      '@qlp/curriculum':
+        specifier: workspace:*
+        version: link:../../packages/curriculum
+      '@qlp/datatable-builder':
+        specifier: workspace:*
+        version: link:../../packages/datatable-builder
       '@qlp/form-builder':
         specifier: workspace:*
         version: link:../../packages/form-builder
@@ -420,6 +432,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.56.2
         version: 5.102.8(react@18.3.1)
+      '@tanstack/react-table':
+        specifier: ^8.20.5
+        version: 8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -570,6 +585,67 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+
+  packages/curriculum:
+    dependencies:
+      '@qlp/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@qlp/components':
+        specifier: workspace:*
+        version: link:../components
+      '@qlp/contexts':
+        specifier: workspace:*
+        version: link:../contexts
+      '@qlp/datatable-builder':
+        specifier: workspace:*
+        version: link:../datatable-builder
+      '@qlp/form-builder':
+        specifier: workspace:*
+        version: link:../form-builder
+      '@qlp/hooks':
+        specifier: workspace:*
+        version: link:../hooks
+      '@qlp/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@tanstack/react-table':
+        specifier: ^8.20.5
+        version: 8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      i18next:
+        specifier: ^23.15.1
+        version: 23.16.8
+      lucide-react:
+        specifier: ^0.441.0
+        version: 0.441.0(react@18.3.1)
+      react-i18next:
+        specifier: ^15.0.2
+        version: 15.7.4(i18next@23.16.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)
+    devDependencies:
+      '@tanstack/react-query':
+        specifier: ^5.56.2
+        version: 5.102.8(react@18.3.1)
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.31)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      react-router-dom:
+        specifier: ^6.26.2
+        version: 6.30.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      sonner:
+        specifier: ^1.7.1
+        version: 1.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.5.3
         version: 5.9.3
