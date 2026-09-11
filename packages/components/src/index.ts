@@ -1,6 +1,3 @@
-export { BreadcrumbCommon } from "./BreadcrumbCommon";
-export { LanguageSwitcher } from "./LanguageSwitcher";
-export { Spinner } from "./Spinner";
 export {
   AuthenticationLayout,
   AuthFormHeader,
@@ -16,3 +13,5 @@ export type {
   ResetPasswordFormProps,
   AuthScreen,
 } from "./auth";
+
+export { BreadcrumbCommon, LanguageSwitcher, Spinner } from "./shared";

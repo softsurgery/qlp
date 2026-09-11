@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "@qlp/ui";
 import { useTranslation } from "react-i18next";
-import { i18nConfig, resolveSupportedLng } from "./i18n/config";
+import { i18nConfig, resolveSupportedLng } from "../i18n/config";
 
 interface LanguageSwitcherProps {
   className?: string;
