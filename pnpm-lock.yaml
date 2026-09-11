@@ -238,6 +238,9 @@ importers:
       uuid:
         specifier: ^11.0.3
         version: 11.1.1
+      xstate:
+        specifier: ^5.32.6
+        version: 5.32.6
     devDependencies:
       '@eslint/js':
         specifier: ^9.18.0
@@ -7901,6 +7904,9 @@ packages:
   xmlhttprequest-ssl@2.1.2:
     resolution: {integrity: sha512-TEU+nJVUUnA4CYJFLvK5X9AOeH4KvDvhIfm0vV1GaQRtchnG0hgK5p8hw/xjv8cunWYCsiPCSDzObPyhEwq3KQ==}
     engines: {node: '>=0.4.0'}
+
+  xstate@5.32.6:
+    resolution: {integrity: sha512-WfA8WNrh6r9osuGwVm+aIPM4jmMW2LKHV1Yv9thYpOtL4HVF/kobh95K/O8v2jDCpDmP2EoY+6uvuqHXCZ6ZLw==}
 
   xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
@@ -16037,6 +16043,8 @@ snapshots:
   xmlbuilder@11.0.1: {}
 
   xmlhttprequest-ssl@2.1.2: {}
+
+  xstate@5.32.6: {}
 
   xtend@4.0.2: {}
 
