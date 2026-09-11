@@ -92,7 +92,7 @@ export class AbstractVersioningCrudService<T extends ObjectLiteral> {
       id: payload.id || randomUUID(),
       version: payload.version ?? 1,
       isLatest: true,
-    } as DeepPartial<T>);
+    });
   }
 
   @Transactional()
@@ -115,12 +115,12 @@ export class AbstractVersioningCrudService<T extends ObjectLiteral> {
       ...payload,
       ...dto,
       id,
-    } as DeepPartial<T>);
+    });
   }
 
   @Transactional()
-  async update(id: string | number, dto: Partial<T>) {
-    return this.saveNewVersion(id, dto as DeepPartial<T>);
+  async update(id: string | number, dto: DeepPartial<T>) {
+    return this.saveNewVersion(id, dto);
   }
 
   async softDelete(id: string | number): Promise<T | null> {
