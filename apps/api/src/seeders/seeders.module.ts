@@ -5,6 +5,8 @@ import { AdminSeedCommand } from './admin.seeder';
 import { PermissionsSeedCommand } from './permission.seeder';
 import { UserManagementModule } from 'src/modules/user-management/user-management.module';
 import { PlaygroundUsersSeedCommand } from './playground/playground-users.seeder';
+import { PlaygroundCurriculumSeedCommand } from './playground/playground-curriculum.seeder';
+import { CurriculumModule } from 'src/modules/curriculum/curriculum.module';
 
 @Module({
   providers: [
@@ -13,7 +15,8 @@ import { PlaygroundUsersSeedCommand } from './playground/playground-users.seeder
     RolesSeedCommand,
     AdminSeedCommand,
     PlaygroundUsersSeedCommand,
+    PlaygroundCurriculumSeedCommand,
   ],
-  imports: [CommandModule, UserManagementModule],
+  imports: [CommandModule, UserManagementModule, CurriculumModule],
 })
 export class SeedersModule {}
