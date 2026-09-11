@@ -10,11 +10,17 @@ import { CurriculumModuleRepository } from './repositories/curriculum-module.rep
 import { CurriculumLessonRepository } from './repositories/curriculum-lesson.repository';
 import { CurriculumLessonMaterialRepository } from './repositories/curriculum-lesson-material.repository';
 import { CurriculumExamRepository } from './repositories/curriculum-exam.repository';
+import { CurriculumCollaboratorRepository } from './repositories/curriculum-collaborator.repository';
+import { CurriculumModuleCollaboratorRepository } from './repositories/curriculum-module-collaborator.repository';
+import { CurriculumLessonCollaboratorRepository } from './repositories/curriculum-lesson-collaborator.repository';
 import { CurriculumService } from './services/curriculum.service';
 import { CurriculumModuleService } from './services/curriculum-module.service';
 import { CurriculumLessonService } from './services/curriculum-lesson.service';
 import { CurriculumLessonMaterialService } from './services/curriculum-lesson-material.service';
 import { CurriculumExamService } from './services/curriculum-exam.service';
+import { CurriculumCollaboratorEntity } from './entities/curriculum-collaborator.entity';
+import { CurriculumModuleCollaboratorEntity } from './entities/curriculum-module-collaborator.entity';
+import { CurriculumLessonCollaboratorEntity } from './entities/curriculum-lesson-collaborator.entity';
 
 @Module({
   providers: [
@@ -23,6 +29,9 @@ import { CurriculumExamService } from './services/curriculum-exam.service';
     CurriculumLessonRepository,
     CurriculumLessonMaterialRepository,
     CurriculumExamRepository,
+    CurriculumCollaboratorRepository,
+    CurriculumModuleCollaboratorRepository,
+    CurriculumLessonCollaboratorRepository,
     CurriculumService,
     CurriculumModuleService,
     CurriculumLessonService,
@@ -43,6 +52,9 @@ import { CurriculumExamService } from './services/curriculum-exam.service';
       CurriculumLessonEntity,
       CurriculumLessonMaterialEntity,
       CurriculumExamEntity,
+      CurriculumCollaboratorEntity,
+      CurriculumModuleCollaboratorEntity,
+      CurriculumLessonCollaboratorEntity,
     ]),
   ],
 })

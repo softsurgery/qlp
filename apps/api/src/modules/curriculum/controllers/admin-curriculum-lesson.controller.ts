@@ -31,7 +31,10 @@ export class AdminCurriculumLessonController {
 
   @Get('/lessons/:lessonId/versions')
   async findVersions(@Param('lessonId') lessonId: string): Promise<ResponseCurriculumLessonDto[]> {
-    return toDtoArray(ResponseCurriculumLessonDto, await this.lessonService.findAllVersions(lessonId));
+    return toDtoArray(
+      ResponseCurriculumLessonDto,
+      await this.lessonService.findAllVersions(lessonId),
+    );
   }
 
   @Post('/modules/:moduleId/lessons')
@@ -41,6 +44,9 @@ export class AdminCurriculumLessonController {
     @Body() dto: CreateCurriculumLessonDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumLessonDto> {
+    if (!dto.ownerId && req.user?.sub) {
+      dto.ownerId = req.user.sub;
+    }
     const lesson = await this.lessonService.createForModule(moduleId, dto);
     req.logInfo = { id: lesson.id, moduleId };
     return toDto(ResponseCurriculumLessonDto, lesson);
@@ -53,7 +59,7 @@ export class AdminCurriculumLessonController {
     @Body() dto: UpdateCurriculumLessonDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumLessonDto> {
-    const lesson = await this.lessonService.updateLesson(lessonId, dto);
+    const lesson = await this.lessonService.updateLesson(lessonId, dto, req.user?.sub);
     req.logInfo = { id: lesson.id, version: lesson.version };
     return toDto(ResponseCurriculumLessonDto, lesson);
   }
@@ -65,6 +71,33 @@ export class AdminCurriculumLessonController {
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumLessonDto | null> {
     req.logInfo = { id: lessonId };
-    return toDto(ResponseCurriculumLessonDto, await this.lessonService.softDelete(lessonId));
+    return toDto(
+      ResponseCurriculumLessonDto,
+      await this.lessonService.softDelete(lessonId, req.user?.sub),
+    );
+  }
+
+  @Put('/lessons/:lessonId/collaborators')
+  async addOrUpdateCollaborator(
+    @Param('lessonId') lessonId: string,
+    @Body() dto: import('../dtos/collaborator/update-collaborator.dto').UpdateCollaboratorDto,
+    @Request() req: AdvancedRequest,
+  ) {
+    return this.lessonService.addOrUpdateCollaborator(
+      lessonId,
+      dto.userId,
+      dto.role,
+      req.user?.sub,
+    );
+  }
+
+  @Delete('/lessons/:lessonId/collaborators/:userId')
+  async removeCollaborator(
+    @Param('lessonId') lessonId: string,
+    @Param('userId') userId: string,
+    @Request() req: AdvancedRequest,
+  ) {
+    await this.lessonService.removeCollaborator(lessonId, userId, req.user?.sub);
+    return { success: true };
   }
 }

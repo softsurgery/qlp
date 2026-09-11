@@ -31,7 +31,10 @@ export class ClientCurriculumLessonController {
 
   @Get('/lessons/:lessonId/versions')
   async findVersions(@Param('lessonId') lessonId: string): Promise<ResponseCurriculumLessonDto[]> {
-    return toDtoArray(ResponseCurriculumLessonDto, await this.lessonService.findAllVersions(lessonId));
+    return toDtoArray(
+      ResponseCurriculumLessonDto,
+      await this.lessonService.findAllVersions(lessonId),
+    );
   }
 
   @Post('/modules/:moduleId/lessons')
@@ -41,6 +44,9 @@ export class ClientCurriculumLessonController {
     @Body() dto: CreateCurriculumLessonDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumLessonDto> {
+    if (!dto.ownerId && req.user?.sub) {
+      dto.ownerId = req.user.sub;
+    }
     const lesson = await this.lessonService.createForModule(moduleId, dto);
     req.logInfo = { id: lesson.id, moduleId };
     return toDto(ResponseCurriculumLessonDto, lesson);
@@ -53,7 +59,7 @@ export class ClientCurriculumLessonController {
     @Body() dto: UpdateCurriculumLessonDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumLessonDto> {
-    const lesson = await this.lessonService.updateLesson(lessonId, dto);
+    const lesson = await this.lessonService.updateLesson(lessonId, dto, req.user?.sub);
     req.logInfo = { id: lesson.id, version: lesson.version };
     return toDto(ResponseCurriculumLessonDto, lesson);
   }
@@ -65,6 +71,9 @@ export class ClientCurriculumLessonController {
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumLessonDto | null> {
     req.logInfo = { id: lessonId };
-    return toDto(ResponseCurriculumLessonDto, await this.lessonService.softDelete(lessonId));
+    return toDto(
+      ResponseCurriculumLessonDto,
+      await this.lessonService.softDelete(lessonId, req.user?.sub),
+    );
   }
 }

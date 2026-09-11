@@ -35,7 +35,10 @@ export class ClientCurriculumModuleController {
 
   @Get('/modules/:moduleId/versions')
   async findVersions(@Param('moduleId') moduleId: string): Promise<ResponseCurriculumModuleDto[]> {
-    return toDtoArray(ResponseCurriculumModuleDto, await this.moduleService.findAllVersions(moduleId));
+    return toDtoArray(
+      ResponseCurriculumModuleDto,
+      await this.moduleService.findAllVersions(moduleId),
+    );
   }
 
   @Post('/:id/modules')
@@ -46,6 +49,9 @@ export class ClientCurriculumModuleController {
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumModuleDto> {
     await this.curriculumService.findOneById(id);
+    if (!dto.ownerId && req.user?.sub) {
+      dto.ownerId = req.user.sub;
+    }
     const module = await this.moduleService.createForCurriculum(id, dto);
     req.logInfo = { id: module.id, curriculumId: id };
     return toDto(ResponseCurriculumModuleDto, module);
@@ -58,7 +64,7 @@ export class ClientCurriculumModuleController {
     @Body() dto: UpdateCurriculumModuleDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumModuleDto> {
-    const module = await this.moduleService.updateModule(moduleId, dto);
+    const module = await this.moduleService.updateModule(moduleId, dto, req.user?.sub);
     req.logInfo = { id: module.id, version: module.version };
     return toDto(ResponseCurriculumModuleDto, module);
   }
@@ -70,6 +76,9 @@ export class ClientCurriculumModuleController {
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumModuleDto | null> {
     req.logInfo = { id: moduleId };
-    return toDto(ResponseCurriculumModuleDto, await this.moduleService.softDelete(moduleId));
+    return toDto(
+      ResponseCurriculumModuleDto,
+      await this.moduleService.softDelete(moduleId, req.user?.sub),
+    );
   }
 }

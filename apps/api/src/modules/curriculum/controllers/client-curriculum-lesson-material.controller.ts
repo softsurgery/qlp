@@ -70,6 +70,9 @@ export class ClientCurriculumLessonMaterialController {
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumLessonMaterialDto | null> {
     req.logInfo = { id: materialId };
-    return toDto(ResponseCurriculumLessonMaterialDto, await this.materialService.softDelete(materialId));
+    return toDto(
+      ResponseCurriculumLessonMaterialDto,
+      await this.materialService.softDelete(materialId),
+    );
   }
 }

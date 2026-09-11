@@ -55,7 +55,10 @@ export class ClientCurriculumController {
     const parsedVersion = version ? Number(version) : undefined;
     return toDto(
       ResponseCurriculumTreeDto,
-      await this.curriculumService.getTree(id, Number.isFinite(parsedVersion) ? parsedVersion : undefined),
+      await this.curriculumService.getTree(
+        id,
+        Number.isFinite(parsedVersion) ? parsedVersion : undefined,
+      ),
     );
   }
 
@@ -83,6 +86,9 @@ export class ClientCurriculumController {
     @Body() dto: CreateCurriculumDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumDto> {
+    if (!dto.ownerId && req.user?.sub) {
+      dto.ownerId = req.user.sub;
+    }
     const curriculum = await this.curriculumService.createCurriculum(dto);
     req.logInfo = { id: curriculum.id, title: curriculum.title };
     return toDto(ResponseCurriculumDto, curriculum);
@@ -95,7 +101,7 @@ export class ClientCurriculumController {
     @Body() dto: UpdateCurriculumDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumDto> {
-    const curriculum = await this.curriculumService.updateCurriculum(id, dto);
+    const curriculum = await this.curriculumService.updateCurriculum(id, dto, req.user?.sub);
     req.logInfo = { id: curriculum.id, version: curriculum.version };
     return toDto(ResponseCurriculumDto, curriculum);
   }
@@ -107,6 +113,9 @@ export class ClientCurriculumController {
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumDto | null> {
     req.logInfo = { id };
-    return toDto(ResponseCurriculumDto, await this.curriculumService.softDeleteTree(id));
+    return toDto(
+      ResponseCurriculumDto,
+      await this.curriculumService.softDeleteTree(id, req.user?.sub),
+    );
   }
 }

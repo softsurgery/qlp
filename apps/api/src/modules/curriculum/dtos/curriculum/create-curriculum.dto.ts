@@ -21,4 +21,9 @@ export class CreateCurriculumDto {
   @IsEnum(CurriculumStatus)
   @IsOptional()
   status?: CurriculumStatus;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  ownerId?: string;
 }

@@ -22,4 +22,9 @@ export class UpdateCurriculumDto {
   @IsEnum(CurriculumStatus)
   @IsOptional()
   status?: CurriculumStatus;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  ownerId?: string;
 }

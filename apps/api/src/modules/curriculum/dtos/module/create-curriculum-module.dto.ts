@@ -18,4 +18,9 @@ export class CreateCurriculumModuleDto {
   @Min(0)
   @IsOptional()
   sortOrder?: number;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  ownerId?: string;
 }

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, ForbiddenException } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AbstractVersioningCrudService } from 'src/shared/database/services/abstract-versioning-crud.service';
 import { CurriculumEntity } from '../entities/curriculum.entity';
@@ -10,6 +10,7 @@ import { CurriculumModuleService } from './curriculum-module.service';
 import { CurriculumLessonService } from './curriculum-lesson.service';
 import { CurriculumLessonMaterialService } from './curriculum-lesson-material.service';
 import { CurriculumExamService } from './curriculum-exam.service';
+import { CurriculumCollaboratorRepository } from '../repositories/curriculum-collaborator.repository';
 
 @Injectable()
 export class CurriculumService extends AbstractVersioningCrudService<CurriculumEntity> {
@@ -19,8 +20,42 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
     private readonly lessonService: CurriculumLessonService,
     private readonly materialService: CurriculumLessonMaterialService,
     private readonly examService: CurriculumExamService,
+    private readonly collaboratorRepository: CurriculumCollaboratorRepository,
   ) {
     super(curriculumRepository);
+  }
+
+  async addOrUpdateCollaborator(
+    curriculumId: string,
+    userId: string,
+    role: string,
+    actorId?: string,
+  ) {
+    if (actorId) {
+      await this.assertCanEdit(curriculumId, actorId);
+    }
+    const existing = await this.collaboratorRepository.findOne({
+      where: { curriculumId, userId },
+    });
+    if (existing) {
+      existing.role = role as any;
+      return this.collaboratorRepository.save(existing);
+    }
+    return this.collaboratorRepository.save(
+      this.collaboratorRepository.create({ curriculumId, userId, role: role as any }),
+    );
+  }
+
+  async removeCollaborator(curriculumId: string, userId: string, actorId?: string) {
+    if (actorId) {
+      await this.assertCanEdit(curriculumId, actorId);
+    }
+    const existing = await this.collaboratorRepository.findOne({
+      where: { curriculumId, userId },
+    });
+    if (existing) {
+      await this.collaboratorRepository.remove(existing);
+    }
   }
 
   private slugify(value: string) {
@@ -42,6 +77,20 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
     }
   }
 
+  async assertCanEdit(id: string, actorId: string) {
+    const curriculum = await this.findOneById(id);
+    if (!curriculum) return;
+    if (curriculum.ownerId === actorId) return;
+
+    const isEditor = await this.collaboratorRepository.findOne({
+      where: { curriculumId: id, userId: actorId, role: 'EDITOR' as any },
+    });
+
+    if (!isEditor) {
+      throw new ForbiddenException('You do not have permission to edit this curriculum');
+    }
+  }
+
   async createCurriculum(dto: CreateCurriculumDto) {
     const slug = this.slugify(dto.slug || dto.title);
     await this.assertUniqueSlug(slug);
@@ -50,10 +99,14 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
       slug,
       description: dto.description,
       status: dto.status ?? CurriculumStatus.Draft,
+      ownerId: dto.ownerId,
     });
   }
 
-  async updateCurriculum(id: string, dto: UpdateCurriculumDto) {
+  async updateCurriculum(id: string, dto: UpdateCurriculumDto, actorId?: string) {
+    if (actorId) {
+      await this.assertCanEdit(id, actorId);
+    }
     const latest = await this.findOneById(id);
     const slug = dto.slug ? this.slugify(dto.slug) : latest.slug;
     await this.assertUniqueSlug(slug, id);
@@ -97,7 +150,10 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
   }
 
   @Transactional()
-  async softDeleteTree(id: string) {
+  async softDeleteTree(id: string, actorId?: string) {
+    if (actorId) {
+      await this.assertCanEdit(id, actorId);
+    }
     const modules = await this.moduleService.findLatestByCurriculum(id);
     await Promise.all(
       modules.map(async (module) => {
@@ -109,7 +165,9 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
         await Promise.all(
           lessons.map(async (lesson) => {
             const materials = await this.materialService.findLatestByLesson(lesson.id);
-            await Promise.all(materials.map((material) => this.materialService.softDelete(material.id)));
+            await Promise.all(
+              materials.map((material) => this.materialService.softDelete(material.id)),
+            );
             await this.lessonService.softDelete(lesson.id);
           }),
         );
