@@ -41,6 +41,12 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
     },
   });
 
+  React.useEffect(() => {
+    if (editor && value !== undefined && value !== editor.getHTML()) {
+      editor.commands.setContent(value);
+    }
+  }, [editor, value]);
+
   return (
     <div
       className={cn(
