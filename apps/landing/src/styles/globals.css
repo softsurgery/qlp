@@ -1,5 +1,6 @@
 @import "@qlp/ui/styles/scrollbar.css";
 @import "@qlp/ui/styles/input-styles.css";
+@import "@qlp/ui/styles/container.css";
 @import "tailwindcss" source(none);
 @import "tw-animate-css";
 
