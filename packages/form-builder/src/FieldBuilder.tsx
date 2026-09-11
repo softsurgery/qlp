@@ -20,6 +20,7 @@ import {
 import { ComboboxMultiSelectField } from "./components/ComboboxMultiSelectField";
 import { AvatarField } from "./components/AvatarField";
 import { PasswordField } from "./components/PasswordField";
+import { RichTextField } from "./components/RichTextField";
 
 interface FieldBuilderProps {
   field?: Field<any>;
@@ -297,9 +298,8 @@ export const FieldBuilder = ({ field }: FieldBuilderProps) => {
           }
         />
       );
-    // case "editor": {
-    //   return <EditorWrapper props={field.props} />;
-    // }
+    case "editor":
+      return <RichTextField field={field} />;
     case "file":
       return (
         <div className={cn("flex flex-col", field?.wrapperClassName)}>

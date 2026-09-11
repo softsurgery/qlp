@@ -171,6 +171,7 @@ export interface EditorFieldProps extends BaseFieldProps {
   value?: string;
   onChange?: (e: string) => void;
   maxLength?: number;
+  height?: number | string;
 }
 
 export interface FileFieldProps extends BaseFieldProps {
