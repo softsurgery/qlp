@@ -5,5 +5,5 @@ import { api } from "@/lib/api";
 export default function CurriculumEditPage() {
   const { id } = useParams();
   if (!id) return null;
-  return <CurriculumEditor api={api.adminCurriculum} basePath="/curriculum" curriculumId={id} />;
+  return <CurriculumEditor api={api.adminCurriculum} uploadApi={api.upload} basePath="/curriculum" curriculumId={id} />;
 }

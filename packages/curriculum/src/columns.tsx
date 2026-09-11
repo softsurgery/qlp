@@ -41,13 +41,14 @@ export function useCurriculumColumns(
             />
           ),
           cell: ({ row }) => (
-            <div className="w-[200px] lg:w-[300px]">
+            <div>
               <div className="font-semibold truncate">{row.original.title}</div>
 
               {row.original.description && (
-                <div className="line-clamp-2 text-xs text-muted-foreground mt-1">
-                  {row.original.description}
-                </div>
+                <div
+                  className="line-clamp-2 text-xs text-muted-foreground mt-1"
+                  dangerouslySetInnerHTML={{ __html: row.original.description }}
+                />
               )}
             </div>
           ),
@@ -120,7 +121,12 @@ export function useCurriculumColumns(
         },
         {
           accessorKey: "createdAt",
-          meta: { title: t("columns.createdAt") },
+          meta: {
+            title: t("columns.createdAt"),
+            filterKey: "createdAt",
+            filterField: "createdAt",
+            filterType: "date-range",
+          },
           header: ({ column }) => (
             <DataTableColumnHeader
               column={column}
@@ -131,7 +137,7 @@ export function useCurriculumColumns(
           ),
           cell: ({ row }) => (
             <DataTableCell
-              variant={DataTableCellVariant.DATE}
+              variant={DataTableCellVariant.DATE_TIME}
               value={
                 row.original.createdAt
                   ? new Date(row.original.createdAt)
@@ -143,7 +149,12 @@ export function useCurriculumColumns(
         },
         {
           accessorKey: "updatedAt",
-          meta: { title: t("columns.updatedAt") },
+          meta: {
+            title: t("columns.updatedAt"),
+            filterKey: "updatedAt",
+            filterField: "updatedAt",
+            filterType: "date-range",
+          },
           header: ({ column }) => (
             <DataTableColumnHeader
               column={column}
@@ -154,7 +165,7 @@ export function useCurriculumColumns(
           ),
           cell: ({ row }) => (
             <DataTableCell
-              variant={DataTableCellVariant.DATE}
+              variant={DataTableCellVariant.DATE_TIME}
               value={
                 row.original.updatedAt
                   ? new Date(row.original.updatedAt)

@@ -1,43 +1,41 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Repeat2, Save } from "lucide-react";
+import { Save, Repeat2 } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useBreadcrumb, useUI } from "@qlp/contexts";
 import { Button, Separator, Label } from "@qlp/ui";
-import { CurriculumMetaHeader } from "../components/CurriculumMetaHeader";
 import {
   type CurriculumResource,
-  type CreateCurriculumDto,
+  type UpdateCurriculumDto,
+  type ResponseCurriculumDto,
   type ServerErrorResponse,
-  type ResponseUserDto,
 } from "@qlp/api-client";
 import { type UploadSrcApi } from "@qlp/hooks";
 import { useCurriculumStore } from "../hooks/stores/useCurriculumStore";
-import { useCreateCurriculumFormStructure } from "./useCreateCurriculumFormStructure";
+import { useUpdateCurriculumFormStructure } from "./useUpdateCurriculumFormStructure";
 import { errorMessage } from "../utils";
 import { CurriculumFormLayout } from "../components/CurriculumFormLayout";
+import { CurriculumMetaHeader } from "../components/CurriculumMetaHeader";
 
-export interface CreateCurriculumFormProps {
+interface UpdateCurriculumFormProps {
   className?: string;
   api: CurriculumResource;
   uploadApi?: UploadSrcApi;
   basePath: string;
-  user?: ResponseUserDto | null;
+  curriculum: ResponseCurriculumDto;
   onSuccess?: () => void;
 }
 
-export function CreateCurriculumForm({
+export function UpdateCurriculumForm({
   className,
   api,
   uploadApi,
   basePath,
-  user,
+  curriculum,
   onSuccess,
-}: CreateCurriculumFormProps) {
-  const navigate = useNavigate();
+}: UpdateCurriculumFormProps) {
   const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("curriculum");
   const queryClient = useQueryClient();
@@ -48,11 +46,22 @@ export function CreateCurriculumForm({
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
 
+  // Populate store
+  React.useEffect(() => {
+    curriculumStore.set("response", curriculum);
+    curriculumStore.set("updateDto", {
+      title: curriculum.title,
+      slug: curriculum.slug,
+      description: curriculum.description,
+      status: curriculum.status,
+    });
+  }, [curriculum]); // intentional single initialization dependency when curriculum loads
+
   React.useEffect(() => {
     if (setRoutes) {
       setRoutes([
         { title: t("title"), href: basePath },
-        { title: t("createTitle") },
+        { title: curriculum.title || t("updateTitle") },
       ]);
     }
     if (setEnableMainOverflow) setEnableMainOverflow(true);
@@ -69,60 +78,55 @@ export function CreateCurriculumForm({
     setRoutes,
     t,
     basePath,
+    curriculum.title,
   ]);
 
-  const { createCurriculumFormStructure } = useCreateCurriculumFormStructure({
+  const { updateCurriculumFormStructure } = useUpdateCurriculumFormStructure({
     curriculumStore,
   });
 
-  const { mutate: createMutation, isPending } = useMutation({
-    mutationFn: (dto: CreateCurriculumDto) => api.create(dto),
-    onSuccess: (curriculum) => {
-      toast.success(t("created"));
+  const { mutate: updateMutation, isPending } = useMutation({
+    mutationFn: (dto: UpdateCurriculumDto) => api.update(curriculum.id, dto),
+    onSuccess: (updated) => {
+      toast.success(t("updated"));
       void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
-      curriculumStore.reset();
+      void queryClient.invalidateQueries({ queryKey: ["curriculum", curriculum.id] });
       if (onSuccess) onSuccess();
-      else navigate(`${basePath}/${curriculum.id}/edit`);
     },
     onError: (error: ServerErrorResponse) => {
       toast.error(errorMessage(error, t("saveError")));
     },
   });
 
-  const handleReset = React.useCallback(
-    () => curriculumStore.reset(),
-    [curriculumStore],
-  );
-
   const handleSubmit = React.useCallback(() => {
-    if (!curriculumStore.createDto.title.trim()) {
-      curriculumStore.set("createDtoErrors", {
+    if (!curriculumStore.updateDto.title?.trim()) {
+      curriculumStore.set("updateDtoErrors", {
         title: [t("errors.titleRequired")],
       });
       return;
     }
-    curriculumStore.set("createDtoErrors", {});
-    createMutation(curriculumStore.createDto);
-  }, [createMutation, curriculumStore, t]);
+    curriculumStore.set("updateDtoErrors", {});
+    updateMutation(curriculumStore.updateDto);
+  }, [updateMutation, curriculumStore, t]);
 
   const mainContent = (
     <div className="flex flex-col">
-      <FormBuilder structure={createCurriculumFormStructure} />
+      <FormBuilder structure={updateCurriculumFormStructure} />
     </div>
   );
 
   const sidebarContent = (
     <>
       <CurriculumMetaHeader
-        status={t(`status.${curriculumStore.createDto.status || "draft"}`)}
-        user={user}
+        status={t(`status.${curriculum.status}`)}
+        user={curriculum.owner}
+        createdAt={curriculum.createdAt}
+        updatedAt={curriculum.updatedAt}
         uploadApi={uploadApi}
       />
       <Separator />
       <div className="flex flex-col gap-2 w-full">
-        <Label className="text-xs font-bold text-muted-foreground">
-          {tCommon("commands.actions", "Actions")}
-        </Label>
+        <Label className="text-xs font-bold text-muted-foreground">{tCommon("commands.actions", "Actions")}</Label>
         <Button
           type="button"
           size="lg"
@@ -139,7 +143,7 @@ export function CreateCurriculumForm({
           size="lg"
           className="rounded-xl w-full"
           variant={"ghost"}
-          onClick={handleReset}
+          onClick={resetStore}
           disabled={isPending}
         >
           <Repeat2 className="mr-2 h-4 w-4" />

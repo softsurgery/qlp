@@ -7,6 +7,7 @@ import UserCreatePage from "./pages/UserCreatePage";
 import UserEditPage from "./pages/UserEditPage";
 import RolesPage from "./pages/RolesPage";
 import CurriculumPage from "./pages/CurriculumPage";
+import CurriculumCreatePage from "./pages/CurriculumCreatePage";
 import CurriculumEditPage from "./pages/CurriculumEditPage";
 import CurriculumViewPage from "./pages/CurriculumViewPage";
 
@@ -54,6 +55,7 @@ export default function App() {
         </Route>
         <Route path="tutors" element={<div>Tutors</div>} />
         <Route path="curriculum" element={<CurriculumPage />} />
+        <Route path="curriculum/new" element={<CurriculumCreatePage />} />
         <Route path="curriculum/:id" element={<CurriculumViewPage />} />
         <Route path="curriculum/:id/edit" element={<CurriculumEditPage />} />
       </Route>

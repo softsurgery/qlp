@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { CurriculumStatus } from '../../enums/curriculum-status.enum';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateCurriculumDto {
   @ApiProperty({ required: false })
@@ -17,11 +16,6 @@ export class UpdateCurriculumDto {
   @IsString()
   @IsOptional()
   description?: string;
-
-  @ApiProperty({ enum: CurriculumStatus, required: false })
-  @IsEnum(CurriculumStatus)
-  @IsOptional()
-  status?: CurriculumStatus;
 
   @ApiProperty({ required: false })
   @IsString()

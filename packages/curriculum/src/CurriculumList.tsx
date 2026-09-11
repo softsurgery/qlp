@@ -142,6 +142,7 @@ export function CurriculumList({ api, basePath }: CurriculumListProps) {
   const context: DataTableConfig<ResponseCurriculumDto> = {
     singularName: t("item"),
     pluralName: t("title"),
+    createCallback: () => navigate(`${basePath}/new`),
     inspectCallback: (entity) => navigate(`${basePath}/${entity.id}`),
     updateCallback: (entity) => navigate(`${basePath}/${entity.id}/edit`),
     deleteCallback: openDeleteCurriculumDialog,
