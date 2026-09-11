@@ -10,7 +10,7 @@ import {
   type DataTableConfig,
 } from "@qlp/datatable-builder";
 import { useDebounce } from "@qlp/hooks";
-import { useIntro } from "@qlp/contexts";
+import { useIntro, useBreadcrumb } from "@qlp/contexts";
 import {
   CurriculumStatus,
   type CreateCurriculumDto,
@@ -21,6 +21,8 @@ import {
 import { useCurriculumColumns } from "./columns";
 import { errorMessage } from "./utils";
 import React from "react";
+import { useCurriculumDeleteDialog } from "./modals/CurriculumDeleteDialog";
+import { useCurriculumStore } from "./hooks/stores/useCurriculumStore";
 
 interface CurriculumListProps {
   api: CurriculumResource;
@@ -31,6 +33,24 @@ export function CurriculumList({ api, basePath }: CurriculumListProps) {
   const { t } = useTranslation("curriculum");
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const { setIntro, clearIntro } = useIntro();
+  const { setRoutes, clearRoutes } = useBreadcrumb();
+
+  const curriculumStore = useCurriculumStore();
+
+  React.useEffect(() => {
+    if (setIntro) {
+      setIntro(t("title"), t("description"));
+    }
+    if (setRoutes) {
+      setRoutes([{ title: t("title") }]);
+    }
+    return () => {
+      if (clearIntro) clearIntro();
+      if (clearRoutes) clearRoutes();
+    };
+  }, [setIntro, clearIntro, setRoutes, clearRoutes, t]);
 
   const {
     page,
@@ -80,6 +100,7 @@ export function CurriculumList({ api, basePath }: CurriculumListProps) {
         search: debouncedSearchTerm,
         sort: `${debouncedSortDetails.sortKey},${debouncedSortDetails.order ? "ASC" : "DESC"}`,
         filter: filterString,
+        join: "owner",
       }),
   });
 
@@ -105,6 +126,17 @@ export function CurriculumList({ api, basePath }: CurriculumListProps) {
       toast.error(errorMessage(error, t("deleteError"))),
   });
 
+  const { deleteCurriculumDialog, openDeleteCurriculumDialog } =
+    useCurriculumDeleteDialog({
+      curriculumTitle: curriculumStore.response?.title,
+      deleteCurriculum: () => {
+        if (curriculumStore.response) {
+          deleteMutation.mutate(curriculumStore.response.id);
+        }
+      },
+      isDeletePending: deleteMutation.isPending,
+    });
+
   const items = listQuery.data?.data ?? [];
 
   const context: DataTableConfig<ResponseCurriculumDto> = {
@@ -112,6 +144,8 @@ export function CurriculumList({ api, basePath }: CurriculumListProps) {
     pluralName: t("title"),
     inspectCallback: (entity) => navigate(`${basePath}/${entity.id}`),
     updateCallback: (entity) => navigate(`${basePath}/${entity.id}/edit`),
+    deleteCallback: openDeleteCurriculumDialog,
+    targetEntity: (entity) => curriculumStore.set("response", entity),
     searchTerm,
     setSearchTerm,
     page,
@@ -145,7 +179,6 @@ export function CurriculumList({ api, basePath }: CurriculumListProps) {
     [t],
   );
 
-  const { title: introTitle } = useIntro();
   const columns = useCurriculumColumns(context, statusFilterOptions);
   const isPending =
     listQuery.isPending ||
@@ -166,6 +199,7 @@ export function CurriculumList({ api, basePath }: CurriculumListProps) {
         isPending={isPending}
         footerPagination
       />
+      {deleteCurriculumDialog}
     </div>
   );
 }

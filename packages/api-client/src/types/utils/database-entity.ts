@@ -4,3 +4,9 @@ export interface DatabaseEntity {
   deletedAt: Date | null;
   isDeletionRestricted: boolean;
 }
+
+export interface VersionedEntity extends DatabaseEntity {
+  id: string;
+  version: number;
+  isLatest: boolean;
+}

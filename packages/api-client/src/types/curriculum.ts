@@ -1,4 +1,5 @@
-import type { DatabaseEntity } from "./utils/database-entity.js";
+import type { VersionedEntity } from "./utils/database-entity.js";
+import type { ResponseUserDto } from "./user-managemnt.js";
 
 export enum CurriculumStatus {
   Draft = "draft",
@@ -20,12 +21,6 @@ export enum ExamQuestionType {
   ShortAnswer = "short_answer",
 }
 
-export interface VersionedEntity extends DatabaseEntity {
-  id: string;
-  version: number;
-  isLatest: boolean;
-}
-
 export interface ExamQuestion {
   id: string;
   prompt: string;
@@ -40,6 +35,8 @@ export interface ResponseCurriculumDto extends VersionedEntity {
   title: string;
   description?: string;
   status: CurriculumStatus | string;
+  ownerId?: string;
+  owner?: ResponseUserDto;
 }
 
 export interface ResponseCurriculumLessonMaterialDto extends VersionedEntity {

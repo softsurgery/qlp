@@ -41,7 +41,8 @@
     "status": "الحالة",
     "version": "الإصدار",
     "createdAt": "تاريخ الإنشاء",
-    "updatedAt": "آخر تحديث"
+    "updatedAt": "آخر تحديث",
+    "owner": "المالك"
   },
   "status": {
     "draft": "مسودة",

@@ -97,6 +97,28 @@ export function useCurriculumColumns(
           enableSorting: true,
         },
         {
+          accessorKey: "owner",
+          meta: {
+            title: t("columns.owner"),
+          },
+          header: ({ column }) => (
+            <DataTableColumnHeader
+              column={column}
+              title={t("columns.owner")}
+              attribute="owner"
+              context={context}
+            />
+          ),
+          cell: ({ row }) => (
+            <div className="text-sm">
+              {row.original.owner
+                ? `${row.original.owner.firstName} ${row.original.owner.lastName}`
+                : "-"}
+            </div>
+          ),
+          enableSorting: false,
+        },
+        {
           accessorKey: "createdAt",
           meta: { title: t("columns.createdAt") },
           header: ({ column }) => (
