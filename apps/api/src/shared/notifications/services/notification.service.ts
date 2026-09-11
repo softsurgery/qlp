@@ -21,9 +21,7 @@ export class NotificationService extends AbstractCrudService<NotificationEntity>
     query: IQueryObject,
     userId?: string,
   ): Promise<PageDto<NotificationEntity>> {
-    const queryBuilder = new QueryBuilder(
-      this.notificationRepository.getMetadata(),
-    );
+    const queryBuilder = new QueryBuilder(this.notificationRepository.getMetadata());
 
     const queryOptions = queryBuilder.build(query);
 

@@ -35,9 +35,7 @@ export class NotificationController {
   ) {}
 
   @Get('/unread-count')
-  async getUnreadCount(
-    @Request() req: AdvancedRequest,
-  ): Promise<{ count: number }> {
+  async getUnreadCount(@Request() req: AdvancedRequest): Promise<{ count: number }> {
     const count = await this.notificationService.getUnreadCount(req?.user?.sub);
     return { count };
   }
@@ -48,10 +46,7 @@ export class NotificationController {
     @Query() query: IQueryObject,
     @Request() req: AdvancedRequest,
   ): Promise<PageDto<ResponseNotificationDto>> {
-    const paginated = await this.notificationService.findAllPaginatedByUser(
-      query,
-      req?.user?.sub,
-    );
+    const paginated = await this.notificationService.findAllPaginatedByUser(query, req?.user?.sub);
     return {
       ...paginated,
       data: toDtoArray(ResponseNotificationDto, paginated.data),
@@ -64,10 +59,7 @@ export class NotificationController {
     @Param('id') id: string,
     @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseNotificationDto>> {
-    const paginated = await this.notificationService.findAllPaginatedByUser(
-      query,
-      id,
-    );
+    const paginated = await this.notificationService.findAllPaginatedByUser(query, id);
     return {
       ...paginated,
       data: toDtoArray(ResponseNotificationDto, paginated.data),
@@ -75,13 +67,8 @@ export class NotificationController {
   }
 
   @Get(':id')
-  async findOneById(
-    @Param('id') id: number,
-  ): Promise<ResponseNotificationDto | null> {
-    return toDto(
-      ResponseNotificationDto,
-      await this.notificationService.findOneById(id),
-    );
+  async findOneById(@Param('id') id: number): Promise<ResponseNotificationDto | null> {
+    return toDto(ResponseNotificationDto, await this.notificationService.findOneById(id));
   }
 
   @Post('/mark-read')

@@ -16,8 +16,7 @@ export interface BatchNotificationInfo {
 export const Notify = (type: NotificationType): MethodDecorator => {
   return (target, propertyKey, descriptor) => {
     const existingTypes: NotificationType[] =
-      Reflect.getMetadata(NOTIFY_METADATA_KEY, descriptor.value as object) ||
-      [];
+      Reflect.getMetadata(NOTIFY_METADATA_KEY, descriptor.value as object) || [];
     Reflect.defineMetadata(
       NOTIFY_METADATA_KEY,
       [...existingTypes, type],
@@ -30,10 +29,7 @@ export const Notify = (type: NotificationType): MethodDecorator => {
 export const BatchNotify = (type: NotificationType): MethodDecorator => {
   return (target, propertyKey, descriptor) => {
     const existingTypes: NotificationType[] =
-      Reflect.getMetadata(
-        BATCH_NOTIFY_METADATA_KEY,
-        descriptor.value as object,
-      ) || [];
+      Reflect.getMetadata(BATCH_NOTIFY_METADATA_KEY, descriptor.value as object) || [];
     Reflect.defineMetadata(
       BATCH_NOTIFY_METADATA_KEY,
       [...existingTypes, type],

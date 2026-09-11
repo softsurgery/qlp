@@ -17,9 +17,7 @@ import { NotificationType } from '../../../app/enums/notification-type.enum';
   cors: { origin: '*' },
 })
 @Injectable()
-export class NotificationGateway
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
+export class NotificationGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(NotificationGateway.name);
 
   @WebSocketServer()
