@@ -143,3 +143,6 @@ export { ThemeProvider, useTheme } from "./components/theme-provider";
 export { ModeToggle } from "./components/mode-toggle";
 export { Toaster } from "./components/sonner";
 export * from "./components/reui/stepper";
+export * from "./components/editor/rte-text-editor";
+export * from "./components/editor/extensions";
+import "./components/editor/style.css";
