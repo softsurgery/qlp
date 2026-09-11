@@ -40,7 +40,8 @@
     "slug": "Slug",
     "status": "Status",
     "version": "Version",
-    "updatedAt": "Updated"
+    "createdAt": "Created at",
+    "updatedAt": "Updated at"
   },
   "status": {
     "draft": "Draft",
