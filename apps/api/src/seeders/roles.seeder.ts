@@ -4,6 +4,7 @@ import { RoleRepository } from 'src/shared/abstract-user-management/repositories
 import { RolePermissionRepository } from 'src/shared/abstract-user-management/repositories/role-permission.repository';
 import { PermissionRepository } from 'src/shared/abstract-user-management/repositories/permission.repository';
 import { BasicRoles } from 'src/shared/abstract-user-management/enums/basic-roles.enum';
+import { ExtendedRoles } from 'src/modules/user-management/enums/extended-roles.enum';
 
 @Injectable()
 export class RolesSeedCommand {
@@ -26,13 +27,33 @@ export class RolesSeedCommand {
     await this.roleRepository.saveMany([
       {
         id: BasicRoles.Admin,
-        label: 'Admin',
-        description: 'Administrator role',
+        label: BasicRoles.Admin,
+        description: `${BasicRoles.Admin} role`,
       },
       {
         id: BasicRoles.User,
-        label: 'User',
-        description: 'User role',
+        label: BasicRoles.User,
+        description: `${BasicRoles.User} role`,
+      },
+      {
+        id: ExtendedRoles.Tutor,
+        label: ExtendedRoles.Tutor,
+        description: `${ExtendedRoles.Tutor} role`,
+      },
+      {
+        id: ExtendedRoles.Student,
+        label: ExtendedRoles.Student,
+        description: `${ExtendedRoles.Student} role`,
+      },
+      {
+        id: ExtendedRoles.Kid,
+        label: ExtendedRoles.Kid,
+        description: `${ExtendedRoles.Kid} role`,
+      },
+      {
+        id: ExtendedRoles.Parent,
+        label: ExtendedRoles.Parent,
+        description: `${ExtendedRoles.Parent} role`,
       },
     ]);
 
