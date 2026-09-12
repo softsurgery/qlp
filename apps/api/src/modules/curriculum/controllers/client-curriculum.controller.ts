@@ -89,6 +89,9 @@ export class ClientCurriculumController {
     if (!dto.ownerId && req.user?.sub) {
       dto.ownerId = req.user.sub;
     }
+    if (!dto.createdById && req.user?.sub) {
+      dto.createdById = req.user.sub;
+    }
     const curriculum = await this.curriculumService.createCurriculum(dto);
     req.logInfo = { id: curriculum.id, title: curriculum.title };
     return toDto(ResponseCurriculumDto, curriculum);

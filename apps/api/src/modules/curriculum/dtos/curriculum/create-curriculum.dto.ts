@@ -26,4 +26,9 @@ export class CreateCurriculumDto {
   @IsString()
   @IsOptional()
   ownerId?: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  createdById?: string;
 }

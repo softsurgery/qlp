@@ -47,6 +47,9 @@ export class ClientCurriculumLessonController {
     if (!dto.ownerId && req.user?.sub) {
       dto.ownerId = req.user.sub;
     }
+    if (!dto.createdById && req.user?.sub) {
+      dto.createdById = req.user.sub;
+    }
     const lesson = await this.lessonService.createForModule(moduleId, dto);
     req.logInfo = { id: lesson.id, moduleId };
     return toDto(ResponseCurriculumLessonDto, lesson);

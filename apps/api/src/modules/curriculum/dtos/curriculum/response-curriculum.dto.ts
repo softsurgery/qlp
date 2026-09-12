@@ -29,4 +29,13 @@ export class ResponseCurriculumDto extends ResponseVersionedDtoHelper {
   @Type(() => ResponseUserDto)
   @Expose()
   owner?: ResponseUserDto;
+
+  @ApiProperty({ required: false })
+  @Expose()
+  createdById?: string;
+
+  @ApiProperty({ required: false, type: () => ResponseUserDto })
+  @Type(() => ResponseUserDto)
+  @Expose()
+  createdBy?: ResponseUserDto;
 }

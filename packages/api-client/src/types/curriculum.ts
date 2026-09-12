@@ -37,6 +37,8 @@ export interface ResponseCurriculumDto extends VersionedEntity {
   status: CurriculumStatus | string;
   ownerId?: string;
   owner?: ResponseUserDto;
+  createdById?: string;
+  createdBy?: ResponseUserDto;
 }
 
 export interface ResponseCurriculumLessonMaterialDto extends VersionedEntity {
@@ -55,6 +57,10 @@ export interface ResponseCurriculumLessonDto extends VersionedEntity {
   description?: string;
   sortOrder: number;
   materials?: ResponseCurriculumLessonMaterialDto[];
+  ownerId?: string;
+  owner?: ResponseUserDto;
+  createdById?: string;
+  createdBy?: ResponseUserDto;
 }
 
 export interface ResponseCurriculumExamDto extends VersionedEntity {
@@ -65,6 +71,8 @@ export interface ResponseCurriculumExamDto extends VersionedEntity {
   passingScore: number;
   questions: ExamQuestion[];
   sortOrder: number;
+  createdById?: string;
+  createdBy?: ResponseUserDto;
 }
 
 export interface ResponseCurriculumModuleDto extends VersionedEntity {
@@ -74,6 +82,10 @@ export interface ResponseCurriculumModuleDto extends VersionedEntity {
   sortOrder: number;
   lessons?: ResponseCurriculumLessonDto[];
   exams?: ResponseCurriculumExamDto[];
+  ownerId?: string;
+  owner?: ResponseUserDto;
+  createdById?: string;
+  createdBy?: ResponseUserDto;
 }
 
 export interface ResponseCurriculumTreeDto extends ResponseCurriculumDto {
@@ -85,6 +97,8 @@ export interface CreateCurriculumDto {
   slug?: string;
   description?: string;
   status?: CurriculumStatus | string;
+  ownerId?: string;
+  createdById?: string;
 }
 
 export interface UpdateCurriculumDto {
@@ -92,30 +106,40 @@ export interface UpdateCurriculumDto {
   slug?: string;
   description?: string;
   status?: CurriculumStatus | string;
+  ownerId?: string;
+  createdById?: string;
 }
 
 export interface CreateCurriculumModuleDto {
   title: string;
   description?: string;
   sortOrder?: number;
+  ownerId?: string;
+  createdById?: string;
 }
 
 export interface UpdateCurriculumModuleDto {
   title?: string;
   description?: string;
   sortOrder?: number;
+  ownerId?: string;
+  createdById?: string;
 }
 
 export interface CreateCurriculumLessonDto {
   title: string;
   description?: string;
   sortOrder?: number;
+  ownerId?: string;
+  createdById?: string;
 }
 
 export interface UpdateCurriculumLessonDto {
   title?: string;
   description?: string;
   sortOrder?: number;
+  ownerId?: string;
+  createdById?: string;
 }
 
 export interface CreateCurriculumMaterialDto {
@@ -143,6 +167,7 @@ export interface CreateCurriculumExamDto {
   passingScore?: number;
   questions?: ExamQuestion[];
   sortOrder?: number;
+  createdById?: string;
 }
 
 export interface UpdateCurriculumExamDto {
@@ -152,4 +177,5 @@ export interface UpdateCurriculumExamDto {
   passingScore?: number;
   questions?: ExamQuestion[];
   sortOrder?: number;
+  createdById?: string;
 }

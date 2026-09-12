@@ -41,6 +41,9 @@ export class AdminCurriculumExamController {
     @Body() dto: CreateCurriculumExamDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumExamDto> {
+    if (!dto.createdById && req.user?.sub) {
+      dto.createdById = req.user.sub;
+    }
     const exam = await this.examService.createForModule(moduleId, dto);
     req.logInfo = { id: exam.id, moduleId };
     return toDto(ResponseCurriculumExamDto, exam);

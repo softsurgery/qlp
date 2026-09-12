@@ -23,4 +23,11 @@ export class CurriculumLessonEntity extends VersionedEntityHelper {
   @ManyToOne(() => AbstractUserEntity, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'ownerId' })
   owner?: AbstractUserEntity;
+
+  @Column({ nullable: true })
+  createdById?: string;
+
+  @ManyToOne(() => AbstractUserEntity, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'createdById' })
+  createdBy?: AbstractUserEntity;
 }
