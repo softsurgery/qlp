@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
+import { cn } from "../lib/utils";
 import {
-  cn,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+} from "../components/dialog";
+import {
   Drawer,
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-} from "@qlp/ui";
+} from "../components/drawer";
 import { useMediaQuery } from "./useMediaQuery.js";
 
 interface UseDialogOptions {

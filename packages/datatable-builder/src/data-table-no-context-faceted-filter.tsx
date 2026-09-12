@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useDialog } from "@qlp/hooks";
+import { useDialog } from "@qlp/ui";
 import {
   Button,
   Checkbox,

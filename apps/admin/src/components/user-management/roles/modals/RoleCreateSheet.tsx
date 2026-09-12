@@ -1,7 +1,7 @@
 import { BookUser } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { RoleCreateForm } from "../forms/RoleCreateForm";
-import { useSheet } from "@qlp/hooks";
+import { useSheet } from "@qlp/ui";
 
 interface RoleCreateSheet {
   createRole?: () => void;

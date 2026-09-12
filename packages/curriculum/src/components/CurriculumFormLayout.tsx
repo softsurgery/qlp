@@ -11,7 +11,7 @@ import {
   SheetTrigger,
   cn,
 } from "@qlp/ui";
-import { useMediaQuery } from "@qlp/hooks";
+import { useMediaQuery } from "@qlp/ui";
 
 interface CurriculumFormLayoutProps {
   className?: string;

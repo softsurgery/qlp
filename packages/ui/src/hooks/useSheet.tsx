@@ -1,12 +1,12 @@
 import React, { useState } from "react";
+import { cn } from "../lib/utils";
 import {
-  cn,
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@qlp/ui";
+} from "../components/sheet";
 
 interface UseSheetOptions {
   children?: React.ReactNode;
