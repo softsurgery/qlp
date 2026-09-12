@@ -97,7 +97,7 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
     }
   }
 
-  async createCurriculum(dto: CreateCurriculumDto) {
+  async createCurriculum(dto: CreateCurriculumDto, createdById?: string) {
     const slug = this.slugify(dto.slug || dto.title);
     await this.assertUniqueSlug(slug);
     return this.save({
@@ -106,6 +106,7 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
       description: dto.description,
       status: dto.status ?? CurriculumStatus.Draft,
       ownerId: dto.ownerId,
+      createdById: createdById,
     });
   }
 

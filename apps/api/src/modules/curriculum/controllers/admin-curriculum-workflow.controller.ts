@@ -7,6 +7,7 @@ import {
   Post,
   Request,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
@@ -27,10 +28,13 @@ export class AdminCurriculumWorkflowController {
   constructor(private readonly curriculumWorkflowService: CurriculumWorkflowService) {}
 
   @Get()
-  async findWorkflow(@Param('id') id: string): Promise<ResponseCurriculumWorkflowDto> {
+  async findWorkflow(
+    @Param('id') id: string,
+    @Query('join') join?: string,
+  ): Promise<ResponseCurriculumWorkflowDto> {
     return toDto(
       ResponseCurriculumWorkflowDto,
-      await this.curriculumWorkflowService.findOneById(id),
+      await this.curriculumWorkflowService.findOneById(id, join),
     );
   }
 

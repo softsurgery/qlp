@@ -14,8 +14,8 @@ export class CurriculumWorkflowService extends AbstractWorkflowService<
     super(curriculumMachine, CurriculumEvent);
   }
 
-  async findOneById(id: string) {
-    const curriculum = await this.curriculumService.findOneById(id);
+  async findOneById(id: string, join?: string) {
+    const curriculum = await this.curriculumService.findOneById(id, join);
     const machine = this.machine;
     return {
       status: curriculum.status,

@@ -10,6 +10,7 @@ import {
   Put,
   Query,
   Request,
+  UnauthorizedException,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -71,8 +72,13 @@ export class AdminCurriculumController {
   }
 
   @Get('/:id/versions')
-  async findVersions(@Param('id') id: string): Promise<ResponseCurriculumDto[]> {
-    return toDtoArray(ResponseCurriculumDto, await this.curriculumService.findAllVersions(id));
+  @ApiPaginatedResponse(ResponseCurriculumDto)
+  async findVersions(
+    @Param('id') id: string,
+    @Query() query: IQueryObject,
+  ): Promise<PageDto<ResponseCurriculumDto>> {
+    const paginated = await this.curriculumService.findAllVersionsPaginated(id, query);
+    return { ...paginated, data: toDtoArray(ResponseCurriculumDto, paginated.data) };
   }
 
   @Get('/:id')
@@ -86,13 +92,11 @@ export class AdminCurriculumController {
     @Body() dto: CreateCurriculumDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumDto> {
-    if (!dto.ownerId && req.user?.sub) {
-      dto.ownerId = req.user.sub;
+    console.log(req.user?.sub);
+    if (!req.user?.sub) {
+      throw new UnauthorizedException();
     }
-    if (!dto.createdById && req.user?.sub) {
-      dto.createdById = req.user.sub;
-    }
-    const curriculum = await this.curriculumService.createCurriculum(dto);
+    const curriculum = await this.curriculumService.createCurriculum(dto, req.user?.sub);
     req.logInfo = { id: curriculum.id, title: curriculum.title };
     return toDto(ResponseCurriculumDto, curriculum);
   }
