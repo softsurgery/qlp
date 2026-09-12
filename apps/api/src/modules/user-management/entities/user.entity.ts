@@ -19,5 +19,5 @@ export class UserEntity extends AbstractUserEntity {
   picture?: StorageEntity;
 
   @Column({ nullable: true })
-  pictureId?: number;
+  pictureId?: number | null;
 }

@@ -53,14 +53,17 @@ export class UserService extends AbstractUserService {
 
     const updatedUser = await this.userRepository.update(id, {
       ...rest,
-      pictureId: pictureId ?? existingUser.pictureId,
+      pictureId: pictureId !== undefined ? pictureId : existingUser.pictureId,
     });
 
-    if (pictureId && pictureId !== existingUser.pictureId) {
-      await this.storageService.confirm(pictureId);
-      if (existingUser.pictureId) await this.storageService.delete(existingUser.pictureId);
-
-      await this.userStorageFolderService.assignProfilePicture(pictureId);
+    if (pictureId !== undefined && pictureId !== existingUser.pictureId) {
+      if (pictureId) {
+        await this.storageService.confirm(pictureId);
+        await this.userStorageFolderService.assignProfilePicture(pictureId);
+      }
+      if (existingUser.pictureId) {
+        await this.storageService.delete(existingUser.pictureId);
+      }
     }
 
     return updatedUser;
