@@ -1,4 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { AppProvider } from "@qlp/contexts";
+import { api } from "@/lib/api";
 import { useAuthSession } from "./hooks/useAuth";
 import Layout from "./components/layout/Layout";
 import AuthPage from "./pages/AuthPage";
@@ -24,45 +26,47 @@ function GuestRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <Routes>
-      <Route
-        path="/auth"
-        element={
-          <GuestRoute>
-            <AuthPage />
-          </GuestRoute>
-        }
-      />
-      <Route
-        path="/sign-up"
-        element={
-          <GuestRoute>
-            <SignUpPage />
-          </GuestRoute>
-        }
-      />
-      <Route
-        path="/"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<div>Dashboard</div>} />
-        <Route path="curriculum" element={<CurriculumPage />} />
-        <Route path="curriculum/:id" element={<CurriculumViewPage />} />
-        <Route path="curriculum/:id/edit" element={<CurriculumEditPage />} />
-        <Route path="lessons/:id" element={<div>Lesson</div>} />
-        <Route path="tutors" element={<div>Tutors</div>} />
-        <Route path="bookings" element={<div>Bookings</div>} />
-        <Route path="chat" element={<div>Chat</div>} />
-        <Route path="chat/:conversationId" element={<div>Chat</div>} />
-        <Route path="profile" element={<div>Chat</div>} />
-        <Route path="achievements" element={<div>Achievements</div>} />
-        <Route path="children" element={<div>Children</div>} />
-        <Route path="video/:bookingId" element={<div>Video</div>} />
-      </Route>
-    </Routes>
+    <AppProvider value={{ appType: "web", api }}>
+      <Routes>
+        <Route
+          path="/auth"
+          element={
+            <GuestRoute>
+              <AuthPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/sign-up"
+          element={
+            <GuestRoute>
+              <SignUpPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<div>Dashboard</div>} />
+          <Route path="curriculum" element={<CurriculumPage />} />
+          <Route path="curriculum/:id" element={<CurriculumViewPage />} />
+          <Route path="curriculum/:id/edit" element={<CurriculumEditPage />} />
+          <Route path="lessons/:id" element={<div>Lesson</div>} />
+          <Route path="tutors" element={<div>Tutors</div>} />
+          <Route path="bookings" element={<div>Bookings</div>} />
+          <Route path="chat" element={<div>Chat</div>} />
+          <Route path="chat/:conversationId" element={<div>Chat</div>} />
+          <Route path="profile" element={<div>Chat</div>} />
+          <Route path="achievements" element={<div>Achievements</div>} />
+          <Route path="children" element={<div>Children</div>} />
+          <Route path="video/:bookingId" element={<div>Video</div>} />
+        </Route>
+      </Routes>
+    </AppProvider>
   );
 }
