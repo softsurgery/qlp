@@ -7,3 +7,4 @@ export { DataTableRowActions } from "./data-table-row-actions";
 export { useDataTableState } from "./use-data-table-state";
 export * from "./column-filter";
 export * from "./types";
+export * from './core/user-avatar-cell';
