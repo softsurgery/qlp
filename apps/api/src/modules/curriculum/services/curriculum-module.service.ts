@@ -5,10 +5,13 @@ import { CurriculumModuleRepository } from '../repositories/curriculum-module.re
 import { CreateCurriculumModuleDto } from '../dtos/module/create-curriculum-module.dto';
 import { UpdateCurriculumModuleDto } from '../dtos/module/update-curriculum-module.dto';
 import { CurriculumModuleCollaboratorRepository } from '../repositories/curriculum-module-collaborator.repository';
+import { BasicRoles } from 'src/shared/abstract-user-management/enums/basic-roles.enum';
+import { UserService } from '../../user-management/services/user.service';
 
 @Injectable()
 export class CurriculumModuleService extends AbstractVersioningCrudService<CurriculumModuleEntity> {
   constructor(
+    private readonly userService: UserService,
     private readonly moduleRepository: CurriculumModuleRepository,
     private readonly collaboratorRepository: CurriculumModuleCollaboratorRepository,
   ) {
@@ -44,6 +47,9 @@ export class CurriculumModuleService extends AbstractVersioningCrudService<Curri
   }
 
   async assertCanEdit(id: string, actorId: string) {
+    const user = await this.userService.findOneById(actorId);
+    if (user?.roleId === BasicRoles.Admin) return;
+
     const module = await this.findOneById(id);
     if (!module) return;
     if (module.ownerId === actorId) return;

@@ -21,6 +21,7 @@ import { CurriculumExamService } from './services/curriculum-exam.service';
 import { CurriculumCollaboratorEntity } from './entities/curriculum-collaborator.entity';
 import { CurriculumModuleCollaboratorEntity } from './entities/curriculum-module-collaborator.entity';
 import { CurriculumLessonCollaboratorEntity } from './entities/curriculum-lesson-collaborator.entity';
+import { UserManagementModule } from '../user-management/user-management.module';
 
 @Module({
   providers: [
@@ -46,6 +47,7 @@ import { CurriculumLessonCollaboratorEntity } from './entities/curriculum-lesson
     CurriculumExamService,
   ],
   imports: [
+    UserManagementModule,
     TypeOrmModule.forFeature([
       CurriculumEntity,
       CurriculumModuleEntity,
