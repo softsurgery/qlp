@@ -16,6 +16,7 @@ import { useUpdateCurriculumFormStructure } from "./useUpdateCurriculumFormStruc
 import { errorMessage } from "../utils";
 import { CurriculumFormLayout } from "../components/CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../components/CurriculumMetaHeader";
+import { useTutors } from "../hooks/user/useTutors";
 
 interface UpdateCurriculumFormProps {
   className?: string;
@@ -39,19 +40,9 @@ export function UpdateCurriculumForm({
   const { t } = useTranslation("curriculum");
   const queryClient = useQueryClient();
 
-  const userApi = baseApi.user;
-  const { data: users } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => userApi?.findAll(),
-    enabled: appType === "admin" && !!userApi,
+  const { tutorOptions: ownerOptions } = useTutors({
+    enabled: appType === "admin",
   });
-
-  const ownerOptions =
-    users?.map((u) => ({
-      label:
-        u.firstName && u.lastName ? `${u.firstName} ${u.lastName}` : u.username,
-      value: u.id,
-    })) || [];
 
   const {
     data: curriculum,

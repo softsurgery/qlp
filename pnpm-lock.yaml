@@ -618,6 +618,9 @@ importers:
       '@qlp/hooks':
         specifier: workspace:*
         version: link:../hooks
+      '@qlp/lib':
+        specifier: workspace:*
+        version: link:../lib
       '@qlp/ui':
         specifier: workspace:*
         version: link:../ui

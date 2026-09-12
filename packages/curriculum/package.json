@@ -20,6 +20,7 @@
     "@qlp/datatable-builder": "workspace:*",
     "@qlp/form-builder": "workspace:*",
     "@qlp/hooks": "workspace:*",
+    "@qlp/lib": "workspace:*",
     "@qlp/ui": "workspace:*",
     "@tanstack/react-table": "^8.20.5",
     "i18next": "^23.15.1",

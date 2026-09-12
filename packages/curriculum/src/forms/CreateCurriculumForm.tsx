@@ -17,6 +17,7 @@ import { useCurriculumStore } from "../hooks/stores/useCurriculumStore";
 import { useCreateCurriculumFormStructure } from "./useCreateCurriculumFormStructure";
 import { errorMessage } from "../utils";
 import { CurriculumFormLayout } from "../components/CurriculumFormLayout";
+import { useTutors } from "../hooks/user/useTutors";
 
 export interface CreateCurriculumFormProps {
   className?: string;
@@ -41,19 +42,9 @@ export function CreateCurriculumForm({
   const { t } = useTranslation("curriculum");
   const queryClient = useQueryClient();
 
-  const userApi = baseApi.user;
-  const { data: users } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => userApi?.findAll(),
-    enabled: appType === "admin" && !!userApi,
+  const { tutorOptions: ownerOptions } = useTutors({
+    enabled: appType === "admin",
   });
-
-  const ownerOptions =
-    users?.map((u) => ({
-      label:
-        u.firstName && u.lastName ? `${u.firstName} ${u.lastName}` : u.username,
-      value: u.id,
-    })) || [];
 
   const curriculumStore = useCurriculumStore();
   const resetStore = useCurriculumStore((state) => state.reset);
