@@ -48,6 +48,48 @@ export class AbstractVersioningCrudService<T extends ObjectLiteral> {
     return this.repository.findAllVersions(id, queryOptions as FindManyOptions<T>);
   }
 
+  async findAllVersionsPaginated(id: number | string, query: IQueryObject): Promise<PageDto<T>> {
+    const queryBuilder = new QueryBuilder(this.repository.getMetadata());
+    const queryOptions = queryBuilder.build(query);
+
+    // Make repository properties accessible
+    const repo = this.repository as any;
+    const idCol = repo.getIdColumn();
+    const versionCol = repo.getVersionColumn();
+
+    const where = Array.isArray(queryOptions.where)
+      ? queryOptions.where.map((condition) => ({
+          ...condition,
+          [idCol]: id,
+        }))
+      : {
+          ...(queryOptions.where || {}),
+          [idCol]: id,
+        };
+
+    const mergedQueryOptions = {
+      ...queryOptions,
+      where,
+      order: {
+        ...(queryOptions.order || {}),
+        [versionCol]: 'DESC',
+      },
+    };
+
+    const count = await repo.getTotalCount({ where });
+    const entities = await repo.findAll(mergedQueryOptions);
+
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto: {
+        page: Number(query.page) || 1,
+        take: Number(query.limit) || 10,
+      },
+      itemCount: count,
+    });
+
+    return new PageDto(entities, pageMetaDto);
+  }
+
   async findOneByCondition(query: IQueryObject): Promise<T | null> {
     const queryBuilder = new QueryBuilder(this.repository.getMetadata());
     const queryOptions = queryBuilder.build(query);
