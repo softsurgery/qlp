@@ -9,7 +9,7 @@ import {
 } from "@qlp/form-builder";
 import { useTranslation } from "react-i18next";
 import { CurriculumStore } from "../hooks/stores/useCurriculumStore";
-import { slugify } from "../utils";
+import { slugify } from "@qlp/lib";
 
 interface UseUpdateCurriculumFormStructureProps {
   curriculumStore: CurriculumStore;
@@ -79,6 +79,7 @@ export const useUpdateCurriculumFormStructure = ({
     label: t("fields.owner", "Owner"),
     variant: FieldVariant.SELECT,
     required: false,
+    placeholder: t("fields.ownerPlaceholder", "Select an owner"),
     description: t(
       "fields.ownerDescription",
       "Assign an owner to this curriculum",

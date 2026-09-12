@@ -10,7 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { CurriculumStore } from "../hooks/stores/useCurriculumStore";
 import { CurriculumStatus } from "@qlp/api-client";
-import { slugify } from "../utils";
+import { slugify } from "@qlp/lib";
 
 interface UseCreateCurriculumFormStructureProps {
   curriculumStore: CurriculumStore;
@@ -38,7 +38,7 @@ export const useCreateCurriculumFormStructure = ({
       value: curriculumStore.createDto.title || "",
       onChange: (value) => {
         curriculumStore.setNested("createDto.title", value);
-        curriculumStore.setNested("createDto.slug", slugify(value)); // auto-generate slug
+        curriculumStore.setNested("createDto.slug", slugify(value));
         curriculumStore.setNested("createDtoErrors.title", []);
       },
     },
@@ -102,8 +102,14 @@ export const useCreateCurriculumFormStructure = ({
     label: t("fields.owner", "Owner"),
     variant: FieldVariant.SELECT,
     required: false,
-    description: t("fields.ownerDescription", "Assign an owner to this curriculum"),
-    error: getError(curriculumStore.createDtoErrors?.ownerId as string[] | undefined),
+    placeholder: t("fields.ownerPlaceholder", "Select an owner"),
+    description: t(
+      "fields.ownerDescription",
+      "Assign an owner to this curriculum",
+    ),
+    error: getError(
+      curriculumStore.createDtoErrors?.ownerId as string[] | undefined,
+    ),
     props: {
       options: ownerOptions || [],
       value: curriculumStore.createDto.ownerId,
@@ -121,7 +127,9 @@ export const useCreateCurriculumFormStructure = ({
       {
         rows: [
           { fields: [titleField, slugField] },
-          ...(appType === "admin" ? [{ fields: [ownerField, statusField] }] : []),
+          ...(appType === "admin"
+            ? [{ fields: [ownerField, statusField] }]
+            : []),
           { fields: [descriptionField] },
         ],
       },

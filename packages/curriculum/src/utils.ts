@@ -5,12 +5,4 @@ export function errorMessage(error: ServerErrorResponse, fallback: string) {
   return Array.isArray(message) ? message.join(", ") : message || fallback;
 }
 
-export function slugify(value: string) {
-  return value
-    .normalize("NFKD")
-    .toLowerCase()
-    .trim()
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
+
