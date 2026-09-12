@@ -5,10 +5,14 @@ import { IdentifiableUser, identifyUser, identifyUserAvatar } from "@qlp/lib";
 import DataTableCell from "./data-table-cell";
 import { DataTableCellVariant } from "../types";
 
-export const UserAvatarCell = ({ user }: { user: IdentifiableUser }) => {
+export const UserAvatarCell = ({
+  user,
+}: {
+  user?: IdentifiableUser | null;
+}) => {
   const { api } = useApp();
   const { data: src } = useUploadSrc(
-    user?.picture ?? (user?.pictureId ? { id: user?.pictureId } : null),
+    user?.pictureId ? { id: user.pictureId } : null,
     api.upload,
   );
 
