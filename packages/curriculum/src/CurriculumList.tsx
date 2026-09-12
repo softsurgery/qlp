@@ -14,7 +14,6 @@ import { useIntro, useBreadcrumb } from "@qlp/contexts";
 import {
   CurriculumStatus,
   type CreateCurriculumDto,
-  type CurriculumResource,
   type ResponseCurriculumDto,
   type ServerErrorResponse,
 } from "@qlp/api-client";
@@ -23,16 +22,19 @@ import { errorMessage } from "./utils";
 import React from "react";
 import { useCurriculumDeleteDialog } from "./modals/CurriculumDeleteDialog";
 import { useCurriculumStore } from "./hooks/stores/useCurriculumStore";
+import { useApp } from "@qlp/contexts";
 
 interface CurriculumListProps {
-  api: CurriculumResource;
-  basePath: string;
+  className?: string;
 }
 
-export function CurriculumList({ api, basePath }: CurriculumListProps) {
+export function CurriculumList({ className }: CurriculumListProps = {}) {
   const { t } = useTranslation("curriculum");
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const { api: baseApi, appType } = useApp();
+  const api = appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
 
   const { setIntro, clearIntro } = useIntro();
   const { setRoutes, clearRoutes } = useBreadcrumb();
@@ -109,7 +111,7 @@ export function CurriculumList({ api, basePath }: CurriculumListProps) {
     onSuccess: (curriculum) => {
       toast.success(t("created"));
       void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
-      navigate(`${basePath}/${curriculum.id}/edit`);
+      navigate(`/curriculum/${curriculum.id}/edit`);
     },
     onError: (error: ServerErrorResponse) => {
       toast.error(errorMessage(error, t("saveError")));
@@ -142,9 +144,9 @@ export function CurriculumList({ api, basePath }: CurriculumListProps) {
   const context: DataTableConfig<ResponseCurriculumDto> = {
     singularName: t("item"),
     pluralName: t("title"),
-    createCallback: () => navigate(`${basePath}/new`),
-    inspectCallback: (entity) => navigate(`${basePath}/${entity.id}`),
-    updateCallback: (entity) => navigate(`${basePath}/${entity.id}/edit`),
+    createCallback: () => navigate(`/curriculum/new`),
+    inspectCallback: (entity) => navigate(`/curriculum/${entity.id}`),
+    updateCallback: (entity) => navigate(`/curriculum/${entity.id}/edit`),
     deleteCallback: openDeleteCurriculumDialog,
     targetEntity: (entity) => curriculumStore.set("response", entity),
     searchTerm,

@@ -1,4 +1,4 @@
 export { CurriculumList } from "./CurriculumList";
-export { CurriculumCreator } from "./CurriculumCreator";
-export { CurriculumEditor } from "./CurriculumEditor";
+export { CreateCurriculumForm } from "./forms/CreateCurriculumForm";
+export { UpdateCurriculumForm } from "./forms/UpdateCurriculumForm";
 export { CurriculumViewer } from "./CurriculumViewer";

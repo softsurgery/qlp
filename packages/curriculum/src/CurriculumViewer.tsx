@@ -1,17 +1,19 @@
 import React from "react";
-import { type CurriculumResource } from "@qlp/api-client";
+import { useApp } from "@qlp/contexts";
 
 interface CurriculumViewerProps {
-  api: CurriculumResource;
-  basePath: string;
   curriculumId: string;
+  version?: number;
+  revealAnswers?: boolean;
 }
 
 export function CurriculumViewer({
-  api,
-  basePath,
   curriculumId,
+  version,
+  revealAnswers,
 }: CurriculumViewerProps) {
+  const { api: baseApi, appType } = useApp();
+  const api = appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">View Curriculum</h1>

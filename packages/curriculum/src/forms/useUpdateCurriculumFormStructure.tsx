@@ -4,6 +4,8 @@ import {
   FormStructure,
   EditorFieldProps,
   TextFieldProps,
+  SelectFieldProps,
+  SelectOption,
 } from "@qlp/form-builder";
 import { useTranslation } from "react-i18next";
 import { CurriculumStore } from "../hooks/stores/useCurriculumStore";
@@ -11,10 +13,14 @@ import { slugify } from "../utils";
 
 interface UseUpdateCurriculumFormStructureProps {
   curriculumStore: CurriculumStore;
+  appType?: "admin" | "web";
+  ownerOptions?: SelectOption[];
 }
 
 export const useUpdateCurriculumFormStructure = ({
   curriculumStore,
+  appType,
+  ownerOptions,
 }: UseUpdateCurriculumFormStructureProps) => {
   const { t } = useTranslation("curriculum");
   const getError = (err?: string[]) => err?.[0];
@@ -68,11 +74,36 @@ export const useUpdateCurriculumFormStructure = ({
     },
   };
 
+  const ownerField: Field<SelectFieldProps> = {
+    id: "ownerId",
+    label: t("fields.owner", "Owner"),
+    variant: FieldVariant.SELECT,
+    required: false,
+    description: t(
+      "fields.ownerDescription",
+      "Assign an owner to this curriculum",
+    ),
+    error: getError(
+      curriculumStore.updateDtoErrors?.ownerId as string[] | undefined,
+    ),
+    props: {
+      options: ownerOptions || [],
+      value: curriculumStore.updateDto.ownerId,
+      onValueChange: (value) => {
+        curriculumStore.set("updateDto", {
+          ...curriculumStore.updateDto,
+          ownerId: value,
+        });
+      },
+    },
+  };
+
   const updateCurriculumFormStructure: FormStructure = {
     fieldsets: [
       {
         rows: [
           { fields: [titleField, slugField] },
+          ...(appType === "admin" ? [{ fields: [ownerField] }] : []),
           { fields: [descriptionField] },
         ],
       },

@@ -1,6 +1,5 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { CurriculumViewer } from "@qlp/curriculum";
-import { api } from "@/lib/api";
 
 export default function CurriculumViewPage() {
   const { id } = useParams();
@@ -10,8 +9,6 @@ export default function CurriculumViewPage() {
   if (!id) return null;
   return (
     <CurriculumViewer
-      api={api.curriculum}
-      basePath="/curriculum"
       curriculumId={id}
       version={Number.isFinite(version) ? version : undefined}
     />

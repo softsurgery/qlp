@@ -5,6 +5,7 @@ import {
   SelectFieldProps,
   EditorFieldProps,
   TextFieldProps,
+  SelectOption,
 } from "@qlp/form-builder";
 import { useTranslation } from "react-i18next";
 import { CurriculumStore } from "../hooks/stores/useCurriculumStore";
@@ -13,10 +14,14 @@ import { slugify } from "../utils";
 
 interface UseCreateCurriculumFormStructureProps {
   curriculumStore: CurriculumStore;
+  appType?: "admin" | "web";
+  ownerOptions?: SelectOption[];
 }
 
 export const useCreateCurriculumFormStructure = ({
   curriculumStore,
+  appType,
+  ownerOptions,
 }: UseCreateCurriculumFormStructureProps) => {
   const { t } = useTranslation("curriculum");
   const getError = (err?: string[]) => err?.[0];
@@ -92,11 +97,31 @@ export const useCreateCurriculumFormStructure = ({
     },
   };
 
+  const ownerField: Field<SelectFieldProps> = {
+    id: "ownerId",
+    label: t("fields.owner", "Owner"),
+    variant: FieldVariant.SELECT,
+    required: false,
+    description: t("fields.ownerDescription", "Assign an owner to this curriculum"),
+    error: getError(curriculumStore.createDtoErrors?.ownerId as string[] | undefined),
+    props: {
+      options: ownerOptions || [],
+      value: curriculumStore.createDto.ownerId,
+      onValueChange: (value) => {
+        curriculumStore.set("createDto", {
+          ...curriculumStore.createDto,
+          ownerId: value,
+        });
+      },
+    },
+  };
+
   const createCurriculumFormStructure: FormStructure = {
     fieldsets: [
       {
         rows: [
           { fields: [titleField, slugField] },
+          ...(appType === "admin" ? [{ fields: [ownerField, statusField] }] : []),
           { fields: [descriptionField] },
         ],
       },

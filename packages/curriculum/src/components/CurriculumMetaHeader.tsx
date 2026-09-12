@@ -1,42 +1,44 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
-import { type ResponseUserDto } from "@qlp/api-client";
+import { type ResponseCurriculumDto } from "@qlp/api-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@qlp/ui";
 import { useUploadSrc, type UploadSrcApi } from "@qlp/hooks";
 import { DocumentMetaTable, type MetaTableRow } from "./DocumentMetaTable";
 
 export interface CurriculumMetaHeaderProps {
   className?: string;
-  statusLabel?: string;
-  status: string;
-  createdByLabel?: string;
-  user?: ResponseUserDto | null;
-  createdAtLabel?: string;
-  createdAt?: Date | string;
-  updatedAtLabel?: string;
-  updatedAt?: Date | string;
+  curriculum?: Partial<ResponseCurriculumDto>;
   extraRows?: MetaTableRow[];
   uploadApi?: UploadSrcApi;
 }
 
 export const CurriculumMetaHeader = ({
   className,
-  statusLabel,
-  status,
-  createdByLabel,
-  user,
-  createdAtLabel,
-  createdAt,
-  updatedAtLabel,
-  updatedAt,
+  curriculum,
   extraRows = [],
   uploadApi,
 }: CurriculumMetaHeaderProps) => {
   const { t: tCommon } = useTranslation("common");
+  const { t: tCurriculum } = useTranslation("curriculum");
 
-  const { data: avatarSrc } = useUploadSrc(
-    uploadApi ? (user?.picture ?? (user?.pictureId ? { id: user.pictureId } : null)) : null,
-    uploadApi!
+  const createdBy = curriculum?.createdBy;
+  const owner = curriculum?.owner;
+  const status = curriculum?.status;
+  const createdAt = curriculum?.createdAt;
+  const updatedAt = curriculum?.updatedAt;
+
+  const { data: createdByAvatarSrc } = useUploadSrc(
+    uploadApi
+      ? (createdBy?.picture ??
+          (createdBy?.pictureId ? { id: createdBy?.pictureId } : null))
+      : null,
+    uploadApi!,
+  );
+
+  const { data: ownerAvatarSrc } = useUploadSrc(
+    uploadApi
+      ? (owner?.picture ?? (owner?.pictureId ? { id: owner?.pictureId } : null))
+      : null,
+    uploadApi!,
   );
 
   const formatDate = (date?: Date | string) => {
@@ -45,25 +47,64 @@ export const CurriculumMetaHeader = ({
   };
 
   const rows: MetaTableRow[] = [
-    { label: statusLabel || tCommon("fields.status", "Status"), value: status },
-    ...(user
+    ...(status
       ? [
           {
-            label: createdByLabel || tCommon("fields.createdBy", "Created By"),
+            label: tCommon("fields.status", "Status"),
+            value: tCurriculum(`status.${status}` as any, status),
+          },
+        ]
+      : []),
+    ...(createdBy
+      ? [
+          {
+            label: tCommon("fields.createdBy", "Created By"),
             value: (
               <div className="flex items-center gap-2">
                 {uploadApi && (
                   <Avatar className="h-6 w-6 shrink-0">
-                    <AvatarImage src={avatarSrc ?? undefined} />
+                    <AvatarImage src={createdByAvatarSrc ?? undefined} />
                     <AvatarFallback className="text-[10px]">
-                      {(user.firstName?.[0] || user.username[0] || "?").toUpperCase()}
+                      {(
+                        createdBy.firstName?.[0] ||
+                        createdBy.username[0] ||
+                        "?"
+                      ).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 )}
                 <span>
-                  {user.firstName
-                    ? `${user.firstName} ${user.lastName}`
-                    : user.username}
+                  {createdBy.firstName
+                    ? `${createdBy.firstName} ${createdBy.lastName}`
+                    : createdBy.username}
+                </span>
+              </div>
+            ),
+          },
+        ]
+      : []),
+    ...(owner
+      ? [
+          {
+            label: tCommon("fields.owner", "Owner"),
+            value: (
+              <div className="flex items-center gap-2">
+                {uploadApi && (
+                  <Avatar className="h-6 w-6 shrink-0">
+                    <AvatarImage src={ownerAvatarSrc ?? undefined} />
+                    <AvatarFallback className="text-[10px]">
+                      {(
+                        owner.firstName?.[0] ||
+                        owner.username[0] ||
+                        "?"
+                      ).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+                <span>
+                  {owner.firstName
+                    ? `${owner.firstName} ${owner.lastName}`
+                    : owner.username}
                 </span>
               </div>
             ),
@@ -73,7 +114,7 @@ export const CurriculumMetaHeader = ({
     ...(createdAt
       ? [
           {
-            label: createdAtLabel || tCommon("fields.createdAt", "Created At"),
+            label: tCommon("fields.createdAt", "Created At"),
             value: formatDate(createdAt),
           },
         ]
@@ -81,7 +122,7 @@ export const CurriculumMetaHeader = ({
     ...(updatedAt
       ? [
           {
-            label: updatedAtLabel || tCommon("fields.updatedAt", "Updated At"),
+            label: tCommon("fields.updatedAt", "Updated At"),
             value: formatDate(updatedAt),
           },
         ]

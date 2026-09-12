@@ -1,18 +1,16 @@
 import React from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useApp } from "@qlp/contexts";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Save, Repeat2 } from "lucide-react";
+import { Save, Repeat2, Loader2 } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useBreadcrumb, useUI } from "@qlp/contexts";
 import { Button, Separator, Label } from "@qlp/ui";
 import {
-  type CurriculumResource,
   type UpdateCurriculumDto,
-  type ResponseCurriculumDto,
   type ServerErrorResponse,
 } from "@qlp/api-client";
-import { type UploadSrcApi } from "@qlp/hooks";
 import { useCurriculumStore } from "../hooks/stores/useCurriculumStore";
 import { useUpdateCurriculumFormStructure } from "./useUpdateCurriculumFormStructure";
 import { errorMessage } from "../utils";
@@ -21,24 +19,48 @@ import { CurriculumMetaHeader } from "../components/CurriculumMetaHeader";
 
 interface UpdateCurriculumFormProps {
   className?: string;
-  api: CurriculumResource;
-  uploadApi?: UploadSrcApi;
-  basePath: string;
-  curriculum: ResponseCurriculumDto;
+  curriculumId: string;
+  appType?: "admin" | "web";
   onSuccess?: () => void;
 }
 
 export function UpdateCurriculumForm({
   className,
-  api,
-  uploadApi,
-  basePath,
-  curriculum,
+  curriculumId,
+  appType: appTypeProp,
   onSuccess,
 }: UpdateCurriculumFormProps) {
   const { t: tCommon } = useTranslation("common");
+  const { api: baseApi, appType: contextAppType } = useApp();
+  const appType = appTypeProp || contextAppType;
+  const api =
+    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+  const uploadApi = baseApi.upload;
   const { t } = useTranslation("curriculum");
   const queryClient = useQueryClient();
+
+  const userApi = baseApi.user;
+  const { data: users } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => userApi?.findAll(),
+    enabled: appType === "admin" && !!userApi,
+  });
+
+  const ownerOptions =
+    users?.map((u) => ({
+      label:
+        u.firstName && u.lastName ? `${u.firstName} ${u.lastName}` : u.username,
+      value: u.id,
+    })) || [];
+
+  const {
+    data: curriculum,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["curriculum", curriculumId],
+    queryFn: () => api.findById(curriculumId),
+  });
 
   const curriculumStore = useCurriculumStore();
   const resetStore = useCurriculumStore((state) => state.reset);
@@ -48,19 +70,21 @@ export function UpdateCurriculumForm({
 
   // Populate store
   React.useEffect(() => {
-    curriculumStore.set("response", curriculum);
-    curriculumStore.set("updateDto", {
-      title: curriculum.title,
-      slug: curriculum.slug,
-      description: curriculum.description,
-      status: curriculum.status,
-    });
+    if (curriculum) {
+      curriculumStore.set("response", curriculum);
+      curriculumStore.set("updateDto", {
+        title: curriculum.title,
+        slug: curriculum.slug,
+        description: curriculum.description,
+        status: curriculum.status,
+      });
+    }
   }, [curriculum]); // intentional single initialization dependency when curriculum loads
 
   React.useEffect(() => {
-    if (setRoutes) {
+    if (setRoutes && curriculum) {
       setRoutes([
-        { title: t("title"), href: basePath },
+        { title: t("title"), href: "/curriculum" },
         { title: curriculum.title || t("updateTitle") },
       ]);
     }
@@ -77,20 +101,26 @@ export function UpdateCurriculumForm({
     setEnableMainOverflow,
     setRoutes,
     t,
-    basePath,
-    curriculum.title,
+    curriculum?.title,
   ]);
 
   const { updateCurriculumFormStructure } = useUpdateCurriculumFormStructure({
     curriculumStore,
+    appType,
+    ownerOptions,
   });
 
   const { mutate: updateMutation, isPending } = useMutation({
-    mutationFn: (dto: UpdateCurriculumDto) => api.update(curriculum.id, dto),
+    mutationFn: (dto: UpdateCurriculumDto) => {
+      if (!curriculum) throw new Error("Curriculum not loaded");
+      return api.update(curriculum.id, dto);
+    },
     onSuccess: (updated) => {
       toast.success(t("updated"));
       void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
-      void queryClient.invalidateQueries({ queryKey: ["curriculum", curriculum.id] });
+      void queryClient.invalidateQueries({
+        queryKey: ["curriculum", curriculumId],
+      });
       if (onSuccess) onSuccess();
     },
     onError: (error: ServerErrorResponse) => {
@@ -115,18 +145,21 @@ export function UpdateCurriculumForm({
     </div>
   );
 
-  const sidebarContent = (
+  const sidebarContent = curriculum ? (
     <>
       <CurriculumMetaHeader
-        status={t(`status.${curriculum.status}`)}
-        user={curriculum.owner}
-        createdAt={curriculum.createdAt}
-        updatedAt={curriculum.updatedAt}
+        curriculum={{
+          ...curriculum,
+          owner: appType === "admin" ? undefined : curriculum.owner,
+          createdAt: appType !== "admin" ? undefined : curriculum.createdAt,
+        }}
         uploadApi={uploadApi}
       />
       <Separator />
       <div className="flex flex-col gap-2 w-full">
-        <Label className="text-xs font-bold text-muted-foreground">{tCommon("commands.actions", "Actions")}</Label>
+        <Label className="text-xs font-bold text-muted-foreground">
+          {tCommon("commands.actions", "Actions")}
+        </Label>
         <Button
           type="button"
           size="lg"
@@ -151,7 +184,23 @@ export function UpdateCurriculumForm({
         </Button>
       </div>
     </>
-  );
+  ) : null;
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full items-center justify-center p-6">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (isError || !curriculum) {
+    return (
+      <div className="flex h-full items-center justify-center p-6">
+        <p className="text-destructive">Failed to load curriculum</p>
+      </div>
+    );
+  }
 
   return (
     <CurriculumFormLayout
