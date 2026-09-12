@@ -32,10 +32,12 @@ export function createCurriculumResource(
     sort,
     filter = "",
     search = "",
+    join,
   }: QueryParams): Promise<Paginated<ResponseCurriculumDto>> => {
     const params: { [key: string]: string | undefined } = { page, limit, sort };
     if (search) params.search = search;
     if (filter) params.filter = filter;
+    if (join) params.join = join;
     const response = await http.get<Paginated<ResponseCurriculumDto>>(
       `${basePath}/list`,
       { params },
@@ -48,8 +50,8 @@ export function createCurriculumResource(
     return response.data;
   };
 
-  const findById = async (id: string): Promise<ResponseCurriculumDto> => {
-    const response = await http.get<ResponseCurriculumDto>(`${basePath}/${id}`);
+  const findById = async (id: string, params?: QueryParams): Promise<ResponseCurriculumDto> => {
+    const response = await http.get<ResponseCurriculumDto>(`${basePath}/${id}`, { params });
     return response.data;
   };
 
@@ -77,9 +79,11 @@ export function createCurriculumResource(
 
   const findWorkflow = async (
     id: string,
+    params?: QueryParams,
   ): Promise<ResponseCurriculumWorkflowDto> => {
     const response = await http.get<ResponseCurriculumWorkflowDto>(
       `${basePath}/${id}/workflow`,
+      { params },
     );
     return response.data;
   };

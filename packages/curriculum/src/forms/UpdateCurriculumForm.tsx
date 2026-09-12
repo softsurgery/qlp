@@ -1,9 +1,10 @@
 import React from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useApp } from "@qlp/contexts";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Save, Repeat2, Loader2 } from "lucide-react";
+import { Save, Repeat2, Loader2, History as HistoryIcon } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useBreadcrumb, useUI } from "@qlp/contexts";
 import { Button, Separator, Label } from "@qlp/ui";
@@ -32,6 +33,7 @@ export function UpdateCurriculumForm({
   onSuccess,
 }: UpdateCurriculumFormProps) {
   const { t: tCommon } = useTranslation("common");
+  const navigate = useNavigate();
   const { api: baseApi, appType: contextAppType } = useApp();
   const appType = appTypeProp || contextAppType;
   const api =
@@ -45,13 +47,16 @@ export function UpdateCurriculumForm({
   });
 
   const {
-    data: curriculum,
+    data: workflowData,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["curriculum", curriculumId],
-    queryFn: () => api.findById(curriculumId),
+    queryKey: ["curriculum", curriculumId, "workflow"],
+    queryFn: () =>
+      api.workflow.findWorkflow(curriculumId, { join: "owner,createdBy" }),
   });
+
+  const curriculum = workflowData?.curriculum;
 
   const curriculumStore = useCurriculumStore();
   const resetStore = useCurriculumStore((state) => state.reset);
@@ -68,6 +73,7 @@ export function UpdateCurriculumForm({
         slug: curriculum.slug,
         description: curriculum.description,
         status: curriculum.status,
+        ownerId: curriculum.owner?.id || curriculum.ownerId,
       });
     }
   }, [curriculum]); // intentional single initialization dependency when curriculum loads
@@ -119,6 +125,26 @@ export function UpdateCurriculumForm({
     },
   });
 
+  const { mutate: executeWorkflowMutation, isPending: isExecutingWorkflow } =
+    useMutation({
+      mutationFn: (dto: { event: string }) =>
+        api.workflow.executeWorkflow(curriculumId, dto),
+      onSuccess: () => {
+        toast.success(
+          tCommon("workflowExecuted", "Action executed successfully"),
+        );
+        void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
+        void queryClient.invalidateQueries({
+          queryKey: ["curriculum", curriculumId],
+        });
+      },
+      onError: (error: ServerErrorResponse) => {
+        toast.error(
+          errorMessage(error, tCommon("workflowError", "Action failed")),
+        );
+      },
+    });
+
   const handleSubmit = React.useCallback(() => {
     if (!curriculumStore.updateDto.title?.trim()) {
       curriculumStore.set("updateDtoErrors", {
@@ -153,18 +179,31 @@ export function UpdateCurriculumForm({
         </Label>
         <Button
           type="button"
-          size="lg"
+          size="sm"
           className="rounded-xl w-full"
           variant={"outline"}
           onClick={handleSubmit}
-          disabled={isPending}
+          disabled={isPending || (workflowData && !workflowData.isUpdatable)}
         >
           <Save className="mr-2 h-4 w-4" />
           <span>{tCommon("commands.save", "Save")}</span>
         </Button>
+        {workflowData?.nextSteps?.map((step: { label: string }) => (
+          <Button
+            key={step.label}
+            type="button"
+            size="sm"
+            className="rounded-xl w-full"
+            variant="default"
+            onClick={() => executeWorkflowMutation({ event: step.label })}
+            disabled={isPending || isExecutingWorkflow}
+          >
+            {step.label}
+          </Button>
+        ))}
         <Button
           type="button"
-          size="lg"
+          size="sm"
           className="rounded-xl w-full"
           variant={"ghost"}
           onClick={resetStore}
@@ -173,6 +212,18 @@ export function UpdateCurriculumForm({
           <Repeat2 className="mr-2 h-4 w-4" />
           <span>{tCommon("commands.reset", "Reset")}</span>
         </Button>
+      </div>
+      <div className="flex flex-col gap-2 w-full mt-4">
+        <Label className="text-xs font-bold text-muted-foreground">
+          {tCommon("commands.shortcuts", "Shortcuts")}
+        </Label>
+        <Link
+          to={`/curriculum/${curriculumId}/versions`}
+          className="text-sm text-primary hover:underline flex items-center"
+        >
+          <HistoryIcon className="mr-2 h-4 w-4" />
+          {tCommon("commands.history", "History")}
+        </Link>
       </div>
     </>
   ) : null;

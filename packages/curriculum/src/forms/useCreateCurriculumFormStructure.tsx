@@ -75,28 +75,6 @@ export const useCreateCurriculumFormStructure = ({
     },
   };
 
-  const statusField: Field<SelectFieldProps> = {
-    id: "status",
-    label: t("fields.status"),
-    variant: FieldVariant.SELECT,
-    required: true,
-    description: t("fields.statusDescription"),
-    error: getError(curriculumStore.createDtoErrors?.status),
-    props: {
-      options: Object.values(CurriculumStatus).map((status) => ({
-        label: t(`status.${status}`),
-        value: status,
-      })),
-      value: curriculumStore.createDto.status,
-      onValueChange: (value) => {
-        curriculumStore.set("createDto", {
-          ...curriculumStore.createDto,
-          status: value as CurriculumStatus,
-        });
-      },
-    },
-  };
-
   const ownerField: Field<SelectFieldProps> = {
     id: "ownerId",
     label: t("fields.owner", "Owner"),
@@ -128,7 +106,7 @@ export const useCreateCurriculumFormStructure = ({
         rows: [
           { fields: [titleField, slugField] },
           ...(appType === "admin"
-            ? [{ fields: [ownerField, statusField] }]
+            ? [{ fields: [ownerField] }]
             : []),
           { fields: [descriptionField] },
         ],

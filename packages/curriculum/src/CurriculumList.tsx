@@ -34,7 +34,8 @@ export function CurriculumList({ className }: CurriculumListProps = {}) {
   const queryClient = useQueryClient();
 
   const { api: baseApi, appType } = useApp();
-  const api = appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+  const api =
+    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
 
   const { setIntro, clearIntro } = useIntro();
   const { setRoutes, clearRoutes } = useBreadcrumb();
@@ -102,7 +103,7 @@ export function CurriculumList({ className }: CurriculumListProps = {}) {
         search: debouncedSearchTerm,
         sort: `${debouncedSortDetails.sortKey},${debouncedSortDetails.order ? "ASC" : "DESC"}`,
         filter: filterString,
-        join: "owner",
+        join: "owner,createdBy",
       }),
   });
 

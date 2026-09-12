@@ -6,6 +6,7 @@ import {
   DataTableCellVariant,
   DataTableColumnHeader,
   DataTableRowActions,
+  UserAvatarCell,
   type DataTableColumnFilterOption,
   type DataTableConfig,
 } from "@qlp/datatable-builder";
@@ -78,6 +79,24 @@ export function useCurriculumColumns(
           enableSorting: true,
         },
         {
+          accessorKey: "version",
+          meta: {
+            title: t("columns.version"),
+          },
+          header: ({ column }) => (
+            <DataTableColumnHeader
+              column={column}
+              title={t("columns.version")}
+              attribute="version"
+              context={context}
+            />
+          ),
+          cell: ({ row }) => (
+            <div className="text-sm">{row.original.version}</div>
+          ),
+          enableSorting: true,
+        },
+        {
           accessorKey: "status",
           meta: {
             title: t("columns.status"),
@@ -111,11 +130,25 @@ export function useCurriculumColumns(
             />
           ),
           cell: ({ row }) => (
-            <div className="text-sm">
-              {row.original.owner
-                ? `${row.original.owner.firstName} ${row.original.owner.lastName}`
-                : "-"}
-            </div>
+            <UserAvatarCell user={row.original.owner} />
+          ),
+          enableSorting: false,
+        },
+        {
+          accessorKey: "createdBy",
+          meta: {
+            title: t("columns.createdBy"),
+          },
+          header: ({ column }) => (
+            <DataTableColumnHeader
+              column={column}
+              title={t("columns.createdBy")}
+              attribute="createdBy"
+              context={context}
+            />
+          ),
+          cell: ({ row }) => (
+            <UserAvatarCell user={row.original.createdBy} />
           ),
           enableSorting: false,
         },

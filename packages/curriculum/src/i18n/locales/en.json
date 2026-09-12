@@ -42,7 +42,8 @@
     "version": "Version",
     "createdAt": "Created at",
     "updatedAt": "Updated at",
-    "owner": "Owned by"
+    "owner": "Owned by",
+    "createdBy": "Created by"
   },
   "status": {
     "draft": "Draft",

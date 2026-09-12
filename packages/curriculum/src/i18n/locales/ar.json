@@ -42,7 +42,8 @@
     "version": "الإصدار",
     "createdAt": "تاريخ الإنشاء",
     "updatedAt": "آخر تحديث",
-    "owner": "المالك"
+    "owner": "المالك",
+    "createdBy": "تم الإنشاء بواسطة"
   },
   "status": {
     "draft": "مسودة",

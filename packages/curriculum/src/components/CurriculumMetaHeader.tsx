@@ -3,6 +3,7 @@ import { type ResponseCurriculumDto } from "@qlp/api-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@qlp/ui";
 import { useUploadSrc, type UploadSrcApi } from "@qlp/hooks";
 import { DocumentMetaTable, type MetaTableRow } from "./DocumentMetaTable";
+import { identifyUser, identifyUserAvatar } from "@qlp/lib";
 
 export interface CurriculumMetaHeaderProps {
   className?: string;
@@ -73,11 +74,7 @@ export const CurriculumMetaHeader = ({
                     </AvatarFallback>
                   </Avatar>
                 )}
-                <span>
-                  {createdBy.firstName
-                    ? `${createdBy.firstName} ${createdBy.lastName}`
-                    : createdBy.username}
-                </span>
+                <span>{identifyUser(createdBy)}</span>
               </div>
             ),
           },
@@ -92,20 +89,12 @@ export const CurriculumMetaHeader = ({
                 {uploadApi && (
                   <Avatar className="h-6 w-6 shrink-0">
                     <AvatarImage src={ownerAvatarSrc ?? undefined} />
-                    <AvatarFallback className="text-[10px]">
-                      {(
-                        owner.firstName?.[0] ||
-                        owner.username[0] ||
-                        "?"
-                      ).toUpperCase()}
+                    <AvatarFallback className="text-xs">
+                      {identifyUserAvatar(owner)}
                     </AvatarFallback>
                   </Avatar>
                 )}
-                <span>
-                  {owner.firstName
-                    ? `${owner.firstName} ${owner.lastName}`
-                    : owner.username}
-                </span>
+                <span>{identifyUser(owner)}</span>
               </div>
             ),
           },
