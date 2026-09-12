@@ -1,5 +1,6 @@
 import type { VersionedEntity } from "./utils/database-entity.js";
 import type { ResponseUserDto } from "./user-managemnt.js";
+import type { ResponseWorkflowDto } from "./utils/workflow.js";
 
 export enum CurriculumStatus {
   Draft = "draft",
@@ -39,6 +40,14 @@ export interface ResponseCurriculumDto extends VersionedEntity {
   owner?: ResponseUserDto;
   createdById?: string;
   createdBy?: ResponseUserDto;
+}
+
+export interface ResponseCurriculumWorkflowDto extends ResponseWorkflowDto {
+  curriculum: ResponseCurriculumDto;
+}
+
+export interface ExecuteCurriculumWorkflowDto {
+  event: string;
 }
 
 export interface ResponseCurriculumLessonMaterialDto extends VersionedEntity {

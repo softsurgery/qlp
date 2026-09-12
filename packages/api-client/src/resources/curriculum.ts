@@ -18,6 +18,8 @@ import type {
   UpdateCurriculumLessonDto,
   UpdateCurriculumMaterialDto,
   UpdateCurriculumModuleDto,
+  ResponseCurriculumWorkflowDto,
+  ExecuteCurriculumWorkflowDto,
 } from "../types/index.js";
 
 export function createCurriculumResource(
@@ -62,9 +64,33 @@ export function createCurriculumResource(
     return response.data;
   };
 
-  const findVersions = async (id: string): Promise<ResponseCurriculumDto[]> => {
-    const response = await http.get<ResponseCurriculumDto[]>(
+  const findVersions = async (
+    id: string,
+    params?: QueryParams,
+  ): Promise<Paginated<ResponseCurriculumDto>> => {
+    const response = await http.get<Paginated<ResponseCurriculumDto>>(
       `${basePath}/${id}/versions`,
+      { params },
+    );
+    return response.data;
+  };
+
+  const findWorkflow = async (
+    id: string,
+  ): Promise<ResponseCurriculumWorkflowDto> => {
+    const response = await http.get<ResponseCurriculumWorkflowDto>(
+      `${basePath}/${id}/workflow`,
+    );
+    return response.data;
+  };
+
+  const executeWorkflow = async (
+    id: string,
+    dto: ExecuteCurriculumWorkflowDto,
+  ): Promise<ResponseCurriculumWorkflowDto> => {
+    const response = await http.post<ResponseCurriculumWorkflowDto>(
+      `${basePath}/${id}/workflow`,
+      dto,
     );
     return response.data;
   };
@@ -260,6 +286,10 @@ export function createCurriculumResource(
     findById,
     findTree,
     findVersions,
+    workflow: {
+      findWorkflow,
+      executeWorkflow,
+    },
     create,
     update,
     remove,

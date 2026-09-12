@@ -22,6 +22,7 @@ import { CurriculumCollaboratorEntity } from './entities/curriculum-collaborator
 import { CurriculumModuleCollaboratorEntity } from './entities/curriculum-module-collaborator.entity';
 import { CurriculumLessonCollaboratorEntity } from './entities/curriculum-lesson-collaborator.entity';
 import { UserManagementModule } from '../user-management/user-management.module';
+import { CurriculumWorkflowService } from './services/curriculum-workflow.service';
 
 @Module({
   providers: [
@@ -38,6 +39,7 @@ import { UserManagementModule } from '../user-management/user-management.module'
     CurriculumLessonService,
     CurriculumLessonMaterialService,
     CurriculumExamService,
+    CurriculumWorkflowService,
   ],
   exports: [
     CurriculumService,
@@ -45,6 +47,7 @@ import { UserManagementModule } from '../user-management/user-management.module'
     CurriculumLessonService,
     CurriculumLessonMaterialService,
     CurriculumExamService,
+    CurriculumWorkflowService,
   ],
   imports: [
     UserManagementModule,

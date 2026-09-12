@@ -7,6 +7,7 @@ import { StorageController } from 'src/shared/storage/controllers/storage.contro
 import { StorageModule } from 'src/shared/storage/storage.module';
 import { CurriculumModule } from 'src/modules/curriculum/curriculum.module';
 import { ClientCurriculumController } from 'src/modules/curriculum/controllers/client-curriculum.controller';
+import { ClientCurriculumWorkflowController } from 'src/modules/curriculum/controllers/client-curriculum-workflow.controller';
 import { ClientCurriculumModuleController } from 'src/modules/curriculum/controllers/client-curriculum-module.controller';
 import { ClientCurriculumLessonController } from 'src/modules/curriculum/controllers/client-curriculum-lesson.controller';
 import { ClientCurriculumLessonMaterialController } from 'src/modules/curriculum/controllers/client-curriculum-lesson-material.controller';
@@ -17,6 +18,7 @@ import { ClientCurriculumExamController } from 'src/modules/curriculum/controlle
     ClientAuthController,
     StorageController,
     ClientCurriculumController,
+    ClientCurriculumWorkflowController,
     ClientCurriculumModuleController,
     ClientCurriculumLessonController,
     ClientCurriculumLessonMaterialController,

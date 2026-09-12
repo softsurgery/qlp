@@ -9,6 +9,7 @@ import { RoleController } from 'src/shared/abstract-user-management/controllers/
 import { PermissionController } from 'src/shared/abstract-user-management/controllers/permission.controller';
 import { CurriculumModule } from 'src/modules/curriculum/curriculum.module';
 import { AdminCurriculumController } from 'src/modules/curriculum/controllers/admin-curriculum.controller';
+import { AdminCurriculumWorkflowController } from 'src/modules/curriculum/controllers/admin-curriculum-workflow.controller';
 import { AdminCurriculumModuleController } from 'src/modules/curriculum/controllers/admin-curriculum-module.controller';
 import { AdminCurriculumLessonController } from 'src/modules/curriculum/controllers/admin-curriculum-lesson.controller';
 import { AdminCurriculumLessonMaterialController } from 'src/modules/curriculum/controllers/admin-curriculum-lesson-material.controller';
@@ -21,6 +22,7 @@ import { AdminCurriculumExamController } from 'src/modules/curriculum/controller
     RoleController,
     PermissionController,
     AdminCurriculumController,
+    AdminCurriculumWorkflowController,
     AdminCurriculumModuleController,
     AdminCurriculumLessonController,
     AdminCurriculumLessonMaterialController,
