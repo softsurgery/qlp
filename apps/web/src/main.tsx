@@ -1,17 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter } from 'react-router-dom';
-import { Toaster } from 'sonner';
-import { ThemeProvider, useTheme } from '@qlp/ui';
-import App from './App';
-import './i18n';
-import './styles/globals.css';
-
-function ThemedToaster() {
-  const { theme } = useTheme();
-  return <Toaster position="top-right" theme={theme} />;
-}
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter } from "react-router-dom";
+import { Toaster } from "sonner";
+import { ThemeProvider } from "@qlp/ui";
+import App from "./App";
+import "./i18n";
+import "./styles/globals.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,13 +15,22 @@ const queryClient = new QueryClient({
   },
 });
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <App />
-          <ThemedToaster />
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: "hsl(var(--background))",
+                color: "hsl(var(--foreground))",
+                border: "1px solid hsl(var(--border))",
+              },
+            }}
+          />
         </BrowserRouter>
       </QueryClientProvider>
     </ThemeProvider>
