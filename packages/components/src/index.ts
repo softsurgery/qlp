@@ -14,4 +14,5 @@ export type {
   AuthScreen,
 } from "./auth";
 
-export { BreadcrumbCommon, LanguageSwitcher, Spinner } from "./shared";
+export { BreadcrumbCommon, LanguageSwitcher, Spinner, DocumentMetaTable } from "./shared";
+export type { MetaTableRow, DocumentMetaTableProps } from "./shared";
