@@ -35,10 +35,7 @@ export class AdminCurriculumModuleController {
 
   @Get('/modules/:moduleId/versions')
   async findVersions(@Param('moduleId') moduleId: string): Promise<ResponseCurriculumModuleDto[]> {
-    return toDtoArray(
-      ResponseCurriculumModuleDto,
-      await this.moduleService.findAllVersions(moduleId),
-    );
+    return toDtoArray(ResponseCurriculumModuleDto, await this.moduleService.findVersions(moduleId));
   }
 
   @Post('/:id/modules')
@@ -52,12 +49,17 @@ export class AdminCurriculumModuleController {
     if (!dto.ownerId && req.user?.sub) {
       dto.ownerId = req.user.sub;
     }
-    if (!dto.createdById && req.user?.sub) {
-      dto.createdById = req.user.sub;
-    }
-    const module = await this.moduleService.createForCurriculum(id, dto);
+    const module = await this.moduleService.createForCurriculum(id, dto, req.user?.sub);
     req.logInfo = { id: module.id, curriculumId: id };
     return toDto(ResponseCurriculumModuleDto, module);
+  }
+
+  @Put('/modules/reorder')
+  async reorder(
+    @Body() dto: { updates: { id: string; sortOrder: number }[] },
+    @Request() req: AdvancedRequest,
+  ) {
+    return this.moduleService.reorderModules(dto.updates, req.user?.sub);
   }
 
   @Put('/modules/:moduleId')

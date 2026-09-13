@@ -5,6 +5,9 @@ import { CurriculumModuleEntity } from './entities/curriculum-module.entity';
 import { CurriculumLessonEntity } from './entities/curriculum-lesson.entity';
 import { CurriculumLessonMaterialEntity } from './entities/curriculum-lesson-material.entity';
 import { CurriculumExamEntity } from './entities/curriculum-exam.entity';
+import { CurriculumCollaboratorEntity } from './entities/curriculum-collaborator.entity';
+import { CurriculumModuleCollaboratorEntity } from './entities/curriculum-module-collaborator.entity';
+import { CurriculumLessonCollaboratorEntity } from './entities/curriculum-lesson-collaborator.entity';
 import { CurriculumRepository } from './repositories/curriculum.repository';
 import { CurriculumModuleRepository } from './repositories/curriculum-module.repository';
 import { CurriculumLessonRepository } from './repositories/curriculum-lesson.repository';
@@ -18,13 +21,24 @@ import { CurriculumModuleService } from './services/curriculum-module.service';
 import { CurriculumLessonService } from './services/curriculum-lesson.service';
 import { CurriculumLessonMaterialService } from './services/curriculum-lesson-material.service';
 import { CurriculumExamService } from './services/curriculum-exam.service';
-import { CurriculumCollaboratorEntity } from './entities/curriculum-collaborator.entity';
-import { CurriculumModuleCollaboratorEntity } from './entities/curriculum-module-collaborator.entity';
-import { CurriculumLessonCollaboratorEntity } from './entities/curriculum-lesson-collaborator.entity';
-import { UserManagementModule } from '../user-management/user-management.module';
 import { CurriculumWorkflowService } from './services/curriculum-workflow.service';
+import { CurriculumModuleWorkflowService } from './services/curriculum-module-workflow.service';
+import { AdminCurriculumController } from './controllers/admin-curriculum.controller';
+import { AdminCurriculumModuleController } from './controllers/admin-curriculum-module.controller';
+import { AdminCurriculumWorkflowController } from './controllers/admin-curriculum-workflow.controller';
+import { AdminCurriculumModuleWorkflowController } from './controllers/admin-curriculum-module-workflow.controller';
+import { ClientCurriculumWorkflowController } from './controllers/client-curriculum-workflow.controller';
+import { UserManagementModule } from '../user-management/user-management.module';
+import { LoggerModule } from 'src/shared/logger/logger.module';
 
 @Module({
+  controllers: [
+    AdminCurriculumController,
+    AdminCurriculumModuleController,
+    AdminCurriculumWorkflowController,
+    AdminCurriculumModuleWorkflowController,
+    ClientCurriculumWorkflowController,
+  ],
   providers: [
     CurriculumRepository,
     CurriculumModuleRepository,
@@ -40,6 +54,7 @@ import { CurriculumWorkflowService } from './services/curriculum-workflow.servic
     CurriculumLessonMaterialService,
     CurriculumExamService,
     CurriculumWorkflowService,
+    CurriculumModuleWorkflowService,
   ],
   exports: [
     CurriculumService,
@@ -48,6 +63,7 @@ import { CurriculumWorkflowService } from './services/curriculum-workflow.servic
     CurriculumLessonMaterialService,
     CurriculumExamService,
     CurriculumWorkflowService,
+    CurriculumModuleWorkflowService,
   ],
   imports: [
     UserManagementModule,
@@ -61,6 +77,7 @@ import { CurriculumWorkflowService } from './services/curriculum-workflow.servic
       CurriculumModuleCollaboratorEntity,
       CurriculumLessonCollaboratorEntity,
     ]),
+    LoggerModule,
   ],
 })
 export class CurriculumModule {}

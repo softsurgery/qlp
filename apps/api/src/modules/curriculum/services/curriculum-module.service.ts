@@ -63,7 +63,11 @@ export class CurriculumModuleService extends AbstractVersioningCrudService<Curri
     }
   }
 
-  async createForCurriculum(curriculumId: string, dto: CreateCurriculumModuleDto) {
+  async createForCurriculum(
+    curriculumId: string,
+    dto: CreateCurriculumModuleDto,
+    createdById?: string,
+  ) {
     const siblings = await this.findAll({ filter: `curriculumId||$eq||${curriculumId}` });
     const sortOrder = dto.sortOrder ?? siblings.length;
     return this.save({
@@ -72,6 +76,7 @@ export class CurriculumModuleService extends AbstractVersioningCrudService<Curri
       description: dto.description,
       sortOrder,
       ownerId: dto.ownerId,
+      createdById: createdById,
     });
   }
 
@@ -95,5 +100,22 @@ export class CurriculumModuleService extends AbstractVersioningCrudService<Curri
       sort: 'sortOrder',
     });
     return modules;
+  }
+
+  async reorderModules(updates: { id: string; sortOrder: number }[], userId?: string) {
+    // Perform sequentially or in parallel?
+    // Doing this in parallel might be fine, since they are separate IDs,
+    // but saveNewVersion creates new versions. Let's do it in a loop for safety or Promise.all.
+    // Wait, since we are calling updateModule, it will create new versions.
+    await Promise.all(
+      updates.map((update) =>
+        this.updateModule(update.id, { sortOrder: update.sortOrder }, userId),
+      ),
+    );
+    return { success: true };
+  }
+
+  async findVersions(id: string) {
+    return this.repository.findAllVersions(id);
   }
 }
