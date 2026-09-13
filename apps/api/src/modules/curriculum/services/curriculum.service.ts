@@ -123,10 +123,10 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
     });
   }
 
-  async getTree(id: string, version?: number) {
+  async getTree(id: string, version?: number, join?: string) {
     const curriculum =
       version != null ? await this.findOneByVersion(id, version) : await this.findOneById(id);
-    const modules = await this.moduleService.findLatestByCurriculum(id);
+    const modules = await this.moduleService.findLatestByCurriculum(id, join);
 
     const nestedModules = await Promise.all(
       modules.map(async (module) => {

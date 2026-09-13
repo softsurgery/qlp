@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UseInterceptors,
 } from '@nestjs/common';
@@ -34,10 +35,13 @@ export class ClientCurriculumModuleController {
   ) {}
 
   @Get('/modules/:moduleId/versions')
-  async findVersions(@Param('moduleId') moduleId: string): Promise<ResponseCurriculumModuleDto[]> {
+  async findVersions(
+    @Param('moduleId') moduleId: string,
+    @Query('join') join?: string,
+  ): Promise<ResponseCurriculumModuleDto[]> {
     return toDtoArray(
       ResponseCurriculumModuleDto,
-      await this.moduleService.findAllVersions(moduleId),
+      await this.moduleService.findVersions(moduleId, join),
     );
   }
 

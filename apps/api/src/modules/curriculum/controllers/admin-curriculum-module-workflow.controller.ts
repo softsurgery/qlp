@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CurriculumModuleWorkflowService } from '../services/curriculum-module-workflow.service';
 import { ResponseCurriculumModuleWorkflowDto } from '../dtos/module/response-curriculum-module-workflow.dto';
@@ -12,8 +12,8 @@ export class AdminCurriculumModuleWorkflowController {
   @Get()
   @ApiOperation({ summary: 'Get workflow state for a module' })
   @ApiResponse({ status: 200, type: ResponseCurriculumModuleWorkflowDto })
-  async getWorkflow(@Param('moduleId') moduleId: string) {
-    return this.workflowService.findOneById(moduleId);
+  async getWorkflow(@Param('moduleId') moduleId: string, @Query('join') join?: string) {
+    return this.workflowService.findOneById(moduleId, join);
   }
 
   @Post()

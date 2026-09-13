@@ -52,6 +52,7 @@ export class AdminCurriculumController {
   async findTree(
     @Param('id') id: string,
     @Query('version') version?: string,
+    @Query('join') join?: string,
   ): Promise<ResponseCurriculumTreeDto> {
     const parsedVersion = version ? Number(version) : undefined;
     return toDto(
@@ -59,6 +60,7 @@ export class AdminCurriculumController {
       await this.curriculumService.getTree(
         id,
         Number.isFinite(parsedVersion) ? parsedVersion : undefined,
+        join,
       ),
     );
   }

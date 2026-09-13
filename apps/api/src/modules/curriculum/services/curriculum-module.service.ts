@@ -94,10 +94,11 @@ export class CurriculumModuleService extends AbstractVersioningCrudService<Curri
     return super.softDelete(id);
   }
 
-  async findLatestByCurriculum(curriculumId: string) {
+  async findLatestByCurriculum(curriculumId: string, join?: string) {
     const modules = await this.findAll({
       filter: `curriculumId||$eq||${curriculumId}`,
       sort: 'sortOrder',
+      join,
     });
     return modules;
   }
@@ -115,7 +116,7 @@ export class CurriculumModuleService extends AbstractVersioningCrudService<Curri
     return { success: true };
   }
 
-  async findVersions(id: string) {
-    return this.repository.findAllVersions(id);
+  async findVersions(id: string, join?: string) {
+    return super.findAllVersions(id, { join });
   }
 }
