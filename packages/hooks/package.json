@@ -20,6 +20,9 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@qlp/ui": "workspace:*",
+    "@qlp/contexts": "workspace:*",
+    "@qlp/form-builder": "workspace:*",
+    "@qlp/lib": "workspace:*",
     "zustand": "^5.0.2"
   },
   "peerDependencies": {

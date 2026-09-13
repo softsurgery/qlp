@@ -18,7 +18,7 @@ import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
 import { CurriculumModules } from "../../CurriculumModules";
-import { useTutors } from "../../../hooks/user/useTutors";
+import { useTutors } from "@qlp/hooks";
 
 interface UpdateCurriculumFormProps {
   className?: string;

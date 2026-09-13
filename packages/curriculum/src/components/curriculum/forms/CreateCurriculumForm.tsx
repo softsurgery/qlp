@@ -17,7 +17,7 @@ import { useCurriculumStore } from "../../../hooks/stores/useCurriculumStore";
 import { useCreateCurriculumFormStructure } from "./useCreateCurriculumFormStructure";
 import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
-import { useTutors } from "../../../hooks/user/useTutors";
+import { useTutors } from "@qlp/hooks";
 
 export interface CreateCurriculumFormProps {
   className?: string;

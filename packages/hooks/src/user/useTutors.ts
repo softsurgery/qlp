@@ -9,11 +9,7 @@ export interface useTutorsProps {
 }
 
 export const useTutors = ({ enabled = true }: useTutorsProps = {}) => {
-  const { api, appType } = useApp();
-  const userApi = appType === "admin" ? api.adminCurriculum : api.curriculum; // wait, no! userApi is api.user!
-
-  // let's correct this inside the file
-  const actualUserApi = api.user;
+  const { api } = useApp();
 
   const {
     data: usersResp,
@@ -21,8 +17,8 @@ export const useTutors = ({ enabled = true }: useTutorsProps = {}) => {
     refetch: refetchTutors,
   } = useQuery({
     queryKey: ["users", "tutors"],
-    queryFn: () => actualUserApi?.findAll(),
-    enabled: enabled && !!actualUserApi,
+    queryFn: () => api.user.findAll(),
+    enabled,
   });
 
   const tutors = React.useMemo(() => {
