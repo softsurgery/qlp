@@ -17,13 +17,13 @@ export const useTutors = ({ enabled = true }: useTutorsProps = {}) => {
     refetch: refetchTutors,
   } = useQuery({
     queryKey: ["users", "tutors"],
-    queryFn: () => api.user.findAll(),
+    queryFn: () => api.user.findAll({ filter: `role.label||$eq||Tutor` }),
     enabled,
   });
 
   const tutors = React.useMemo(() => {
     if (!usersResp) return [];
-    return usersResp.filter((u) => u.role?.label === "Tutor");
+    return usersResp;
   }, [usersResp]);
 
   const tutorOptions = React.useMemo(() => {
