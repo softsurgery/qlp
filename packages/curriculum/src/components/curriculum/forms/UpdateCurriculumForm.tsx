@@ -17,7 +17,7 @@ import { useUpdateCurriculumFormStructure } from "./useUpdateCurriculumFormStruc
 import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
-import { CurriculumModules } from "../../CurriculumModules";
+import { CurriculumModules } from "../../curriculum-module/CurriculumModules";
 import { useTutors } from "@qlp/hooks";
 
 interface UpdateCurriculumFormProps {

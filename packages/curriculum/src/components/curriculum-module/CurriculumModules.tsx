@@ -23,10 +23,10 @@ import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { type ResponseCurriculumModuleDto } from "@qlp/api-client";
 import { CurriculumModuleItem } from "./CurriculumModuleItem";
-import { CreateCurriculumModuleForm } from "./curriculum-module/forms/CreateCurriculumModuleForm";
+import { CreateCurriculumModuleForm } from "./forms/CreateCurriculumModuleForm";
 import { useSheet } from "@qlp/ui";
 import { toast } from "sonner";
-import { useCurriculum } from "../hooks";
+import { useCurriculum } from "../../hooks";
 
 export interface CurriculumModulesProps {
   className?: string;
