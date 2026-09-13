@@ -12,13 +12,13 @@ import {
   type UpdateCurriculumDto,
   type ServerErrorResponse,
 } from "@qlp/api-client";
-import { useCurriculumStore } from "../hooks/stores/useCurriculumStore";
+import { useCurriculumStore } from "../../../hooks/stores/useCurriculumStore";
 import { useUpdateCurriculumFormStructure } from "./useUpdateCurriculumFormStructure";
-import { errorMessage } from "../utils";
-import { CurriculumFormLayout } from "../components/CurriculumFormLayout";
-import { CurriculumMetaHeader } from "../components/CurriculumMetaHeader";
-import { CurriculumModules } from "../components/CurriculumModules";
-import { useTutors } from "../hooks/user/useTutors";
+import { errorMessage } from "../../../utils";
+import { CurriculumFormLayout } from "../../CurriculumFormLayout";
+import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
+import { CurriculumModules } from "../../CurriculumModules";
+import { useTutors } from "../../../hooks/user/useTutors";
 
 interface UpdateCurriculumFormProps {
   className?: string;
@@ -229,7 +229,6 @@ export function UpdateCurriculumForm({
           <span>{tCommon("commands.reset", "Reset")}</span>
         </Button>
       </div>
-
     </>
   ) : null;
 

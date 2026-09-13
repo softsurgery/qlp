@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useApp, useBreadcrumb, useIntro } from "@qlp/contexts";
@@ -10,15 +10,17 @@ import {
 } from "@qlp/datatable-builder";
 import { useDebounce } from "@qlp/hooks";
 import { ResponseCurriculumDto } from "@qlp/api-client";
-import { useCurriculumColumns } from "./columns";
+import { useCurriculumVersionColumns } from "./columns";
 import { Loader2 } from "lucide-react";
-import { Button } from "@qlp/ui";
+import { cn } from "@qlp/ui";
 
 interface CurriculumVersionsListProps {
+  className?: string;
   curriculumId: string;
 }
 
 export function CurriculumVersionsList({
+  className,
   curriculumId,
 }: CurriculumVersionsListProps) {
   const { t } = useTranslation("curriculum");
@@ -143,7 +145,7 @@ export function CurriculumVersionsList({
     },
   } as any;
 
-  const columns = useCurriculumColumns(context, []);
+  const columns = useCurriculumVersionColumns(context);
 
   const isPending = isLoading || paging || resizing;
 
@@ -164,7 +166,12 @@ export function CurriculumVersionsList({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden gap-4">
+    <div
+      className={cn(
+        "flex min-h-0 flex-1 flex-col overflow-hidden gap-4",
+        className,
+      )}
+    >
       <DataTable
         className="flex min-h-0 flex-1 flex-col overflow-hidden"
         containerClassName="min-h-0 overflow-auto"

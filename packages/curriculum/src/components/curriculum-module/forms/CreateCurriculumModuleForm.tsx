@@ -10,9 +10,9 @@ import {
   type CreateCurriculumModuleDto,
   type ServerErrorResponse,
 } from "@qlp/api-client";
-import { useCurriculumModuleStore } from "../hooks/stores/useCurriculumModuleStore";
+import { useCurriculumModuleStore } from "../../../hooks/stores/useCurriculumModuleStore";
 import { useCreateCurriculumModuleFormStructure } from "./useCreateCurriculumModuleFormStructure";
-import { errorMessage } from "../utils";
+import { errorMessage } from "../../../utils";
 
 export interface CreateCurriculumModuleFormProps {
   curriculumId: string;

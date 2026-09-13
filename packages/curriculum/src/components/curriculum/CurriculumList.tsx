@@ -18,11 +18,12 @@ import {
   type ServerErrorResponse,
 } from "@qlp/api-client";
 import { useCurriculumColumns } from "./columns";
-import { errorMessage } from "./utils";
+import { errorMessage } from "../../utils";
 import React from "react";
-import { useCurriculumDeleteDialog } from "./modals/CurriculumDeleteDialog";
-import { useCurriculumStore } from "./hooks/stores/useCurriculumStore";
+import { useCurriculumDeleteDialog } from "../../modals/CurriculumDeleteDialog";
+import { useCurriculumStore } from "../../hooks/stores/useCurriculumStore";
 import { useApp } from "@qlp/contexts";
+import { cn } from "@qlp/ui";
 
 interface CurriculumListProps {
   className?: string;
@@ -193,7 +194,12 @@ export function CurriculumList({ className }: CurriculumListProps = {}) {
     filtering;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden gap-4">
+    <div
+      className={cn(
+        "flex min-h-0 flex-1 flex-col overflow-hidden gap-4",
+        className,
+      )}
+    >
       <DataTable
         className="flex min-h-0 flex-1 flex-col overflow-hidden"
         containerClassName="min-h-0 overflow-auto"

@@ -6,17 +6,17 @@ import { Save, X } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useApp, useBreadcrumb, useUI } from "@qlp/contexts";
 import { Button, Label, Separator } from "@qlp/ui";
-import { useCurriculum, useCurriculumModuleWorkflow } from "../hooks";
+import { useCurriculum, useCurriculumModuleWorkflow } from "../../../hooks";
 import {
   type UpdateCurriculumModuleDto,
   type ServerErrorResponse,
   type ResponseCurriculumModuleDto,
 } from "@qlp/api-client";
-import { useCurriculumModuleStore } from "../hooks/stores/useCurriculumModuleStore";
+import { useCurriculumModuleStore } from "../../../hooks/stores/useCurriculumModuleStore";
 import { useUpdateCurriculumModuleFormStructure } from "./useUpdateCurriculumModuleFormStructure";
-import { errorMessage } from "../utils";
-import { CurriculumFormLayout } from "../components/CurriculumFormLayout";
-import { CurriculumMetaHeader } from "../components/CurriculumMetaHeader";
+import { errorMessage } from "../../../utils";
+import { CurriculumFormLayout } from "../../CurriculumFormLayout";
+import { CurriculumMetaHeader } from "../../curriculum/CurriculumMetaHeader";
 import { useNavigate } from "react-router-dom";
 
 export interface UpdateCurriculumModuleFormProps {

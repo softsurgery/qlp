@@ -6,7 +6,7 @@ import {
   TextFieldProps,
 } from "@qlp/form-builder";
 import { useTranslation } from "react-i18next";
-import { CurriculumModuleStore } from "../hooks/stores/useCurriculumModuleStore";
+import { CurriculumModuleStore } from "../../../hooks/stores/useCurriculumModuleStore";
 
 interface UseCreateCurriculumModuleFormStructureProps {
   curriculumModuleStore: CurriculumModuleStore;

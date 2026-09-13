@@ -18,21 +18,25 @@ import {
 } from "@dnd-kit/sortable";
 import { useApp } from "@qlp/contexts";
 import { useDnDService } from "@qlp/hooks";
-import { Button } from "@qlp/ui";
+import { Button, cn } from "@qlp/ui";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { type ResponseCurriculumModuleDto } from "@qlp/api-client";
 import { CurriculumModuleItem } from "./CurriculumModuleItem";
-import { CreateCurriculumModuleForm } from "../forms/CreateCurriculumModuleForm";
+import { CreateCurriculumModuleForm } from "./curriculum-module/forms/CreateCurriculumModuleForm";
 import { useSheet } from "@qlp/ui";
 import { toast } from "sonner";
 import { useCurriculum } from "../hooks";
 
 export interface CurriculumModulesProps {
+  className?: string;
   curriculumId: string;
 }
 
-export function CurriculumModules({ curriculumId }: CurriculumModulesProps) {
+export function CurriculumModules({
+  className,
+  curriculumId,
+}: CurriculumModulesProps) {
   const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("curriculum");
   const { api: baseApi, appType } = useApp();
@@ -41,7 +45,8 @@ export function CurriculumModules({ curriculumId }: CurriculumModulesProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { curriculum: treeData, isCurriculumPending: isLoading } = useCurriculum({ id: curriculumId, join: "owner,createdBy" });
+  const { curriculum: treeData, isCurriculumPending: isLoading } =
+    useCurriculum({ id: curriculumId, join: "owner,createdBy" });
 
   const [modules, setModules] = React.useState<ResponseCurriculumModuleDto[]>(
     [],
@@ -162,7 +167,7 @@ export function CurriculumModules({ curriculumId }: CurriculumModulesProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className={cn("flex flex-col gap-4", className)}>
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-lg font-semibold">{t("modules", "Modules")}</h3>

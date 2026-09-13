@@ -8,7 +8,7 @@ import {
   SelectOption,
 } from "@qlp/form-builder";
 import { useTranslation } from "react-i18next";
-import { CurriculumStore } from "../hooks/stores/useCurriculumStore";
+import { CurriculumStore } from "../../../hooks/stores/useCurriculumStore";
 import { slugify } from "@qlp/lib";
 
 interface UseUpdateCurriculumFormStructureProps {

@@ -1,26 +1,20 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import {
-  DataTable,
-  type DataTableConfig,
-  UserAvatarCell,
-  DataTableCell,
-  DataTableCellVariant,
-} from "@qlp/datatable-builder";
-import { Badge } from "@qlp/ui";
-import { capitalize } from "lodash";
+import { DataTable, type DataTableConfig } from "@qlp/datatable-builder";
 import { useApp, useBreadcrumb, useIntro } from "@qlp/contexts";
 import type { ResponseCurriculumModuleDto } from "@qlp/api-client";
-import { identifyUser } from "@qlp/lib";
-import type { ColumnDef } from "@tanstack/react-table";
-import { useCurriculum, useCurriculumModuleVersions } from "../hooks";
+import { useCurriculum, useCurriculumModuleVersions } from "../../../hooks";
+import { useCurriculumModuleVersionColumns } from "./columns";
+import { cn } from "@qlp/ui";
 
 export interface CurriculumModuleVersionsListProps {
+  className?: string;
   moduleId: string;
   curriculumId?: string;
 }
 
 export function CurriculumModuleVersionsList({
+  className,
   moduleId,
   curriculumId,
 }: CurriculumModuleVersionsListProps) {
@@ -80,82 +74,7 @@ export function CurriculumModuleVersionsList({
     moduleTitle,
   ]);
 
-  const columns = React.useMemo<ColumnDef<ResponseCurriculumModuleDto>[]>(
-    () => [
-      {
-        accessorKey: "title",
-        header: t("fields.title", "Title"),
-        cell: ({ row }) => (
-          <div>
-            <div className="font-semibold truncate">{row.original.title}</div>
-            {row.original.description && (
-              <div
-                className="line-clamp-2 text-xs text-muted-foreground mt-1"
-                dangerouslySetInnerHTML={{ __html: row.original.description }}
-              />
-            )}
-          </div>
-        ),
-      },
-      {
-        accessorKey: "version",
-        header: tCommon("fields.version", "Version"),
-        cell: ({ row }) => (
-          <div className="flex items-center gap-2">
-            <span className="text-sm">{row.original.version}</span>
-            {row.original.isLatest && (
-              <span className="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full font-medium">
-                {tCommon("status.latest", "Latest")}
-              </span>
-            )}
-          </div>
-        ),
-      },
-      {
-        accessorKey: "status",
-        header: tCommon("fields.status", "Status"),
-        cell: ({ row }) => (
-          <Badge>{capitalize(row.original.status || "Draft")}</Badge>
-        ),
-      },
-      {
-        accessorKey: "createdAt",
-        header: tCommon("fields.createdAt", "Created At"),
-        cell: ({ row }) => (
-          <DataTableCell
-            variant={DataTableCellVariant.DATE_TIME}
-            value={
-              row.original.createdAt
-                ? new Date(row.original.createdAt)
-                : undefined
-            }
-          />
-        ),
-      },
-      {
-        accessorKey: "updatedAt",
-        header: tCommon("fields.updatedAt", "Updated At"),
-        cell: ({ row }) => (
-          <DataTableCell
-            variant={DataTableCellVariant.DATE_TIME}
-            value={
-              row.original.updatedAt
-                ? new Date(row.original.updatedAt)
-                : undefined
-            }
-          />
-        ),
-      },
-      {
-        accessorKey: "createdBy",
-        header: tCommon("fields.createdBy", "Created By"),
-        cell: ({ row }) => (
-          <UserAvatarCell user={row.original.createdBy as any} />
-        ),
-      },
-    ],
-    [t, tCommon],
-  );
+  const columns = useCurriculumModuleVersionColumns();
 
   const context: DataTableConfig<ResponseCurriculumModuleDto> = {
     singularName: "Version",
@@ -180,11 +99,16 @@ export function CurriculumModuleVersionsList({
   } as any;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden gap-4">
+    <div
+      className={cn(
+        "flex min-h-0 flex-1 flex-col overflow-hidden gap-4",
+        className,
+      )}
+    >
       <DataTable
         className="flex min-h-0 flex-1 flex-col overflow-hidden"
         containerClassName="min-h-0 overflow-auto"
-        columns={columns as any}
+        columns={columns}
         data={versions || []}
         context={context}
         isPending={isLoading}

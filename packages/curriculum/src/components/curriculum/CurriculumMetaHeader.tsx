@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { type ResponseCurriculumDto } from "@qlp/api-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@qlp/ui";
 import { useUploadSrc, type UploadSrcApi } from "@qlp/hooks";
-import { DocumentMetaTable, type MetaTableRow } from "./DocumentMetaTable";
+import { DocumentMetaTable, type MetaTableRow } from "../DocumentMetaTable";
 import { identifyUser, identifyUserAvatar } from "@qlp/lib";
 
 export interface CurriculumMetaHeaderProps {

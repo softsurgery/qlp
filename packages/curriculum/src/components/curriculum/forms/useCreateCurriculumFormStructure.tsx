@@ -8,7 +8,7 @@ import {
   SelectOption,
 } from "@qlp/form-builder";
 import { useTranslation } from "react-i18next";
-import { CurriculumStore } from "../hooks/stores/useCurriculumStore";
+import { CurriculumStore } from "../../../hooks/stores/useCurriculumStore";
 import { CurriculumStatus } from "@qlp/api-client";
 import { slugify } from "@qlp/lib";
 
@@ -105,9 +105,7 @@ export const useCreateCurriculumFormStructure = ({
       {
         rows: [
           { fields: [titleField, slugField] },
-          ...(appType === "admin"
-            ? [{ fields: [ownerField] }]
-            : []),
+          ...(appType === "admin" ? [{ fields: [ownerField] }] : []),
           { fields: [descriptionField] },
         ],
       },

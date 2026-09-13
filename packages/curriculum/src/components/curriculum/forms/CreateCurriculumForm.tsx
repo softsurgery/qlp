@@ -7,17 +7,17 @@ import { Repeat2, Save } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useBreadcrumb, useUI, useApp } from "@qlp/contexts";
 import { Button, Separator, Label } from "@qlp/ui";
-import { CurriculumMetaHeader } from "../components/CurriculumMetaHeader";
+import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
 import {
   type CreateCurriculumDto,
   type ServerErrorResponse,
   type ResponseUserDto,
 } from "@qlp/api-client";
-import { useCurriculumStore } from "../hooks/stores/useCurriculumStore";
+import { useCurriculumStore } from "../../../hooks/stores/useCurriculumStore";
 import { useCreateCurriculumFormStructure } from "./useCreateCurriculumFormStructure";
-import { errorMessage } from "../utils";
-import { CurriculumFormLayout } from "../components/CurriculumFormLayout";
-import { useTutors } from "../hooks/user/useTutors";
+import { errorMessage } from "../../../utils";
+import { CurriculumFormLayout } from "../../CurriculumFormLayout";
+import { useTutors } from "../../../hooks/user/useTutors";
 
 export interface CreateCurriculumFormProps {
   className?: string;
