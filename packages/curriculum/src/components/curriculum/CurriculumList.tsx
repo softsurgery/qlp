@@ -20,7 +20,7 @@ import {
 import { useCurriculumColumns } from "./columns";
 import { errorMessage } from "../../utils";
 import React from "react";
-import { useCurriculumDeleteDialog } from "../../modals/CurriculumDeleteDialog";
+import { useCurriculumDeleteDialog } from "./modals/CurriculumDeleteDialog";
 import { useCurriculumStore } from "../../hooks/stores/useCurriculumStore";
 import { useApp } from "@qlp/contexts";
 import { cn } from "@qlp/ui";
