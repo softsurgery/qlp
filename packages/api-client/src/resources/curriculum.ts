@@ -20,6 +20,7 @@ import type {
   UpdateCurriculumModuleDto,
   ResponseCurriculumWorkflowDto,
   ExecuteCurriculumWorkflowDto,
+  ResponseCurriculumModuleWorkflowDto,
 } from "../types/index.js";
 
 export function createCurriculumResource(
@@ -57,11 +58,11 @@ export function createCurriculumResource(
 
   const findTree = async (
     id: string,
-    version?: number,
+    params?: QueryParams & { version?: number },
   ): Promise<ResponseCurriculumTreeDto> => {
     const response = await http.get<ResponseCurriculumTreeDto>(
       `${basePath}/${id}/tree`,
-      { params: version != null ? { version } : undefined },
+      { params },
     );
     return response.data;
   };
@@ -157,9 +158,43 @@ export function createCurriculumResource(
 
   const findModuleVersions = async (
     moduleId: string,
+    params?: QueryParams,
   ): Promise<ResponseCurriculumModuleDto[]> => {
     const response = await http.get<ResponseCurriculumModuleDto[]>(
       `${basePath}/modules/${moduleId}/versions`,
+      { params }
+    );
+    return response.data;
+  };
+
+  const findModuleWorkflow = async (
+    moduleId: string,
+    params?: QueryParams,
+  ): Promise<ResponseCurriculumModuleWorkflowDto> => {
+    const response = await http.get<ResponseCurriculumModuleWorkflowDto>(
+      `${basePath}/modules/${moduleId}/workflow`,
+      { params },
+    );
+    return response.data;
+  };
+
+  const executeModuleWorkflow = async (
+    moduleId: string,
+    dto: ExecuteCurriculumWorkflowDto,
+  ): Promise<ResponseCurriculumModuleWorkflowDto> => {
+    const response = await http.post<ResponseCurriculumModuleWorkflowDto>(
+      `${basePath}/modules/${moduleId}/workflow`,
+      dto,
+    );
+    return response.data;
+  };
+
+  const reorderModules = async (
+    updates: { id: string; sortOrder: number }[],
+  ): Promise<{ success: boolean }> => {
+    const response = await http.put<{ success: boolean }>(
+      `${basePath}/modules/reorder`,
+      { updates },
     );
     return response.data;
   };
@@ -301,6 +336,9 @@ export function createCurriculumResource(
     updateModule,
     removeModule,
     findModuleVersions,
+    findModuleWorkflow,
+    executeModuleWorkflow,
+    reorderModules,
     createLesson,
     updateLesson,
     removeLesson,

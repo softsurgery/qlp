@@ -23,7 +23,7 @@
   "confirmDeleteTitle": "Delete this item?",
   "confirmDelete": "Previous versions are kept. This removes the latest version from the outline.",
   "confirmDeleteCurriculum": "This removes the latest version of the curriculum and its modules, lessons, exams, and materials.",
-  "version": "v{{version}}",
+  "versions": "Versions",
   "latest": "Latest",
   "history": "Version history",
   "historyHint": "Open a previous version in the viewer. Editing always saves a new latest version.",
@@ -52,7 +52,7 @@
   },
   "fields": {
     "title": "Title",
-    "titlePlaceholder": "Introduction to algebra",
+    "titlePlaceholder": "Enter title...",
     "titleDescription": "Shown in lists, the outline, and the learner view.",
     "slug": "Slug",
     "slugPlaceholder": "Type a slug or something...",

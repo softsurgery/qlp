@@ -46,6 +46,10 @@ export interface ResponseCurriculumWorkflowDto extends ResponseWorkflowDto {
   curriculum: ResponseCurriculumDto;
 }
 
+export interface ResponseCurriculumModuleWorkflowDto extends ResponseWorkflowDto {
+  module: ResponseCurriculumModuleDto;
+}
+
 export interface ExecuteCurriculumWorkflowDto {
   event: string;
 }
@@ -88,6 +92,7 @@ export interface ResponseCurriculumModuleDto extends VersionedEntity {
   curriculumId: string;
   title: string;
   description?: string;
+  status: CurriculumStatus | string;
   sortOrder: number;
   lessons?: ResponseCurriculumLessonDto[];
   exams?: ResponseCurriculumExamDto[];
@@ -124,7 +129,6 @@ export interface CreateCurriculumModuleDto {
   description?: string;
   sortOrder?: number;
   ownerId?: string;
-  createdById?: string;
 }
 
 export interface UpdateCurriculumModuleDto {
@@ -132,7 +136,6 @@ export interface UpdateCurriculumModuleDto {
   description?: string;
   sortOrder?: number;
   ownerId?: string;
-  createdById?: string;
 }
 
 export interface CreateCurriculumLessonDto {

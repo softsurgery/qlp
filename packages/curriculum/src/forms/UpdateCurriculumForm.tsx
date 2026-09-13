@@ -17,6 +17,7 @@ import { useUpdateCurriculumFormStructure } from "./useUpdateCurriculumFormStruc
 import { errorMessage } from "../utils";
 import { CurriculumFormLayout } from "../components/CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../components/CurriculumMetaHeader";
+import { CurriculumModules } from "../components/CurriculumModules";
 import { useTutors } from "../hooks/user/useTutors";
 
 interface UpdateCurriculumFormProps {
@@ -157,8 +158,10 @@ export function UpdateCurriculumForm({
   }, [updateMutation, curriculumStore, t]);
 
   const mainContent = (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-8">
       <FormBuilder structure={updateCurriculumFormStructure} />
+      <Separator />
+      <CurriculumModules curriculumId={curriculumId} />
     </div>
   );
 
@@ -170,6 +173,19 @@ export function UpdateCurriculumForm({
           owner: appType === "admin" ? undefined : curriculum.owner,
           createdAt: appType !== "admin" ? undefined : curriculum.createdAt,
         }}
+        extraRows={[
+          {
+            label: t("versions"),
+            value: (
+              <span
+                className="cursor-pointer text-primary hover:underline font-semibold"
+                onClick={() => navigate(`/curriculum/${curriculumId}/versions`)}
+              >
+                {curriculum?.version != null ? curriculum?.version : "-"}
+              </span>
+            ),
+          },
+        ]}
         uploadApi={uploadApi}
       />
       <Separator />
@@ -213,18 +229,7 @@ export function UpdateCurriculumForm({
           <span>{tCommon("commands.reset", "Reset")}</span>
         </Button>
       </div>
-      <div className="flex flex-col gap-2 w-full mt-4">
-        <Label className="text-xs font-bold text-muted-foreground">
-          {tCommon("commands.shortcuts", "Shortcuts")}
-        </Label>
-        <Link
-          to={`/curriculum/${curriculumId}/versions`}
-          className="text-sm text-primary hover:underline flex items-center"
-        >
-          <HistoryIcon className="mr-2 h-4 w-4" />
-          {tCommon("commands.history", "History")}
-        </Link>
-      </div>
+
     </>
   ) : null;
 
