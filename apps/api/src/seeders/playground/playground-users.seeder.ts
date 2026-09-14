@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/modules/user-management/services/user.service';
 import { mockUsersSeed } from '../data/playground-user.seeder';
 import { RoleService } from 'src/shared/abstract-user-management/services/role.service';
+import { ExtendedRoles } from 'src/modules/user-management/enums/extended-roles.enum';
 import { BasicRoles } from 'src/shared/abstract-user-management/enums/basic-roles.enum';
 
 @Injectable()
@@ -40,8 +41,13 @@ export class PlaygroundUsersSeedCommand {
           return;
         }
 
-        const mappedRoleId =
-          existsInSeedData.roleId === BasicRoles.Admin ? mappedRoles.admin : mappedRoles.user;
+        const mappedRoleId = mappedRoles[existsInSeedData.roleId];
+        if (!mappedRoleId) {
+          console.log(
+            `⚠️ Role not found for user ${existsInSeedData.username}: ${existsInSeedData.roleId}`,
+          );
+          return;
+        }
 
         await this.userService.save({
           ...existsInSeedData,
@@ -53,15 +59,17 @@ export class PlaygroundUsersSeedCommand {
       }
     };
 
-    const adminRole = await this.roleService.findOneByLabel(BasicRoles.Admin);
-    const userRole = await this.roleService.findOneByLabel(BasicRoles.User);
+    const roles = await this.roleService.findAll();
+    const mappedRoles = Object.fromEntries(roles.map((role) => [role.label, role.id]));
 
-    if (!adminRole || !userRole) {
+    if (
+      !mappedRoles[BasicRoles.Admin] ||
+      !mappedRoles[BasicRoles.User] ||
+      !mappedRoles[ExtendedRoles.Tutor]
+    ) {
       console.log('⚠️ Roles not found! Please run the roles seeder first.');
       return;
     }
-
-    const mappedRoles = { admin: adminRole.id, user: userRole.id };
 
     if (!userId) {
       for (const user of mockUsersSeed) {

@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Request,
+  UnauthorizedException,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -41,10 +42,10 @@ export class ClientCurriculumExamController {
     @Body() dto: CreateCurriculumExamDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumExamDto> {
-    if (!dto.createdById && req.user?.sub) {
-      dto.createdById = req.user.sub;
+    if (!req.user?.sub) {
+      throw new UnauthorizedException();
     }
-    const exam = await this.examService.createForModule(moduleId, dto);
+    const exam = await this.examService.createForModule(moduleId, dto, req.user.sub);
     req.logInfo = { id: exam.id, moduleId };
     return toDto(ResponseCurriculumExamDto, exam);
   }
