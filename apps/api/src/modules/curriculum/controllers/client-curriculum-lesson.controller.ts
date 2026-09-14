@@ -31,6 +31,17 @@ import { ResponseCurriculumLessonDto } from '../dtos/lesson/response-curriculum-
 export class ClientCurriculumLessonController {
   constructor(private readonly lessonService: CurriculumLessonService) {}
 
+  @Get('/modules/:moduleId/lessons')
+  async findByModule(
+    @Param('moduleId') moduleId: string,
+    @Query('join') join?: string,
+  ): Promise<ResponseCurriculumLessonDto[]> {
+    return toDtoArray(
+      ResponseCurriculumLessonDto,
+      await this.lessonService.findLatestByModule(moduleId, join),
+    );
+  }
+
   @Get('/lessons/:lessonId/versions')
   async findVersions(
     @Param('lessonId') lessonId: string,

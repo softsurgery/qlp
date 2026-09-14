@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UseInterceptors,
 } from '@nestjs/common';
@@ -33,9 +34,26 @@ export class AdminCurriculumModuleController {
     private readonly moduleService: CurriculumModuleService,
   ) {}
 
+  @Get('/:curriculumId/modules')
+  async findByCurriculum(
+    @Param('curriculumId') curriculumId: string,
+    @Query('join') join?: string,
+  ): Promise<ResponseCurriculumModuleDto[]> {
+    return toDtoArray(
+      ResponseCurriculumModuleDto,
+      await this.moduleService.findLatestByCurriculum(curriculumId, join),
+    );
+  }
+
   @Get('/modules/:moduleId/versions')
-  async findVersions(@Param('moduleId') moduleId: string): Promise<ResponseCurriculumModuleDto[]> {
-    return toDtoArray(ResponseCurriculumModuleDto, await this.moduleService.findVersions(moduleId));
+  async findVersions(
+    @Param('moduleId') moduleId: string,
+    @Query('join') join?: string,
+  ): Promise<ResponseCurriculumModuleDto[]> {
+    return toDtoArray(
+      ResponseCurriculumModuleDto,
+      await this.moduleService.findVersions(moduleId, join),
+    );
   }
 
   @Post('/:id/modules')

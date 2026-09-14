@@ -34,6 +34,17 @@ export class ClientCurriculumModuleController {
     private readonly moduleService: CurriculumModuleService,
   ) {}
 
+  @Get('/:curriculumId/modules')
+  async findByCurriculum(
+    @Param('curriculumId') curriculumId: string,
+    @Query('join') join?: string,
+  ): Promise<ResponseCurriculumModuleDto[]> {
+    return toDtoArray(
+      ResponseCurriculumModuleDto,
+      await this.moduleService.findLatestByCurriculum(curriculumId, join),
+    );
+  }
+
   @Get('/modules/:moduleId/versions')
   async findVersions(
     @Param('moduleId') moduleId: string,

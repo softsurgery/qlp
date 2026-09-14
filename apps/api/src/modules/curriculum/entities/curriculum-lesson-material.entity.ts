@@ -1,12 +1,20 @@
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { VersionedEntityHelper } from 'src/shared/database/entities/versioned-entity.helper';
 import { MaterialType } from '../enums/material-type.enum';
+import { CurriculumLessonEntity } from './curriculum-lesson.entity';
 
 @Entity('curriculum_lesson_materials')
 export class CurriculumLessonMaterialEntity extends VersionedEntityHelper {
   @Index()
   @Column()
   lessonId: string;
+
+  @ManyToOne(() => CurriculumLessonEntity, (lesson) => lesson.materials, {
+    onDelete: 'CASCADE',
+    createForeignKeyConstraints: false,
+  })
+  @JoinColumn({ name: 'lessonId', referencedColumnName: 'id' })
+  lesson?: CurriculumLessonEntity;
 
   @Column()
   title: string;

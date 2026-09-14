@@ -18,9 +18,4 @@ export class CreateCurriculumLessonDto {
   @Min(0)
   @IsOptional()
   sortOrder?: number;
-
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  createdById?: string;
 }

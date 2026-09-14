@@ -24,7 +24,7 @@ export class CurriculumExamService extends AbstractVersioningCrudService<Curricu
     }));
   }
 
-  async createForModule(moduleId: string, dto: CreateCurriculumExamDto) {
+  async createForModule(moduleId: string, dto: CreateCurriculumExamDto, createdById?: string) {
     const siblings = await this.findAll({ filter: `moduleId||$eq||${moduleId}` });
     return this.save({
       moduleId,
@@ -34,6 +34,7 @@ export class CurriculumExamService extends AbstractVersioningCrudService<Curricu
       passingScore: dto.passingScore ?? 0,
       questions: this.normalizeQuestions(dto.questions),
       sortOrder: dto.sortOrder ?? siblings.length,
+      createdById: createdById,
     });
   }
 

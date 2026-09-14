@@ -26,7 +26,6 @@ import { CurriculumService } from '../services/curriculum.service';
 import { CreateCurriculumDto } from '../dtos/curriculum/create-curriculum.dto';
 import { UpdateCurriculumDto } from '../dtos/curriculum/update-curriculum.dto';
 import { ResponseCurriculumDto } from '../dtos/curriculum/response-curriculum.dto';
-import { ResponseCurriculumTreeDto } from '../dtos/curriculum/response-curriculum-tree.dto';
 
 @ApiTags('curriculum')
 @ApiBearerAuth('access_token')
@@ -48,29 +47,16 @@ export class ClientCurriculumController {
     return toDtoArray(ResponseCurriculumDto, await this.curriculumService.findAll(query));
   }
 
-  @Get('/:id/tree')
-  async findTree(
-    @Param('id') id: string,
-    @Query('version') version?: string,
-    @Query('join') join?: string,
-  ): Promise<ResponseCurriculumTreeDto> {
-    const parsedVersion = version ? Number(version) : undefined;
-    return toDto(
-      ResponseCurriculumTreeDto,
-      await this.curriculumService.getTree(
-        id,
-        Number.isFinite(parsedVersion) ? parsedVersion : undefined,
-        join,
-      ),
-    );
-  }
-
   @Get('/:id/versions/:version')
   async findOneByVersion(
     @Param('id') id: string,
     @Param('version', ParseIntPipe) version: number,
+    @Query('join') join?: string,
   ): Promise<ResponseCurriculumDto> {
-    return toDto(ResponseCurriculumDto, await this.curriculumService.findOneByVersion(id, version));
+    return toDto(
+      ResponseCurriculumDto,
+      await this.curriculumService.findOneByVersion(id, version, join),
+    );
   }
 
   @Get('/:id/versions')
@@ -84,8 +70,11 @@ export class ClientCurriculumController {
   }
 
   @Get('/:id')
-  async findOneById(@Param('id') id: string): Promise<ResponseCurriculumDto> {
-    return toDto(ResponseCurriculumDto, await this.curriculumService.findOneById(id));
+  async findOneById(
+    @Param('id') id: string,
+    @Query('join') join?: string,
+  ): Promise<ResponseCurriculumDto> {
+    return toDto(ResponseCurriculumDto, await this.curriculumService.findOneById(id, join));
   }
 
   @Post()
@@ -124,9 +113,6 @@ export class ClientCurriculumController {
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumDto | null> {
     req.logInfo = { id };
-    return toDto(
-      ResponseCurriculumDto,
-      await this.curriculumService.softDeleteTree(id, req.user?.sub),
-    );
+    return toDto(ResponseCurriculumDto, await this.curriculumService.softDelete(id));
   }
 }

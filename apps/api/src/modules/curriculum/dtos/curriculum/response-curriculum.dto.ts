@@ -3,6 +3,7 @@ import { Expose, Type } from 'class-transformer';
 import { CurriculumStatus } from '../../enums/curriculum-status.enum';
 import { ResponseVersionedDtoHelper } from '../response-versioned.dto';
 import { ResponseUserDto } from 'src/modules/user-management/dtos/user/response-user.dto';
+import { ResponseCurriculumModuleDto } from '../module/response-curriculum-module.dto';
 
 export class ResponseCurriculumDto extends ResponseVersionedDtoHelper {
   @ApiProperty()
@@ -38,4 +39,9 @@ export class ResponseCurriculumDto extends ResponseVersionedDtoHelper {
   @Type(() => ResponseUserDto)
   @Expose()
   createdBy?: ResponseUserDto;
+
+  @ApiProperty({ required: false, type: () => [ResponseCurriculumModuleDto] })
+  @Type(() => ResponseCurriculumModuleDto)
+  @Expose()
+  modules?: ResponseCurriculumModuleDto[];
 }

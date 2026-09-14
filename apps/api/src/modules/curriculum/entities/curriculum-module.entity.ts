@@ -1,13 +1,23 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { VersionedEntityHelper } from 'src/shared/database/entities/versioned-entity.helper';
 import { AbstractUserEntity } from 'src/shared/abstract-user-management/entities/abstract-user.entity';
 import { CurriculumStatus } from '../enums/curriculum-status.enum';
+import { CurriculumEntity } from './curriculum.entity';
+import { CurriculumLessonEntity } from './curriculum-lesson.entity';
+import { CurriculumExamEntity } from './curriculum-exam.entity';
 
 @Entity('curriculum_modules')
 export class CurriculumModuleEntity extends VersionedEntityHelper {
   @Index()
   @Column()
   curriculumId: string;
+
+  @ManyToOne(() => CurriculumEntity, (curriculum) => curriculum.modules, {
+    onDelete: 'CASCADE',
+    createForeignKeyConstraints: false,
+  })
+  @JoinColumn({ name: 'curriculumId', referencedColumnName: 'id' })
+  curriculum?: CurriculumEntity;
 
   @Column()
   title: string;
@@ -34,4 +44,14 @@ export class CurriculumModuleEntity extends VersionedEntityHelper {
   @ManyToOne(() => AbstractUserEntity, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'createdById' })
   createdBy?: AbstractUserEntity;
+
+  @OneToMany(() => CurriculumLessonEntity, (lesson) => lesson.module, {
+    cascade: ['soft-remove', 'recover', 'remove'],
+  })
+  lessons?: CurriculumLessonEntity[];
+
+  @OneToMany(() => CurriculumExamEntity, (exam) => exam.module, {
+    cascade: ['soft-remove', 'recover', 'remove'],
+  })
+  exams?: CurriculumExamEntity[];
 }
