@@ -3,3 +3,7 @@ export * from "./useCurriculumWorkflow";
 export * from "./useCurriculumModules";
 export * from "./useCurriculumModuleWorkflow";
 export * from "./useCurriculumModuleVersions";
+export * from "./useCurriculumLessons";
+export * from "./useCurriculumLesson";
+export * from "./useCurriculumLessonWorkflow";
+export * from "./useCurriculumLessonVersions";

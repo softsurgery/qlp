@@ -20,8 +20,8 @@ export const useCurriculum = (
     isPending: isCurriculumPending,
     refetch: refetchCurriculum,
   } = useQuery({
-    queryKey: ["curriculum", id, "tree", join],
-    queryFn: () => api.findTree(id!, { join }),
+    queryKey: ["curriculum", id, join],
+    queryFn: () => api.findById(id!, { join }),
     enabled: !!id && enabled,
   });
 

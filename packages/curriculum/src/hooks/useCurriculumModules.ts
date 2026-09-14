@@ -1,4 +1,5 @@
-import { useCurriculum } from "./useCurriculum";
+import { useQuery } from "@tanstack/react-query";
+import { useApp } from "@qlp/contexts";
 
 export interface UseCurriculumModulesProps {
   id?: string;
@@ -6,12 +7,26 @@ export interface UseCurriculumModulesProps {
   enabled?: boolean;
 }
 
-export const useCurriculumModules = ({ id, join, enabled = true }: UseCurriculumModulesProps = { enabled: true }) => {
-  const { curriculum, isCurriculumPending, refetchCurriculum } = useCurriculum({ id, join, enabled });
+export const useCurriculumModules = (
+  { id, join, enabled = true }: UseCurriculumModulesProps = { enabled: true },
+) => {
+  const { api: baseApi, appType } = useApp();
+  const api =
+    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+
+  const {
+    data: modules,
+    isPending: isModulesPending,
+    refetch: refetchModules,
+  } = useQuery({
+    queryKey: ["curriculum-modules", id, join],
+    queryFn: () => api.findModulesByCurriculum(id!, { join }),
+    enabled: !!id && enabled,
+  });
 
   return {
-    modules: curriculum?.modules || [],
-    isModulesPending: isCurriculumPending,
-    refetchModules: refetchCurriculum
+    modules: modules || [],
+    isModulesPending,
+    refetchModules,
   };
 };
