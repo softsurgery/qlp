@@ -9,33 +9,35 @@ import { Button, Label, Separator } from "@qlp/ui";
 import {
   useCurriculum,
   useCurriculumModules,
-  useCurriculumModuleWorkflow,
+  useCurriculumLesson,
+  useCurriculumLessonWorkflow,
 } from "../../../hooks";
 import {
-  type UpdateCurriculumModuleDto,
+  type UpdateCurriculumLessonDto,
   type ServerErrorResponse,
 } from "@qlp/api-client";
-import { useCurriculumModuleStore } from "../../../hooks/stores/useCurriculumModuleStore";
-import { useUpdateCurriculumModuleFormStructure } from "./useUpdateCurriculumModuleFormStructure";
+import { useCurriculumLessonStore } from "../../../hooks/stores/useCurriculumLessonStore";
+import { useUpdateCurriculumLessonFormStructure } from "./useUpdateCurriculumLessonFormStructure";
 import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../../curriculum/CurriculumMetaHeader";
-import { CurriculumLessons } from "../../curriculum-lesson/CurriculumLessons";
 import { useNavigate } from "react-router-dom";
 
-export interface UpdateCurriculumModuleFormProps {
+export interface UpdateCurriculumLessonFormProps {
   className?: string;
   curriculumId: string;
   moduleId: string;
+  lessonId: string;
   onSuccess?: () => void;
 }
 
-export function UpdateCurriculumModuleForm({
+export function UpdateCurriculumLessonForm({
   className,
   curriculumId,
   moduleId,
+  lessonId,
   onSuccess,
-}: UpdateCurriculumModuleFormProps) {
+}: UpdateCurriculumLessonFormProps) {
   const { t: tCommon } = useTranslation("common");
   const { api: baseApi, appType } = useApp();
   const api =
@@ -44,40 +46,46 @@ export function UpdateCurriculumModuleForm({
   const queryClient = useQueryClient();
 
   const { curriculum } = useCurriculum({ id: curriculumId });
-  const { modules, isModulesPending } = useCurriculumModules({
-    id: curriculumId,
-    join: "owner,createdBy",
+  const { modules } = useCurriculumModules({ id: curriculumId });
+  const { lesson, isLessonPending } = useCurriculumLesson({
+    moduleId,
+    lessonId,
+    join: "createdBy",
   });
   const { workflow: workflowData, isWorkflowPending: isWorkflowLoading } =
-    useCurriculumModuleWorkflow({ moduleId });
-  const curriculumModuleStore = useCurriculumModuleStore();
-  const resetStore = useCurriculumModuleStore((state) => state.reset);
+    useCurriculumLessonWorkflow({ lessonId });
+  const curriculumLessonStore = useCurriculumLessonStore();
+  const resetStore = useCurriculumLessonStore((state) => state.reset);
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
   const navigate = useNavigate();
 
-  const isLoading = isModulesPending || isWorkflowLoading;
+  const isLoading = isLessonPending || isWorkflowLoading;
 
-  const module = modules.find((m) => m.id === moduleId);
+  const module = modules.find((item) => item.id === moduleId);
 
   React.useEffect(() => {
-    if (module) {
-      curriculumModuleStore.set("updateDto", {
-        title: module.title,
-        description: module.description,
+    if (lesson) {
+      curriculumLessonStore.set("updateDto", {
+        title: lesson.title,
+        description: lesson.description,
       });
     }
-  }, [module]);
+  }, [lesson]);
 
   React.useEffect(() => {
-    if (setRoutes && module && curriculum) {
+    if (setRoutes && lesson && module && curriculum) {
       setRoutes([
         { title: t("title", "Curriculum"), href: "/curriculum" },
         {
           title: curriculum.title,
           href: `/curriculum/${curriculumId}/edit`,
         },
-        { title: module.title },
+        {
+          title: module.title,
+          href: `/curriculum/${curriculumId}/modules/${moduleId}/edit`,
+        },
+        { title: lesson.title },
       ]);
     }
     if (setEnableMainOverflow) setEnableMainOverflow(true);
@@ -87,31 +95,33 @@ export function UpdateCurriculumModuleForm({
       resetStore();
     };
   }, [
+    lesson,
     module,
     curriculum,
     setRoutes,
     clearRoutes,
     t,
     curriculumId,
+    moduleId,
     setEnableMainOverflow,
     clearEnableMainOverflow,
     resetStore,
   ]);
 
-  const { updateCurriculumModuleFormStructure } =
-    useUpdateCurriculumModuleFormStructure({
-      curriculumModuleStore,
+  const { updateCurriculumLessonFormStructure } =
+    useUpdateCurriculumLessonFormStructure({
+      curriculumLessonStore,
     });
 
   const { mutate: updateMutation, isPending } = useMutation({
-    mutationFn: (dto: UpdateCurriculumModuleDto) => {
-      if (!module) throw new Error("Module not found");
-      return api.updateModule(module.id, dto);
+    mutationFn: (dto: UpdateCurriculumLessonDto) => {
+      if (!lesson) throw new Error("Lesson not found");
+      return api.updateLesson(lesson.id, dto);
     },
     onSuccess: () => {
       toast.success(tCommon("commands.saved", "Saved successfully"));
       void queryClient.invalidateQueries({
-        queryKey: ["curriculum-modules", curriculumId],
+        queryKey: ["curriculum-lessons", moduleId],
       });
       resetStore();
       if (onSuccess) onSuccess();
@@ -124,14 +134,14 @@ export function UpdateCurriculumModuleForm({
   const { mutate: executeWorkflow, isPending: isWorkflowPending } = useMutation(
     {
       mutationFn: (event: string) =>
-        api.executeModuleWorkflow(moduleId, { event }),
+        api.executeLessonWorkflow(lessonId, { event }),
       onSuccess: () => {
         toast.success(tCommon("commands.saved", "Saved successfully"));
         void queryClient.invalidateQueries({
-          queryKey: ["curriculum", "modules", moduleId, "workflow"],
+          queryKey: ["curriculum", "lessons", lessonId, "workflow"],
         });
         void queryClient.invalidateQueries({
-          queryKey: ["curriculum-modules", curriculumId],
+          queryKey: ["curriculum-lessons", moduleId],
         });
       },
       onError: (error: ServerErrorResponse) => {
@@ -141,57 +151,52 @@ export function UpdateCurriculumModuleForm({
   );
 
   const handleSubmit = React.useCallback(() => {
-    if (!curriculumModuleStore.updateDto.title?.trim()) {
-      curriculumModuleStore.set("updateDtoErrors", {
+    if (!curriculumLessonStore.updateDto.title?.trim()) {
+      curriculumLessonStore.set("updateDtoErrors", {
         title: [t("errors.titleRequired", "Title is required")],
       });
       return;
     }
-    curriculumModuleStore.set("updateDtoErrors", {});
-    updateMutation(curriculumModuleStore.updateDto);
-  }, [updateMutation, curriculumModuleStore, t]);
+    curriculumLessonStore.set("updateDtoErrors", {});
+    updateMutation(curriculumLessonStore.updateDto);
+  }, [updateMutation, curriculumLessonStore, t]);
 
   const mainContent = (
     <div className="flex flex-col gap-8">
-      <FormBuilder structure={updateCurriculumModuleFormStructure} />
-      <Separator />
-      <CurriculumLessons curriculumId={curriculumId} moduleId={moduleId} />
+      <FormBuilder structure={updateCurriculumLessonFormStructure} />
     </div>
   );
 
   const sidebarContent = (
     <>
-      {module && (
-        <>
-          <CurriculumMetaHeader
-            curriculum={{
-              ...module,
-              status: module.status || workflowData?.status,
-              owner: appType === "admin" ? undefined : module.owner,
-              createdAt: appType !== "admin" ? undefined : module.createdAt,
-              createdBy: module.createdBy,
-            }}
-            extraRows={[
-              {
-                label: t("versions"),
-                value: (
-                  <span
-                    className="cursor-pointer text-primary hover:underline font-semibold"
-                    onClick={() =>
-                      navigate(
-                        `/curriculum/${curriculumId}/modules/${moduleId}/versions`,
-                      )
-                    }
-                  >
-                    {module?.version != null ? module?.version : "-"}
-                  </span>
-                ),
-              },
-            ]}
-            uploadApi={baseApi.upload}
-          />
-          <Separator />
-        </>
+      {lesson && (
+        <CurriculumMetaHeader
+          curriculum={{
+            ...lesson,
+            status: lesson.status || workflowData?.status,
+            owner: undefined,
+            createdAt: appType !== "admin" ? undefined : lesson.createdAt,
+            createdBy: lesson.createdBy,
+          }}
+          extraRows={[
+            {
+              label: t("versions"),
+              value: (
+                <span
+                  className="cursor-pointer text-primary hover:underline font-semibold"
+                  onClick={() =>
+                    navigate(
+                      `/curriculum/${curriculumId}/modules/${moduleId}/lessons/${lessonId}/versions`,
+                    )
+                  }
+                >
+                  {lesson?.version != null ? lesson?.version : "-"}
+                </span>
+              ),
+            },
+          ]}
+          uploadApi={baseApi.upload}
+        />
       )}
 
       <div className="flex flex-col gap-2 w-full">
@@ -215,7 +220,7 @@ export function UpdateCurriculumModuleForm({
           <Save className="mr-2 h-4 w-4" />
           <span>{tCommon("commands.save", "Save")}</span>
         </Button>
-        {workflowData?.nextSteps?.map((step) => (
+        {workflowData?.nextSteps?.map((step: { label: string }) => (
           <Button
             key={step.label}
             type="button"
@@ -247,8 +252,8 @@ export function UpdateCurriculumModuleForm({
     return <div className="p-4">Loading...</div>;
   }
 
-  if (!module) {
-    return <div className="p-4 text-destructive">Module not found</div>;
+  if (!lesson) {
+    return <div className="p-4 text-destructive">Lesson not found</div>;
   }
 
   return (

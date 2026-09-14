@@ -21,23 +21,25 @@ import { useDnDService } from "@qlp/hooks";
 import { Button, cn } from "@qlp/ui";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { type ResponseCurriculumModuleDto } from "@qlp/api-client";
-import { CurriculumModuleItem } from "./CurriculumModuleItem";
+import { type ResponseCurriculumLessonDto } from "@qlp/api-client";
+import { CurriculumLessonItem } from "./CurriculumLessonItem";
 import { toast } from "sonner";
-import { useCurriculumModules } from "../../hooks";
-import { useCurriculumModuleStore } from "../../hooks/stores/useCurriculumModuleStore";
-import { useCurriculumModuleCreateSheet } from "./modals/CurriculumModuleCreateSheet";
-import { useCurriculumModuleDeleteDialog } from "./modals/CurriculumModuleDeleteDialog";
+import { useCurriculumLessons } from "../../hooks";
+import { useCurriculumLessonStore } from "../../hooks/stores/useCurriculumLessonStore";
+import { useCurriculumLessonCreateSheet } from "./modals/CurriculumLessonCreateSheet";
+import { useCurriculumLessonDeleteDialog } from "./modals/CurriculumLessonDeleteDialog";
 
-export interface CurriculumModulesProps {
+export interface CurriculumLessonsProps {
   className?: string;
   curriculumId: string;
+  moduleId: string;
 }
 
-export function CurriculumModules({
+export function CurriculumLessons({
   className,
   curriculumId,
-}: CurriculumModulesProps) {
+  moduleId,
+}: CurriculumLessonsProps) {
   const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("curriculum");
   const { api: baseApi, appType } = useApp();
@@ -46,31 +48,31 @@ export function CurriculumModules({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { modules: loadedModules, isModulesPending: isLoading } =
-    useCurriculumModules({ id: curriculumId, join: "createdBy" });
+  const { lessons: loadedLessons, isLessonsPending: isLoading } =
+    useCurriculumLessons({ moduleId, join: "createdBy" });
 
-  const [modules, setModules] = React.useState<ResponseCurriculumModuleDto[]>(
+  const [lessons, setLessons] = React.useState<ResponseCurriculumLessonDto[]>(
     [],
   );
 
-  const { createCurriculumModuleSheet, openCreateCurriculumModuleSheet } =
-    useCurriculumModuleCreateSheet({ curriculumId });
-  const curriculumModuleStore = useCurriculumModuleStore();
+  const { createCurriculumLessonSheet, openCreateCurriculumLessonSheet } =
+    useCurriculumLessonCreateSheet({ curriculumId, moduleId });
+  const curriculumLessonStore = useCurriculumLessonStore();
 
   React.useEffect(() => {
-    const sorted = [...loadedModules].sort(
+    const sorted = [...loadedLessons].sort(
       (a, b) => (a.sortOrder || 0) - (b.sortOrder || 0),
     );
-    setModules(sorted);
-  }, [loadedModules]);
+    setLessons(sorted);
+  }, [loadedLessons]);
 
-  const { mutate: updateModuleOrder } = useMutation({
+  const { mutate: updateLessonOrder } = useMutation({
     mutationFn: async (updates: { id: string; sortOrder: number }[]) => {
-      return api.reorderModules(updates);
+      return api.reorderLessons(updates);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: ["curriculum-modules", curriculumId],
+        queryKey: ["curriculum-lessons", moduleId],
       });
     },
     onError: () => {
@@ -78,52 +80,54 @@ export function CurriculumModules({
     },
   });
 
-  const { mutate: deleteModuleMutation, isPending: isDeletionPending } =
+  const { mutate: deleteLessonMutation, isPending: isDeletionPending } =
     useMutation({
-      mutationFn: async (moduleId: string) => {
-        return api.removeModule(moduleId);
+      mutationFn: async (lessonId: string) => {
+        return api.removeLesson(lessonId);
       },
       onSuccess: () => {
         void queryClient.invalidateQueries({
-          queryKey: ["curriculum-modules", curriculumId],
+          queryKey: ["curriculum-lessons", moduleId],
         });
         toast.success(tCommon("commands.deleted", "Deleted successfully"));
       },
       onError: () => {
-        toast.error(tCommon("errors.deleteFailed", "Failed to delete module"));
+        toast.error(tCommon("errors.deleteFailed", "Failed to delete lesson"));
       },
     });
 
-  const { deleteCurriculumModuleDialog, openDeleteCurriculumModuleDialog } =
-    useCurriculumModuleDeleteDialog({
-      representation: curriculumModuleStore.response?.title,
-      deleteModule: () => {
-        if (curriculumModuleStore.response) {
-          deleteModuleMutation(curriculumModuleStore.response.id);
+  const { deleteCurriculumLessonDialog, openDeleteCurriculumLessonDialog } =
+    useCurriculumLessonDeleteDialog({
+      representation: curriculumLessonStore.response?.title,
+      deleteLesson: () => {
+        if (curriculumLessonStore.response) {
+          deleteLessonMutation(curriculumLessonStore.response.id);
         }
       },
       isDeletionPending,
-      resetModule: () => curriculumModuleStore.set("response", undefined),
+      resetLesson: () => curriculumLessonStore.set("response", undefined),
     });
 
-  const dndService = useDnDService<ResponseCurriculumModuleDto>({
-    items: modules,
-    setItems: setModules,
+  const dndService = useDnDService<ResponseCurriculumLessonDto>({
+    items: lessons,
+    setItems: setLessons,
     getId: (item) => item.id,
     renderChild: (item) => (
-      <CurriculumModuleItem
-        module={item}
+      <CurriculumLessonItem
+        lesson={item}
         onEdit={() =>
-          navigate(`/curriculum/${curriculumId}/modules/${item.id}/edit`)
+          navigate(
+            `/curriculum/${curriculumId}/modules/${moduleId}/lessons/${item.id}/edit`,
+          )
         }
-        onDelete={(m) => {
-          curriculumModuleStore.set("response", m);
-          openDeleteCurriculumModuleDialog();
+        onDelete={(lesson) => {
+          curriculumLessonStore.set("response", lesson);
+          openDeleteCurriculumLessonDialog();
         }}
       />
     ),
     createNewItem: () => {
-      openCreateCurriculumModuleSheet();
+      openCreateCurriculumLessonSheet();
     },
   });
 
@@ -137,20 +141,20 @@ export function CurriculumModules({
   const handleDragEndWrapper = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      const oldIndex = modules.findIndex((m) => m.id === active.id);
-      const newIndex = modules.findIndex((m) => m.id === over.id);
+      const oldIndex = lessons.findIndex((lesson) => lesson.id === active.id);
+      const newIndex = lessons.findIndex((lesson) => lesson.id === over.id);
 
       dndService.handleDragEnd(event);
 
-      const newModules = arrayMove(modules, oldIndex, newIndex);
+      const newLessons = arrayMove(lessons, oldIndex, newIndex);
 
-      const updates = newModules.map((mod, index) => ({
-        id: mod.id,
+      const updates = newLessons.map((lesson, index) => ({
+        id: lesson.id,
         sortOrder: index,
       }));
 
       if (updates.length > 0) {
-        updateModuleOrder(updates);
+        updateLessonOrder(updates);
       }
     }
   };
@@ -158,7 +162,7 @@ export function CurriculumModules({
   if (isLoading) {
     return (
       <div className="flex h-32 items-center justify-center p-6 text-sm text-muted-foreground">
-        Loading modules...
+        Loading lessons...
       </div>
     );
   }
@@ -167,9 +171,9 @@ export function CurriculumModules({
     <div className={cn("flex flex-col gap-4", className)}>
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-semibold">{t("modules", "Modules")}</h3>
+          <h3 className="text-lg font-semibold">{t("lessons", "Lessons")}</h3>
           <p className="text-sm text-muted-foreground">
-            {t("modulesDescription", "Manage the modules for this curriculum.")}
+            {t("lessonsDescription", "Manage the lessons for this module.")}
           </p>
         </div>
         <Button
@@ -189,7 +193,7 @@ export function CurriculumModules({
         onDragEnd={handleDragEndWrapper}
       >
         <SortableContext
-          items={modules.map((m) => m.id)}
+          items={lessons.map((lesson) => lesson.id)}
           strategy={verticalListSortingStrategy}
         >
           <div className="flex flex-col">
@@ -198,15 +202,15 @@ export function CurriculumModules({
             ))}
             {dndService.items.length === 0 && (
               <div className="text-muted-foreground text-sm py-8 text-center border rounded-lg border-dashed">
-                {t("noModules", "No modules found. Create one to get started.")}
+                {t("noLessons", "No lessons found. Create one to get started.")}
               </div>
             )}
           </div>
         </SortableContext>
       </DndContext>
 
-      {createCurriculumModuleSheet}
-      {deleteCurriculumModuleDialog}
+      {createCurriculumLessonSheet}
+      {deleteCurriculumLessonDialog}
     </div>
   );
 }

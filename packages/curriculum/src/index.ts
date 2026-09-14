@@ -5,4 +5,6 @@ export { CurriculumViewer } from "./components/curriculum/CurriculumViewer";
 export { CurriculumVersionsList } from "./components/curriculum/version-list/CurriculumVersionsList";
 export { UpdateCurriculumModuleForm } from "./components/curriculum-module/forms/UpdateCurriculumModuleForm";
 export * from "./components/curriculum-module/version-list/CurriculumModuleVersionsList";
+export { UpdateCurriculumLessonForm } from "./components/curriculum-lesson/forms/UpdateCurriculumLessonForm";
+export * from "./components/curriculum-lesson/version-list/CurriculumLessonVersionsList";
 export * from "./hooks";

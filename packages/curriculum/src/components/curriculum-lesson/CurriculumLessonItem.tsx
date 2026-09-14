@@ -1,4 +1,3 @@
-import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, X, Edit2 } from "lucide-react";
@@ -11,29 +10,29 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@qlp/ui";
-import { type ResponseCurriculumModuleDto } from "@qlp/api-client";
+import { type ResponseCurriculumLessonDto } from "@qlp/api-client";
 import { useTranslation } from "react-i18next";
 import { identifyUser, identifyUserAvatar } from "@qlp/lib";
 import { useUploadSrc } from "@qlp/hooks";
 import { useApp } from "@qlp/contexts";
 
-export interface CurriculumModuleItemProps {
-  module: ResponseCurriculumModuleDto;
-  onEdit?: (module: ResponseCurriculumModuleDto) => void;
-  onDelete?: (module: ResponseCurriculumModuleDto) => void;
+export interface CurriculumLessonItemProps {
+  lesson: ResponseCurriculumLessonDto;
+  onEdit?: (lesson: ResponseCurriculumLessonDto) => void;
+  onDelete?: (lesson: ResponseCurriculumLessonDto) => void;
   className?: string;
 }
 
-export function CurriculumModuleItem({
-  module,
+export function CurriculumLessonItem({
+  lesson,
   onEdit,
   onDelete,
   className,
-}: CurriculumModuleItemProps) {
+}: CurriculumLessonItemProps) {
   const { api: baseApi } = useApp();
   const { t: tCommon } = useTranslation("common");
 
-  const createdBy = module.createdBy;
+  const createdBy = lesson.createdBy;
   const { data: createdByAvatarSrc } = useUploadSrc(
     baseApi.upload
       ? (createdBy?.picture ??
@@ -48,7 +47,7 @@ export function CurriculumModuleItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: module.id });
+  } = useSortable({ id: lesson.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -78,15 +77,15 @@ export function CurriculumModuleItem({
       <div className="flex flex-col flex-1 gap-2">
         <div className="flex-1 flex flex-col min-w-0 pr-4">
           <div className="flex items-center gap-2">
-            <h4 className="font-semibold text-lg truncate">{module.title}</h4>
+            <h4 className="font-semibold text-lg truncate">{lesson.title}</h4>
             <Badge className="uppercase font-semibold">
-              <span className="text-xs">{module.status || "draft"}</span>
+              <span className="text-xs">{lesson.status || "draft"}</span>
             </Badge>
           </div>
-          {module.description && (
+          {lesson.description && (
             <div
               className="line-clamp-2 text-sm text-muted-foreground mt-1"
-              dangerouslySetInnerHTML={{ __html: module.description }}
+              dangerouslySetInnerHTML={{ __html: lesson.description }}
             />
           )}
         </div>
@@ -115,7 +114,7 @@ export function CurriculumModuleItem({
           variant="ghost"
           size="sm"
           className="h-8 w-8 p-0"
-          onClick={() => onEdit?.(module)}
+          onClick={() => onEdit?.(lesson)}
           title={tCommon("commands.edit", "Edit")}
         >
           <Edit2 className="h-4 w-4" />
@@ -126,7 +125,7 @@ export function CurriculumModuleItem({
           variant="ghost"
           size="sm"
           className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-          onClick={() => onDelete?.(module)}
+          onClick={() => onDelete?.(lesson)}
           title={tCommon("commands.delete", "Delete")}
         >
           <X className="h-4 w-4" />

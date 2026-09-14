@@ -8,13 +8,13 @@ import {
 } from "@qlp/datatable-builder";
 import { Badge } from "@qlp/ui";
 import { capitalize } from "lodash";
-import type { ResponseCurriculumModuleDto } from "@qlp/api-client";
+import type { ResponseCurriculumLessonDto } from "@qlp/api-client";
 
-export function useCurriculumModuleVersionColumns(): ColumnDef<ResponseCurriculumModuleDto>[] {
+export function useCurriculumLessonVersionColumns(): ColumnDef<ResponseCurriculumLessonDto>[] {
   const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("curriculum");
 
-  return React.useMemo<ColumnDef<ResponseCurriculumModuleDto>[]>(
+  return React.useMemo<ColumnDef<ResponseCurriculumLessonDto>[]>(
     () => [
       {
         accessorKey: "title",

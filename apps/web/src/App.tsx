@@ -9,6 +9,10 @@ import CurriculumPage from "./pages/CurriculumPage";
 import CurriculumEditPage from "./pages/CurriculumEditPage";
 import CurriculumViewPage from "./pages/CurriculumViewPage";
 import CurriculumVersionsPage from "./pages/CurriculumVersionsPage";
+import CurriculumModuleEditPage from "./pages/CurriculumModuleEditPage";
+import CurriculumModuleVersionsPage from "./pages/CurriculumModuleVersionsPage";
+import CurriculumLessonEditPage from "./pages/CurriculumLessonEditPage";
+import CurriculumLessonVersionsPage from "./pages/CurriculumLessonVersionsPage";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, user } = useAuthSession();
@@ -59,6 +63,10 @@ export default function App() {
           <Route path="curriculum/:id/versions" element={<CurriculumVersionsPage />} />
           <Route path="curriculum/:id/versions/:version" element={<CurriculumViewPage />} />
           <Route path="curriculum/:id/edit" element={<CurriculumEditPage />} />
+          <Route path="curriculum/:id/modules/:moduleId/edit" element={<CurriculumModuleEditPage />} />
+          <Route path="curriculum/:curriculumId/modules/:moduleId/versions" element={<CurriculumModuleVersionsPage />} />
+          <Route path="curriculum/:id/modules/:moduleId/lessons/:lessonId/edit" element={<CurriculumLessonEditPage />} />
+          <Route path="curriculum/:curriculumId/modules/:moduleId/lessons/:lessonId/versions" element={<CurriculumLessonVersionsPage />} />
           <Route path="lessons/:id" element={<div>Lesson</div>} />
           <Route path="tutors" element={<div>Tutors</div>} />
           <Route path="bookings" element={<div>Bookings</div>} />

@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Repeat2, Save } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useBreadcrumb, useUI, useApp } from "@qlp/contexts";
-import { Button, Separator, Label } from "@qlp/ui";
+import { Button, Label } from "@qlp/ui";
 import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
 import {
   type CreateCurriculumDto,
@@ -126,7 +126,6 @@ export function CreateCurriculumForm({
         }}
         uploadApi={uploadApi}
       />
-      <Separator />
       <div className="flex flex-col gap-2 w-full">
         <Label className="text-xs font-bold text-muted-foreground">
           {tCommon("commands.actions", "Actions")}

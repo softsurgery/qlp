@@ -13,7 +13,6 @@ import { useDebounce } from "@qlp/hooks";
 import { useIntro, useBreadcrumb } from "@qlp/contexts";
 import {
   CurriculumStatus,
-  type CreateCurriculumDto,
   type ResponseCurriculumDto,
   type ServerErrorResponse,
 } from "@qlp/api-client";
@@ -106,18 +105,6 @@ export function CurriculumList({ className }: CurriculumListProps = {}) {
         filter: filterString,
         join: "owner,createdBy",
       }),
-  });
-
-  const createMutation = useMutation({
-    mutationFn: (dto: CreateCurriculumDto) => api.create(dto),
-    onSuccess: (curriculum) => {
-      toast.success(t("created"));
-      void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
-      navigate(`/curriculum/${curriculum.id}/edit`);
-    },
-    onError: (error: ServerErrorResponse) => {
-      toast.error(errorMessage(error, t("saveError")));
-    },
   });
 
   const deleteMutation = useMutation({

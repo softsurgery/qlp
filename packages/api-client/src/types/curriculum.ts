@@ -40,6 +40,7 @@ export interface ResponseCurriculumDto extends VersionedEntity {
   owner?: ResponseUserDto;
   createdById?: string;
   createdBy?: ResponseUserDto;
+  modules?: ResponseCurriculumModuleDto[];
 }
 
 export interface ResponseCurriculumWorkflowDto extends ResponseWorkflowDto {
@@ -48,6 +49,10 @@ export interface ResponseCurriculumWorkflowDto extends ResponseWorkflowDto {
 
 export interface ResponseCurriculumModuleWorkflowDto extends ResponseWorkflowDto {
   module: ResponseCurriculumModuleDto;
+}
+
+export interface ResponseCurriculumLessonWorkflowDto extends ResponseWorkflowDto {
+  lesson: ResponseCurriculumLessonDto;
 }
 
 export interface ExecuteCurriculumWorkflowDto {
@@ -68,6 +73,7 @@ export interface ResponseCurriculumLessonDto extends VersionedEntity {
   moduleId: string;
   title: string;
   description?: string;
+  status: CurriculumStatus | string;
   sortOrder: number;
   materials?: ResponseCurriculumLessonMaterialDto[];
   ownerId?: string;
@@ -102,10 +108,6 @@ export interface ResponseCurriculumModuleDto extends VersionedEntity {
   createdBy?: ResponseUserDto;
 }
 
-export interface ResponseCurriculumTreeDto extends ResponseCurriculumDto {
-  modules: ResponseCurriculumModuleDto[];
-}
-
 export interface CreateCurriculumDto {
   title: string;
   slug?: string;
@@ -128,6 +130,7 @@ export interface CreateCurriculumModuleDto {
   title: string;
   description?: string;
   sortOrder?: number;
+  status?: CurriculumStatus | string;
   ownerId?: string;
 }
 
@@ -142,7 +145,7 @@ export interface CreateCurriculumLessonDto {
   title: string;
   description?: string;
   sortOrder?: number;
-  ownerId?: string;
+  status?: CurriculumStatus | string;
   createdById?: string;
 }
 

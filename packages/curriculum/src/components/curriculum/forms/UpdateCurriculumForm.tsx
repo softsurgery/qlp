@@ -4,10 +4,10 @@ import { useApp } from "@qlp/contexts";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Save, Repeat2, Loader2, History as HistoryIcon } from "lucide-react";
+import { Save, Repeat2, Loader2 } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useBreadcrumb, useUI } from "@qlp/contexts";
-import { Button, Separator, Label } from "@qlp/ui";
+import { Button, Label } from "@qlp/ui";
 import {
   type UpdateCurriculumDto,
   type ServerErrorResponse,
@@ -77,7 +77,7 @@ export function UpdateCurriculumForm({
         ownerId: curriculum.owner?.id || curriculum.ownerId,
       });
     }
-  }, [curriculum]); // intentional single initialization dependency when curriculum loads
+  }, [curriculum]);
 
   React.useEffect(() => {
     if (setRoutes && curriculum) {
@@ -160,7 +160,6 @@ export function UpdateCurriculumForm({
   const mainContent = (
     <div className="flex flex-col gap-8">
       <FormBuilder structure={updateCurriculumFormStructure} />
-      <Separator />
       <CurriculumModules curriculumId={curriculumId} />
     </div>
   );
@@ -188,7 +187,6 @@ export function UpdateCurriculumForm({
         ]}
         uploadApi={uploadApi}
       />
-      <Separator />
       <div className="flex flex-col gap-2 w-full">
         <Label className="text-xs font-bold text-muted-foreground">
           {tCommon("commands.actions", "Actions")}

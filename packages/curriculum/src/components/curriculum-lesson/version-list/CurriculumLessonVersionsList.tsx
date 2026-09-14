@@ -1,41 +1,41 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { DataTable, type DataTableConfig } from "@qlp/datatable-builder";
-import { useApp, useBreadcrumb, useIntro } from "@qlp/contexts";
-import type { ResponseCurriculumModuleDto } from "@qlp/api-client";
-import { useCurriculum, useCurriculumModules, useCurriculumModuleVersions } from "../../../hooks";
-import { useCurriculumModuleVersionColumns } from "./columns";
+import { useBreadcrumb, useIntro } from "@qlp/contexts";
+import type { ResponseCurriculumLessonDto } from "@qlp/api-client";
+import { useCurriculum, useCurriculumModules, useCurriculumLessonVersions } from "../../../hooks";
+import { useCurriculumLessonVersionColumns } from "./columns";
 import { cn } from "@qlp/ui";
 
-export interface CurriculumModuleVersionsListProps {
+export interface CurriculumLessonVersionsListProps {
   className?: string;
-  moduleId: string;
+  lessonId: string;
+  moduleId?: string;
   curriculumId?: string;
 }
 
-export function CurriculumModuleVersionsList({
+export function CurriculumLessonVersionsList({
   className,
+  lessonId,
   moduleId,
   curriculumId,
-}: CurriculumModuleVersionsListProps) {
+}: CurriculumLessonVersionsListProps) {
   const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("curriculum");
-  const { api: baseApi, appType } = useApp();
-  const api =
-    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
 
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setIntro, clearIntro } = useIntro();
 
   const { versions, isVersionsPending: isLoading } =
-    useCurriculumModuleVersions({ moduleId, join: "owner,createdBy" });
+    useCurriculumLessonVersions({ lessonId, join: "createdBy" });
   const { curriculum } = useCurriculum({ id: curriculumId });
   const { modules } = useCurriculumModules({ id: curriculumId });
 
   const module = modules.find((item) => item.id === moduleId);
+  const lessonTitle = versions?.[0]?.title || lessonId;
 
   React.useEffect(() => {
-    if (setRoutes && curriculumId && curriculum && module) {
+    if (setRoutes && curriculumId && moduleId && curriculum && module) {
       setRoutes([
         { title: t("title", "Curriculum"), href: "/curriculum" },
         {
@@ -46,13 +46,17 @@ export function CurriculumModuleVersionsList({
           title: module.title,
           href: `/curriculum/${curriculumId}/modules/${moduleId}/edit`,
         },
+        {
+          title: lessonTitle,
+          href: `/curriculum/${curriculumId}/modules/${moduleId}/lessons/${lessonId}/edit`,
+        },
         { title: tCommon("commands.history", "History") },
       ]);
     }
     if (setIntro && curriculum && module) {
       setIntro(
-        `${t("moduleVersions", "Module Versions")} - ${module.title}`,
-        `${curriculum.title} — ${t("moduleVersionsDescription", "History of module changes")}`,
+        `${t("lessonVersions", "Lesson Versions")} - ${lessonTitle}`,
+        `${curriculum.title} / ${module.title} — ${t("lessonVersionsDescription", "History of lesson changes")}`,
       );
     }
     return () => {
@@ -68,19 +72,21 @@ export function CurriculumModuleVersionsList({
     tCommon,
     curriculumId,
     moduleId,
+    lessonId,
     curriculum?.title,
     module?.title,
+    lessonTitle,
   ]);
 
-  const columns = useCurriculumModuleVersionColumns();
+  const columns = useCurriculumLessonVersionColumns();
 
-  const context: DataTableConfig<ResponseCurriculumModuleDto> = {
+  const context: DataTableConfig<ResponseCurriculumLessonDto> = {
     singularName: "Version",
     pluralName: "Versions",
     createCallback: undefined,
     updateCallback: undefined,
     deleteCallback: undefined,
-    inspectCallback: undefined, // Or maybe a way to view a module version if we want
+    inspectCallback: undefined,
     searchTerm: "",
     setSearchTerm: () => {},
     page: 1,

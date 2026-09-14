@@ -12,7 +12,6 @@ import type {
   ResponseCurriculumLessonDto,
   ResponseCurriculumLessonMaterialDto,
   ResponseCurriculumModuleDto,
-  ResponseCurriculumTreeDto,
   UpdateCurriculumDto,
   UpdateCurriculumExamDto,
   UpdateCurriculumLessonDto,
@@ -21,6 +20,7 @@ import type {
   ResponseCurriculumWorkflowDto,
   ExecuteCurriculumWorkflowDto,
   ResponseCurriculumModuleWorkflowDto,
+  ResponseCurriculumLessonWorkflowDto,
 } from "../types/index.js";
 
 export function createCurriculumResource(
@@ -51,17 +51,12 @@ export function createCurriculumResource(
     return response.data;
   };
 
-  const findById = async (id: string, params?: QueryParams): Promise<ResponseCurriculumDto> => {
-    const response = await http.get<ResponseCurriculumDto>(`${basePath}/${id}`, { params });
-    return response.data;
-  };
-
-  const findTree = async (
+  const findById = async (
     id: string,
-    params?: QueryParams & { version?: number },
-  ): Promise<ResponseCurriculumTreeDto> => {
-    const response = await http.get<ResponseCurriculumTreeDto>(
-      `${basePath}/${id}/tree`,
+    params?: QueryParams,
+  ): Promise<ResponseCurriculumDto> => {
+    const response = await http.get<ResponseCurriculumDto>(
+      `${basePath}/${id}`,
       { params },
     );
     return response.data;
@@ -136,6 +131,17 @@ export function createCurriculumResource(
     return response.data;
   };
 
+  const findModulesByCurriculum = async (
+    curriculumId: string,
+    params?: QueryParams,
+  ): Promise<ResponseCurriculumModuleDto[]> => {
+    const response = await http.get<ResponseCurriculumModuleDto[]>(
+      `${basePath}/${curriculumId}/modules`,
+      { params },
+    );
+    return response.data;
+  };
+
   const updateModule = async (
     moduleId: string,
     dto: UpdateCurriculumModuleDto,
@@ -162,7 +168,7 @@ export function createCurriculumResource(
   ): Promise<ResponseCurriculumModuleDto[]> => {
     const response = await http.get<ResponseCurriculumModuleDto[]>(
       `${basePath}/modules/${moduleId}/versions`,
-      { params }
+      { params },
     );
     return response.data;
   };
@@ -210,6 +216,17 @@ export function createCurriculumResource(
     return response.data;
   };
 
+  const findLessonsByModule = async (
+    moduleId: string,
+    params?: QueryParams,
+  ): Promise<ResponseCurriculumLessonDto[]> => {
+    const response = await http.get<ResponseCurriculumLessonDto[]>(
+      `${basePath}/modules/${moduleId}/lessons`,
+      { params },
+    );
+    return response.data;
+  };
+
   const updateLesson = async (
     lessonId: string,
     dto: UpdateCurriculumLessonDto,
@@ -232,9 +249,43 @@ export function createCurriculumResource(
 
   const findLessonVersions = async (
     lessonId: string,
+    params?: QueryParams,
   ): Promise<ResponseCurriculumLessonDto[]> => {
     const response = await http.get<ResponseCurriculumLessonDto[]>(
       `${basePath}/lessons/${lessonId}/versions`,
+      { params },
+    );
+    return response.data;
+  };
+
+  const findLessonWorkflow = async (
+    lessonId: string,
+    params?: QueryParams,
+  ): Promise<ResponseCurriculumLessonWorkflowDto> => {
+    const response = await http.get<ResponseCurriculumLessonWorkflowDto>(
+      `${basePath}/lessons/${lessonId}/workflow`,
+      { params },
+    );
+    return response.data;
+  };
+
+  const executeLessonWorkflow = async (
+    lessonId: string,
+    dto: ExecuteCurriculumWorkflowDto,
+  ): Promise<ResponseCurriculumLessonWorkflowDto> => {
+    const response = await http.post<ResponseCurriculumLessonWorkflowDto>(
+      `${basePath}/lessons/${lessonId}/workflow`,
+      dto,
+    );
+    return response.data;
+  };
+
+  const reorderLessons = async (
+    updates: { id: string; sortOrder: number }[],
+  ): Promise<{ success: boolean }> => {
+    const response = await http.put<{ success: boolean }>(
+      `${basePath}/lessons/reorder`,
+      { updates },
     );
     return response.data;
   };
@@ -323,7 +374,6 @@ export function createCurriculumResource(
     findPaginated,
     findAll,
     findById,
-    findTree,
     findVersions,
     workflow: {
       findWorkflow,
@@ -333,16 +383,21 @@ export function createCurriculumResource(
     update,
     remove,
     createModule,
+    findModulesByCurriculum,
     updateModule,
     removeModule,
     findModuleVersions,
     findModuleWorkflow,
     executeModuleWorkflow,
     reorderModules,
+    findLessonsByModule,
     createLesson,
     updateLesson,
     removeLesson,
     findLessonVersions,
+    findLessonWorkflow,
+    executeLessonWorkflow,
+    reorderLessons,
     createMaterial,
     updateMaterial,
     removeMaterial,

@@ -39,19 +39,19 @@ export function CurriculumVersionsList({
   });
 
   React.useEffect(() => {
-    if (setRoutes) {
+    if (setRoutes && curriculum) {
       setRoutes([
         { title: t("title"), href: "/curriculum" },
         {
-          title: curriculum?.slug || curriculumId,
+          title: curriculum.title,
           href: `/curriculum/${curriculumId}/edit`,
         },
         { title: tCommon("commands.history", "History") },
       ]);
     }
-    if (setIntro) {
+    if (setIntro && curriculum) {
       setIntro(
-        `${t("versionsTitle", { defaultValue: "Curriculum Versions" })} - ${curriculum?.slug || curriculumId}`,
+        `${t("versionsTitle", { defaultValue: "Curriculum Versions" })} - ${curriculum.title}`,
         t("versionsDescription", {
           defaultValue: "History of curriculum changes",
         }),
@@ -68,7 +68,7 @@ export function CurriculumVersionsList({
     clearIntro,
     t,
     tCommon,
-    curriculum?.slug,
+    curriculum?.title,
     curriculumId,
   ]);
 
