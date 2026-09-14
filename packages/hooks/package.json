@@ -7,6 +7,9 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./stores": "./src/stores/index.ts",
+    "./user": "./src/user/index.ts",
+    "./utils": "./src/utils/index.ts",
     "./*": [
       "./src/*.ts",
       "./src/*.tsx",

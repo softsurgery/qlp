@@ -12,6 +12,11 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./i18n": "./src/i18n/index.ts",
+    "./styles/*.css": "./src/styles/*.css",
+    "./components/*": "./src/components/*.tsx",
+    "./lib/*": "./src/lib/*.ts",
+    "./hooks/*": "./src/hooks/*.ts",
     "./*": [
       "./src/*.ts",
       "./src/*.tsx",

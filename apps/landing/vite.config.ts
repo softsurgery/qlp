@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
+import { qlpWorkspaceAliases } from "../vite.workspace-aliases.mjs";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname, "");
@@ -15,9 +16,10 @@ export default defineConfig(({ mode }) => {
     },
     publicDir: path.resolve(__dirname, "public"),
     resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
+      alias: [
+        { find: "@", replacement: path.resolve(__dirname, "./src") },
+        ...qlpWorkspaceAliases(),
+      ],
     },
     optimizeDeps: {
       exclude: [
