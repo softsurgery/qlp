@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useApp } from "@qlp/contexts";
-import { mapToSelectOptions } from "@qlp/form-builder";
+import { mapToSelectOptions, SelectOption } from "@qlp/form-builder";
 import { identifyUser } from "@qlp/lib";
 import React from "react";
 
@@ -26,7 +26,7 @@ export const useTutors = ({ enabled = true }: useTutorsProps = {}) => {
     return usersResp;
   }, [usersResp]);
 
-  const tutorOptions = React.useMemo(() => {
+  const tutorOptions = React.useMemo((): SelectOption[] => {
     return mapToSelectOptions({
       data: tutors,
       labelKey: "id",

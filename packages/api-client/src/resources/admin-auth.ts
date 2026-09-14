@@ -9,7 +9,7 @@ import type {
   ResponseResetPasswordDto,
   ResponseResetTokenDto,
 } from "../types/auth.js";
-import { useAuthPersistStore } from "@qlp/hooks";
+import { useAuthPersistStore } from "@qlp/hooks/stores";
 
 export function createAdminAuthResource(http: AxiosInstance) {
   const saveToken = (access_token: string, refresh_token: string) => {
