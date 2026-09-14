@@ -52,7 +52,7 @@ export class CurriculumLessonService extends AbstractVersioningCrudService<Curri
 
     const lesson = await this.findOneById(id);
     if (!lesson) return;
-    if (lesson.ownerId === actorId) return;
+    if (lesson.createdById === actorId) return;
 
     const isEditor = await this.collaboratorRepository.findOne({
       where: { lessonId: id, userId: actorId, role: 'EDITOR' as any },
@@ -63,14 +63,14 @@ export class CurriculumLessonService extends AbstractVersioningCrudService<Curri
     }
   }
 
-  async createForModule(moduleId: string, dto: CreateCurriculumLessonDto) {
+  async createForModule(moduleId: string, dto: CreateCurriculumLessonDto, createdById?: string) {
     const siblings = await this.findAll({ filter: `moduleId||$eq||${moduleId}` });
     return this.save({
       moduleId,
       title: dto.title,
       description: dto.description,
       sortOrder: dto.sortOrder ?? siblings.length,
-      ownerId: dto.ownerId,
+      createdById: createdById,
     });
   }
 
@@ -88,10 +88,24 @@ export class CurriculumLessonService extends AbstractVersioningCrudService<Curri
     return super.softDelete(id);
   }
 
-  async findLatestByModule(moduleId: string) {
+  async findLatestByModule(moduleId: string, join?: string) {
     return this.findAll({
       filter: `moduleId||$eq||${moduleId}`,
       sort: 'sortOrder',
+      join,
     });
+  }
+
+  async reorderLessons(updates: { id: string; sortOrder: number }[], userId?: string) {
+    await Promise.all(
+      updates.map((update) =>
+        this.updateLesson(update.id, { sortOrder: update.sortOrder }, userId),
+      ),
+    );
+    return { success: true };
+  }
+
+  async findVersions(id: string, join?: string) {
+    return super.findAllVersions(id, { join });
   }
 }

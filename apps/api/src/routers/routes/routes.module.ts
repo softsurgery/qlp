@@ -12,6 +12,8 @@ import { ClientCurriculumModuleController } from 'src/modules/curriculum/control
 import { ClientCurriculumLessonController } from 'src/modules/curriculum/controllers/client-curriculum-lesson.controller';
 import { ClientCurriculumLessonMaterialController } from 'src/modules/curriculum/controllers/client-curriculum-lesson-material.controller';
 import { ClientCurriculumExamController } from 'src/modules/curriculum/controllers/client-curriculum-exam.controller';
+import { ClientCurriculumModuleWorkflowController } from 'src/modules/curriculum/controllers/client-curriculum-module-workflow.controller';
+import { ClientCurriculumLessonWorkflowController } from 'src/modules/curriculum/controllers/client-curriculum-lesson-workflow.controller';
 
 @Module({
   controllers: [
@@ -20,7 +22,9 @@ import { ClientCurriculumExamController } from 'src/modules/curriculum/controlle
     ClientCurriculumController,
     ClientCurriculumWorkflowController,
     ClientCurriculumModuleController,
+    ClientCurriculumModuleWorkflowController,
     ClientCurriculumLessonController,
+    ClientCurriculumLessonWorkflowController,
     ClientCurriculumLessonMaterialController,
     ClientCurriculumExamController,
   ],

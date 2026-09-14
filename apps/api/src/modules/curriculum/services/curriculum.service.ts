@@ -131,7 +131,7 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
     const nestedModules = await Promise.all(
       modules.map(async (module) => {
         const [lessons, exams] = await Promise.all([
-          this.lessonService.findLatestByModule(module.id),
+          this.lessonService.findLatestByModule(module.id, join),
           this.examService.findLatestByModule(module.id),
         ]);
 

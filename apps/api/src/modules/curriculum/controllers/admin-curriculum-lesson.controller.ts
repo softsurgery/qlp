@@ -7,7 +7,9 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
+  UnauthorizedException,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -30,10 +32,13 @@ export class AdminCurriculumLessonController {
   constructor(private readonly lessonService: CurriculumLessonService) {}
 
   @Get('/lessons/:lessonId/versions')
-  async findVersions(@Param('lessonId') lessonId: string): Promise<ResponseCurriculumLessonDto[]> {
+  async findVersions(
+    @Param('lessonId') lessonId: string,
+    @Query('join') join?: string,
+  ): Promise<ResponseCurriculumLessonDto[]> {
     return toDtoArray(
       ResponseCurriculumLessonDto,
-      await this.lessonService.findAllVersions(lessonId),
+      await this.lessonService.findVersions(lessonId, join),
     );
   }
 
@@ -44,15 +49,20 @@ export class AdminCurriculumLessonController {
     @Body() dto: CreateCurriculumLessonDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumLessonDto> {
-    if (!dto.ownerId && req.user?.sub) {
-      dto.ownerId = req.user.sub;
+    if (!req.user?.sub) {
+      throw new UnauthorizedException('Unauthorized');
     }
-    if (!dto.createdById && req.user?.sub) {
-      dto.createdById = req.user.sub;
-    }
-    const lesson = await this.lessonService.createForModule(moduleId, dto);
+    const lesson = await this.lessonService.createForModule(moduleId, dto, req.user.sub);
     req.logInfo = { id: lesson.id, moduleId };
     return toDto(ResponseCurriculumLessonDto, lesson);
+  }
+
+  @Put('/lessons/reorder')
+  async reorder(
+    @Body() dto: { updates: { id: string; sortOrder: number }[] },
+    @Request() req: AdvancedRequest,
+  ) {
+    return this.lessonService.reorderLessons(dto.updates, req.user?.sub);
   }
 
   @Put('/lessons/:lessonId')
