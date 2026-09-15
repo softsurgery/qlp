@@ -1,5 +1,8 @@
 .rte-root {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   border-radius: var(--radius);
   border: 1px solid hsl(var(--border));
   background-color: hsl(var(--background));
@@ -32,10 +35,17 @@ button.rte-control-button:active {
 }
 
 /* ── Editor Content ── */
+.rte-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 .rte-content .ProseMirror {
   outline: 0;
   padding: var(--spacing, 0.75rem);
-  min-height: 140px;
+  min-height: max(140px, 100%);
 }
 
 .rte-content .ProseMirror > *:last-child {
@@ -216,8 +226,10 @@ button.rte-control-button:active {
   text-decoration-color: color-mix(in srgb, hsl(var(--primary)) 80%, transparent);
 }
 
-.rte-content .ProseMirror ::selection {
-  background-color: color-mix(in srgb, hsl(var(--primary)) 15%, transparent);
+.rte-content .ProseMirror::selection,
+.rte-content .ProseMirror *::selection {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }
 
 /* Syntax Highlighting */
@@ -330,6 +342,7 @@ button.rte-control-button:active {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  flex-shrink: 0;
   gap: 0.5rem;
   top: var(--rte-sticky-offset, 0px);
   background-color: color-mix(in srgb, hsl(var(--muted)) 35%, hsl(var(--background)));
@@ -365,6 +378,7 @@ button.rte-control-button:active {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  flex-shrink: 0;
   gap: 0.5rem;
   background-color: hsl(var(--background));
   z-index: 1;
@@ -574,7 +588,7 @@ button.rte-control-button:active {
 }
 .rte-root[data-variant="compact"] .rte-content .ProseMirror {
   padding: 0.5rem 0.625rem;
-  min-height: 100px;
+  min-height: max(100px, 100%);
 }
 .rte-root[data-variant="compact"] .rte-controls-group {
   display: flex;

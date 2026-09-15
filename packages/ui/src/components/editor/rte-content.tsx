@@ -12,12 +12,8 @@ export const Content = ({
   const { editor } = useRichTextEditorContext();
 
   return (
-    <div className="relative">
-      <EditorContent
-        editor={editor}
-        className={cn("rte-content w-full", className)}
-        style={style}
-      />
+    <div className={cn("rte-content relative min-h-0", className)} style={style}>
+      <EditorContent editor={editor} className="w-full" />
       {children}
     </div>
   );

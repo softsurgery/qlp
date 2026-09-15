@@ -47,6 +47,19 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
     }
   }, [editor, value]);
 
+  React.useEffect(() => {
+    if (!isFullscreen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isFullscreen]);
+
   return (
     <div
       className={cn(
@@ -60,7 +73,10 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
       <RichTextEditor
         editor={editor}
         editable={!disabled}
-        className={cn("bg-card", isFullscreen && "h-full flex flex-col flex-1")}
+        className={cn(
+          "bg-card",
+          isFullscreen && "h-full min-h-0 flex flex-col flex-1 overflow-hidden",
+        )}
       >
         <RichTextEditor.Toolbar>
           <RichTextEditor.ControlsGroup>
@@ -111,7 +127,7 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
           className={cn(
             "overflow-y-auto",
             !height && !isFullscreen && "min-h-[150px] max-h-[400px]",
-            isFullscreen && "flex-1 h-full max-h-none min-h-0",
+            isFullscreen && "flex-1 min-h-0 max-h-none",
           )}
           style={
             !isFullscreen && height ? { height, minHeight: height } : undefined
