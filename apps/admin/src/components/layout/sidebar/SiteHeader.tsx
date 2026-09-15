@@ -8,15 +8,15 @@ export function SiteHeader() {
 
   return (
     <header className="flex h-[--header-height] shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear">
-      <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
+      <div className="flex w-full min-w-0 items-center gap-1 px-4 lg:gap-2 lg:px-6">
         {showSidebar ? (
           <>
-            <SidebarTrigger className="-ml-1" />
+            <SidebarTrigger className="-ml-1 shrink-0" />
             <Separator orientation="vertical" className="mx-2 h-4" />
           </>
         ) : null}
         <BreadcrumbCommon />
-        <div className="ml-auto">
+        <div className="ml-auto shrink-0">
           <ModeToggle />
         </div>
       </div>
