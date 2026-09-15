@@ -77,12 +77,12 @@ const MATERIAL_BLOCKS = [
   },
 ];
 
-export function CurriculumLessonMaterials({
+export const CurriculumLessonMaterials = ({
   className,
   lessonId,
   moduleId,
   disabled,
-}: CurriculumLessonMaterialsProps) {
+}: CurriculumLessonMaterialsProps) => {
   const { t } = useTranslation("curriculum");
   const { t: tCommon } = useTranslation("common");
   const { api: baseApi, appType } = useApp();
@@ -231,6 +231,7 @@ export function CurriculumLessonMaterials({
     getId: (item) => item.id,
     renderChild: (item) => (
       <CurriculumLessonMaterialItem
+        className="rounded-xl mb-2"
         material={item}
         original={loadedMaterials.find((loaded) => loaded.id === item.id)}
         disabled={disabled}
@@ -360,4 +361,4 @@ export function CurriculumLessonMaterials({
       {deleteCurriculumLessonMaterialDialog}
     </div>
   );
-}
+};

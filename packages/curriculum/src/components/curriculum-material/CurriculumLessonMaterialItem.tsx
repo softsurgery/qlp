@@ -26,6 +26,7 @@ import {
 } from "../../utils/material-table";
 
 export interface CurriculumLessonMaterialItemProps {
+  className?: string;
   material: ResponseCurriculumLessonMaterialDto;
   original?: ResponseCurriculumLessonMaterialDto;
   disabled?: boolean;
@@ -42,7 +43,8 @@ function materialIcon(type?: string) {
   return FileText;
 }
 
-export function CurriculumLessonMaterialItem({
+export const CurriculumLessonMaterialItem = ({
+  className,
   material,
   original,
   disabled,
@@ -50,7 +52,7 @@ export function CurriculumLessonMaterialItem({
   onChange,
   onSave,
   onDelete,
-}: CurriculumLessonMaterialItemProps) {
+}: CurriculumLessonMaterialItemProps) => {
   const { t } = useTranslation("curriculum");
   const { t: tCommon } = useTranslation("common");
   const Icon = materialIcon(material.type);
@@ -90,6 +92,7 @@ export function CurriculumLessonMaterialItem({
       className={cn(
         "flex flex-col gap-3 p-3 bg-background border hover:border-primary/50 transition-colors",
         isDragging && "shadow-lg border-primary",
+        className,
       )}
     >
       <div className="flex items-center gap-2">
@@ -200,4 +203,4 @@ export function CurriculumLessonMaterialItem({
       </div>
     </div>
   );
-}
+};
