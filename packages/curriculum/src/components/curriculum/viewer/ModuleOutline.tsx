@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { HtmlContent } from "@qlp/components";
 import { useApp } from "@qlp/contexts";
-import { useUploadSrc } from "@qlp/hooks";
+import { useLocalStorage, useUploadSrc } from "@qlp/hooks";
 import {
   type ExamQuestion,
   type ResponseCurriculumExamDto,
@@ -27,6 +27,10 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
   cn,
 } from "@qlp/ui";
 import {
@@ -39,6 +43,40 @@ import {
 } from "./utils";
 import { hasTableContent } from "../../../utils/material-table";
 import { MaterialTableEditor } from "../../curriculum-lesson/materials/MaterialTableEditor";
+
+type ContentWidth = "full" | "wide" | "narrow";
+
+const CONTENT_WIDTHS: {
+  id: ContentWidth;
+  className: string;
+  barClassName: string;
+  labelKey: "viewer.widthFull" | "viewer.widthWide" | "viewer.widthNarrow";
+}[] = [
+  {
+    id: "full",
+    className: "w-full",
+    barClassName: "w-5",
+    labelKey: "viewer.widthFull",
+  },
+  {
+    id: "wide",
+    className: "mx-auto w-full max-w-5xl",
+    barClassName: "w-3.5",
+    labelKey: "viewer.widthWide",
+  },
+  {
+    id: "narrow",
+    className: "mx-auto w-full max-w-3xl",
+    barClassName: "w-2",
+    labelKey: "viewer.widthNarrow",
+  },
+];
+
+const CONTENT_WIDTH_STORAGE_KEY = "qlp.curriculum.viewer.contentWidth";
+
+function isContentWidth(value: unknown): value is ContentWidth {
+  return value === "full" || value === "wide" || value === "narrow";
+}
 
 interface ModuleOutlineProps {
   module: ResponseCurriculumModuleDto;
@@ -59,88 +97,160 @@ export function ModuleOutline({
   const stats = moduleMaterialStats(module);
   const outline = moduleOutline(module);
   const [showDescription, setShowDescription] = React.useState(false);
+  const [storedWidth, setStoredWidth] = useLocalStorage<ContentWidth>(
+    CONTENT_WIDTH_STORAGE_KEY,
+    "narrow",
+  );
+  const contentWidth = isContentWidth(storedWidth) ? storedWidth : "narrow";
+  const widthClass =
+    CONTENT_WIDTHS.find((option) => option.id === contentWidth)?.className ??
+    "mx-auto w-full max-w-3xl";
   const hasDescription = hasRichText(module.description);
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-8">
-      <h1 className="text-2xl font-semibold tracking-tight">
-        {t("viewer.moduleTitle", { n: moduleIndex + 1, title: module.title })}
-      </h1>
-
-      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-        {stats.videos > 0 ? (
-          <span className="inline-flex items-center gap-1.5">
-            <Clapperboard className="size-3.5" />
-            {t("viewer.videosCount", { count: stats.videos })}
-          </span>
-        ) : null}
-        {stats.readings > 0 ? (
-          <>
-            {stats.videos > 0 ? <span aria-hidden>•</span> : null}
-            <span className="inline-flex items-center gap-1.5">
-              <BookOpen className="size-3.5" />
-              {t("viewer.readingsCount", { count: stats.readings })}
-            </span>
-          </>
-        ) : null}
-        {stats.assessments > 0 ? (
-          <>
-            {stats.videos > 0 || stats.readings > 0 ? (
-              <span aria-hidden>•</span>
-            ) : null}
-            <span className="inline-flex items-center gap-1.5">
-              <ListChecks className="size-3.5" />
-              {t("viewer.assessmentsCount", { count: stats.assessments })}
-            </span>
-          </>
-        ) : null}
+    <div className="w-full">
+      <div className="flex justify-end px-4 pt-4 sm:px-8">
+        <ContentWidthSwitch value={contentWidth} onChange={setStoredWidth} />
       </div>
-
-      {hasDescription ? (
-        <div className="mt-4">
-          <HtmlContent
-            html={module.description}
-            className={cn(!showDescription && "line-clamp-4")}
-          />
-          <button
-            type="button"
-            className="mt-2 text-sm font-medium text-primary hover:underline"
-            onClick={() => setShowDescription((open) => !open)}
-          >
-            {showDescription
-              ? t("viewer.hideDescription")
-              : t("viewer.showDescription")}
-          </button>
-        </div>
-      ) : null}
-
-      <div className="mt-8 flex flex-col divide-y">
-        {outline.length === 0 ? (
-          <p className="py-8 text-center text-sm text-muted-foreground">
-            {t("viewer.emptyModule")}
-          </p>
-        ) : (
-          outline.map((entry) =>
-            entry.kind === "lesson" ? (
-              <LessonGroup
-                key={entry.id}
-                lesson={entry.lesson}
-                activeItemId={activeItemId}
-                onActiveItemChange={onActiveItemChange}
-              />
-            ) : (
-              <ExamGroup
-                key={entry.id}
-                exam={entry.exam}
-                revealAnswers={revealAnswers}
-                activeItemId={activeItemId}
-                onActiveItemChange={onActiveItemChange}
-              />
-            ),
-          )
+      <div
+        className={cn(
+          widthClass,
+          "px-4 pb-6 pt-2 transition-[max-width] duration-200 sm:px-8",
         )}
+      >
+        <h1 className="text-2xl font-semibold tracking-tight">
+          {t("viewer.moduleTitle", { n: moduleIndex + 1, title: module.title })}
+        </h1>
+
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+          {stats.videos > 0 ? (
+            <span className="inline-flex items-center gap-1.5">
+              <Clapperboard className="size-3.5" />
+              {t("viewer.videosCount", { count: stats.videos })}
+            </span>
+          ) : null}
+          {stats.readings > 0 ? (
+            <>
+              {stats.videos > 0 ? <span aria-hidden>•</span> : null}
+              <span className="inline-flex items-center gap-1.5">
+                <BookOpen className="size-3.5" />
+                {t("viewer.readingsCount", { count: stats.readings })}
+              </span>
+            </>
+          ) : null}
+          {stats.assessments > 0 ? (
+            <>
+              {stats.videos > 0 || stats.readings > 0 ? (
+                <span aria-hidden>•</span>
+              ) : null}
+              <span className="inline-flex items-center gap-1.5">
+                <ListChecks className="size-3.5" />
+                {t("viewer.assessmentsCount", { count: stats.assessments })}
+              </span>
+            </>
+          ) : null}
+        </div>
+
+        {hasDescription ? (
+          <div className="mt-4">
+            <HtmlContent
+              html={module.description}
+              className={cn(!showDescription && "line-clamp-4")}
+            />
+            <button
+              type="button"
+              className="mt-2 text-sm font-medium text-primary hover:underline"
+              onClick={() => setShowDescription((open) => !open)}
+            >
+              {showDescription
+                ? t("viewer.hideDescription")
+                : t("viewer.showDescription")}
+            </button>
+          </div>
+        ) : null}
+
+        <div className="mt-8 flex flex-col divide-y">
+          {outline.length === 0 ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              {t("viewer.emptyModule")}
+            </p>
+          ) : (
+            outline.map((entry) =>
+              entry.kind === "lesson" ? (
+                <LessonGroup
+                  key={entry.id}
+                  lesson={entry.lesson}
+                  activeItemId={activeItemId}
+                  onActiveItemChange={onActiveItemChange}
+                />
+              ) : (
+                <ExamGroup
+                  key={entry.id}
+                  exam={entry.exam}
+                  revealAnswers={revealAnswers}
+                  activeItemId={activeItemId}
+                  onActiveItemChange={onActiveItemChange}
+                />
+              ),
+            )
+          )}
+        </div>
       </div>
     </div>
+  );
+}
+
+function ContentWidthSwitch({
+  value,
+  onChange,
+}: {
+  value: ContentWidth;
+  onChange: (width: ContentWidth) => void;
+}) {
+  const { t } = useTranslation("curriculum");
+
+  return (
+    <TooltipProvider delayDuration={300}>
+      <div
+        role="radiogroup"
+        aria-label={t("viewer.contentWidth")}
+        className="inline-flex items-center rounded-md border bg-background p-0.5"
+      >
+        {CONTENT_WIDTHS.map((option) => {
+          const selected = option.id === value;
+          return (
+            <Tooltip key={option.id}>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={selected}
+                  aria-label={t(option.labelKey)}
+                  onClick={() => onChange(option.id)}
+                  className={cn(
+                    "flex size-8 items-center justify-center rounded-sm text-muted-foreground transition-colors",
+                    "hover:bg-muted hover:text-foreground",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    selected && "bg-muted text-foreground",
+                  )}
+                >
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "block h-3 rounded-[2px] border-2 border-current",
+                      option.barClassName,
+                    )}
+                  />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent hideArrow side="bottom" sideOffset={6}>
+                {t(option.labelKey)}
+              </TooltipContent>
+            </Tooltip>
+          );
+        })}
+      </div>
+    </TooltipProvider>
   );
 }
 
@@ -162,7 +272,12 @@ function LessonGroup({
       <div className="flex items-center justify-between gap-3 py-2">
         <h2 className="text-base font-semibold">{lesson.title}</h2>
         <CollapsibleTrigger asChild>
-          <Button type="button" variant="ghost" size="icon-sm" className="shrink-0">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className="shrink-0"
+          >
             <ChevronDown
               className={cn(
                 "size-4 text-muted-foreground transition-transform",
@@ -222,7 +337,12 @@ function ExamGroup({
       <div className="flex items-center justify-between gap-3 py-2">
         <h2 className="text-base font-semibold">{exam.title}</h2>
         <CollapsibleTrigger asChild>
-          <Button type="button" variant="ghost" size="icon-sm" className="shrink-0">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className="shrink-0"
+          >
             <ChevronDown
               className={cn(
                 "size-4 text-muted-foreground transition-transform",
@@ -378,7 +498,8 @@ function MaterialPreview({
     uploadApi,
   );
   const kind = materialKind(material.type);
-  const mediaSrc = src || (isHttpUrl(material.content) ? material.content : undefined);
+  const mediaSrc =
+    src || (isHttpUrl(material.content) ? material.content : undefined);
 
   return (
     <div className="mb-3 ms-11 rounded-md border bg-card p-4">
@@ -423,7 +544,9 @@ function MaterialPreview({
       !hasRichText(material.content) &&
       !hasRichText(material.description) &&
       !(kind === "table" && hasTableContent(material.content)) ? (
-        <p className="text-sm text-muted-foreground">{t("viewer.noMaterials")}</p>
+        <p className="text-sm text-muted-foreground">
+          {t("viewer.noMaterials")}
+        </p>
       ) : null}
     </div>
   );

@@ -225,7 +225,11 @@
     "noMaterials": "لا توجد مواد في هذا الدرس",
     "duration": "{{minutes}} د",
     "passing": "النجاح: {{score}}",
-    "questions": "{{count}} أسئلة"
+    "questions": "{{count}} أسئلة",
+    "contentWidth": "عرض المحتوى",
+    "widthFull": "عرض كامل",
+    "widthWide": "عريض",
+    "widthNarrow": "ضيق"
   },
   "materialType": {
     "video": "فيديو",

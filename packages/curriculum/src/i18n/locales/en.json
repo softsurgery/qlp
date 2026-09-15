@@ -225,7 +225,11 @@
     "noMaterials": "No materials in this lesson",
     "duration": "{{minutes}} min",
     "passing": "Pass: {{score}}",
-    "questions": "{{count}} questions"
+    "questions": "{{count}} questions",
+    "contentWidth": "Content width",
+    "widthFull": "Full width",
+    "widthWide": "Wide",
+    "widthNarrow": "Narrow"
   },
   "materialType": {
     "video": "Video",
