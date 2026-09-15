@@ -18,10 +18,10 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EventType } from 'src/app/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
-import { CurriculumLessonService } from '../services/curriculum-lesson.service';
-import { CreateCurriculumLessonDto } from '../dtos/lesson/create-curriculum-lesson.dto';
-import { UpdateCurriculumLessonDto } from '../dtos/lesson/update-curriculum-lesson.dto';
-import { ResponseCurriculumLessonDto } from '../dtos/lesson/response-curriculum-lesson.dto';
+import { CurriculumLessonService } from '../../services/curriculum-lesson.service';
+import { CreateCurriculumLessonDto } from '../../dtos/lesson/create-curriculum-lesson.dto';
+import { UpdateCurriculumLessonDto } from '../../dtos/lesson/update-curriculum-lesson.dto';
+import { ResponseCurriculumLessonDto } from '../../dtos/lesson/response-curriculum-lesson.dto';
 
 @ApiTags('curriculum-lesson')
 @ApiBearerAuth('access_token')

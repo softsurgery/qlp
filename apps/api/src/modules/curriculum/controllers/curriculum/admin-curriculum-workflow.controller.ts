@@ -15,9 +15,9 @@ import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EventType } from 'src/app/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
 import { toDto } from 'src/shared/database/utils/dtos';
-import { CurriculumWorkflowService } from '../services/curriculum-workflow.service';
-import { ResponseCurriculumWorkflowDto } from '../dtos/curriculum/response-curriculum-workflow.dto';
-import { ExecuteCurriculumWorkflowDto } from '../dtos/curriculum/execute-curriculum-workflow.dto';
+import { CurriculumWorkflowService } from '../../services/curriculum-workflow.service';
+import { ResponseCurriculumWorkflowDto } from '../../dtos/curriculum/response-curriculum-workflow.dto';
+import { ExecuteCurriculumWorkflowDto } from '../../dtos/curriculum/execute-curriculum-workflow.dto';
 
 @ApiTags('admin-curriculum-workflow')
 @ApiBearerAuth('access_token')

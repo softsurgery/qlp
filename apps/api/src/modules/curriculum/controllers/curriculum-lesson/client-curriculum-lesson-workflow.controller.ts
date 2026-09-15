@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Post, Body, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { CurriculumLessonWorkflowService } from '../services/curriculum-lesson-workflow.service';
-import { ResponseCurriculumLessonWorkflowDto } from '../dtos/lesson/response-curriculum-lesson-workflow.dto';
-import { CurriculumEvent } from '../enums/curriculum-event.enum';
+import { CurriculumLessonWorkflowService } from '../../services/curriculum-lesson-workflow.service';
+import { ResponseCurriculumLessonWorkflowDto } from '../../dtos/lesson/response-curriculum-lesson-workflow.dto';
+import { CurriculumEvent } from '../../enums/curriculum-event.enum';
 
 @ApiTags('Curriculum Lesson Workflow')
 @Controller({ version: '1', path: '/curriculum/lessons/:lessonId/workflow' })

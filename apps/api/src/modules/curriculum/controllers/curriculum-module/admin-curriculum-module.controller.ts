@@ -17,11 +17,11 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EventType } from 'src/app/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
-import { CurriculumService } from '../services/curriculum.service';
-import { CurriculumModuleService } from '../services/curriculum-module.service';
-import { CreateCurriculumModuleDto } from '../dtos/module/create-curriculum-module.dto';
-import { UpdateCurriculumModuleDto } from '../dtos/module/update-curriculum-module.dto';
-import { ResponseCurriculumModuleDto } from '../dtos/module/response-curriculum-module.dto';
+import { CurriculumService } from '../../services/curriculum.service';
+import { CurriculumModuleService } from '../../services/curriculum-module.service';
+import { CreateCurriculumModuleDto } from '../../dtos/module/create-curriculum-module.dto';
+import { UpdateCurriculumModuleDto } from '../../dtos/module/update-curriculum-module.dto';
+import { ResponseCurriculumModuleDto } from '../../dtos/module/response-curriculum-module.dto';
 
 @ApiTags('admin-curriculum-module')
 @ApiBearerAuth('access_token')
@@ -108,7 +108,7 @@ export class AdminCurriculumModuleController {
   @Put('/modules/:moduleId/collaborators')
   async addOrUpdateCollaborator(
     @Param('moduleId') moduleId: string,
-    @Body() dto: import('../dtos/collaborator/update-collaborator.dto').UpdateCollaboratorDto,
+    @Body() dto: import('../../dtos/collaborator/update-collaborator.dto').UpdateCollaboratorDto,
     @Request() req: AdvancedRequest,
   ) {
     return this.moduleService.addOrUpdateCollaborator(

@@ -22,17 +22,17 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EventType } from 'src/app/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
-import { CurriculumService } from '../services/curriculum.service';
-import { CreateCurriculumDto } from '../dtos/curriculum/create-curriculum.dto';
-import { UpdateCurriculumDto } from '../dtos/curriculum/update-curriculum.dto';
-import { ResponseCurriculumDto } from '../dtos/curriculum/response-curriculum.dto';
+import { CurriculumService } from '../../services/curriculum.service';
+import { CreateCurriculumDto } from '../../dtos/curriculum/create-curriculum.dto';
+import { UpdateCurriculumDto } from '../../dtos/curriculum/update-curriculum.dto';
+import { ResponseCurriculumDto } from '../../dtos/curriculum/response-curriculum.dto';
 
-@ApiTags('admin-curriculum')
+@ApiTags('curriculum')
 @ApiBearerAuth('access_token')
 @UseInterceptors(ClassSerializerInterceptor)
 @UseInterceptors(LogInterceptor)
 @Controller({ version: '1', path: '/curriculum' })
-export class AdminCurriculumController {
+export class ClientCurriculumController {
   constructor(private readonly curriculumService: CurriculumService) {}
 
   @Get('/list')
@@ -83,7 +83,9 @@ export class AdminCurriculumController {
     @Body() dto: CreateCurriculumDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseCurriculumDto> {
-    console.log(req.user?.sub);
+    if (!dto.ownerId && req.user?.sub) {
+      dto.ownerId = req.user.sub;
+    }
     if (!req.user?.sub) {
       throw new UnauthorizedException();
     }
@@ -112,24 +114,5 @@ export class AdminCurriculumController {
   ): Promise<ResponseCurriculumDto | null> {
     req.logInfo = { id };
     return toDto(ResponseCurriculumDto, await this.curriculumService.softDelete(id));
-  }
-
-  @Put('/:id/collaborators')
-  async addOrUpdateCollaborator(
-    @Param('id') id: string,
-    @Body() dto: import('../dtos/collaborator/update-collaborator.dto').UpdateCollaboratorDto,
-    @Request() req: AdvancedRequest,
-  ) {
-    return this.curriculumService.addOrUpdateCollaborator(id, dto.userId, dto.role, req.user?.sub);
-  }
-
-  @Delete('/:id/collaborators/:userId')
-  async removeCollaborator(
-    @Param('id') id: string,
-    @Param('userId') userId: string,
-    @Request() req: AdvancedRequest,
-  ) {
-    await this.curriculumService.removeCollaborator(id, userId, req.user?.sub);
-    return { success: true };
   }
 }

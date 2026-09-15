@@ -8,12 +8,12 @@ import { UserController } from 'src/modules/user-management/controllers/user.con
 import { RoleController } from 'src/shared/abstract-user-management/controllers/role.controller';
 import { PermissionController } from 'src/shared/abstract-user-management/controllers/permission.controller';
 import { CurriculumModule } from 'src/modules/curriculum/curriculum.module';
-import { AdminCurriculumController } from 'src/modules/curriculum/controllers/admin-curriculum.controller';
-import { AdminCurriculumWorkflowController } from 'src/modules/curriculum/controllers/admin-curriculum-workflow.controller';
-import { AdminCurriculumModuleController } from 'src/modules/curriculum/controllers/admin-curriculum-module.controller';
-import { AdminCurriculumLessonController } from 'src/modules/curriculum/controllers/admin-curriculum-lesson.controller';
-import { AdminCurriculumLessonMaterialController } from 'src/modules/curriculum/controllers/admin-curriculum-lesson-material.controller';
-import { AdminCurriculumExamController } from 'src/modules/curriculum/controllers/admin-curriculum-exam.controller';
+import { AdminCurriculumController } from 'src/modules/curriculum/controllers/curriculum/admin-curriculum.controller';
+import { AdminCurriculumWorkflowController } from 'src/modules/curriculum/controllers/curriculum/admin-curriculum-workflow.controller';
+import { AdminCurriculumModuleController } from 'src/modules/curriculum/controllers/curriculum-module/admin-curriculum-module.controller';
+import { AdminCurriculumLessonController } from 'src/modules/curriculum/controllers/curriculum-lesson/admin-curriculum-lesson.controller';
+import { AdminCurriculumLessonMaterialController } from 'src/modules/curriculum/controllers/curriculum-lesson/admin-curriculum-lesson-material.controller';
+import { AdminCurriculumExamController } from 'src/modules/curriculum/controllers/curriculum-exam/admin-curriculum-exam.controller';
 
 @Module({
   controllers: [

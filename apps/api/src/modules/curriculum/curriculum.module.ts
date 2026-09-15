@@ -24,12 +24,12 @@ import { CurriculumExamService } from './services/curriculum-exam.service';
 import { CurriculumWorkflowService } from './services/curriculum-workflow.service';
 import { CurriculumModuleWorkflowService } from './services/curriculum-module-workflow.service';
 import { CurriculumLessonWorkflowService } from './services/curriculum-lesson-workflow.service';
-import { AdminCurriculumController } from './controllers/admin-curriculum.controller';
-import { AdminCurriculumModuleController } from './controllers/admin-curriculum-module.controller';
-import { AdminCurriculumWorkflowController } from './controllers/admin-curriculum-workflow.controller';
-import { AdminCurriculumModuleWorkflowController } from './controllers/admin-curriculum-module-workflow.controller';
-import { AdminCurriculumLessonWorkflowController } from './controllers/admin-curriculum-lesson-workflow.controller';
-import { ClientCurriculumWorkflowController } from './controllers/client-curriculum-workflow.controller';
+import { AdminCurriculumController } from './controllers/curriculum/admin-curriculum.controller';
+import { AdminCurriculumModuleController } from './controllers/curriculum-module/admin-curriculum-module.controller';
+import { AdminCurriculumWorkflowController } from './controllers/curriculum/admin-curriculum-workflow.controller';
+import { AdminCurriculumModuleWorkflowController } from './controllers/curriculum-module/admin-curriculum-module-workflow.controller';
+import { AdminCurriculumLessonWorkflowController } from './controllers/curriculum-lesson/admin-curriculum-lesson-workflow.controller';
+import { ClientCurriculumWorkflowController } from './controllers/curriculum/client-curriculum-workflow.controller';
 import { UserManagementModule } from '../user-management/user-management.module';
 import { LoggerModule } from 'src/shared/logger/logger.module';
 

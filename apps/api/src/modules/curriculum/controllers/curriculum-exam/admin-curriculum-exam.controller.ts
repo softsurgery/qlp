@@ -17,17 +17,17 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EventType } from 'src/app/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
-import { CurriculumExamService } from '../services/curriculum-exam.service';
-import { CreateCurriculumExamDto } from '../dtos/exam/create-curriculum-exam.dto';
-import { UpdateCurriculumExamDto } from '../dtos/exam/update-curriculum-exam.dto';
-import { ResponseCurriculumExamDto } from '../dtos/exam/response-curriculum-exam.dto';
+import { CurriculumExamService } from '../../services/curriculum-exam.service';
+import { CreateCurriculumExamDto } from '../../dtos/exam/create-curriculum-exam.dto';
+import { UpdateCurriculumExamDto } from '../../dtos/exam/update-curriculum-exam.dto';
+import { ResponseCurriculumExamDto } from '../../dtos/exam/response-curriculum-exam.dto';
 
-@ApiTags('curriculum-exam')
+@ApiTags('admin-curriculum-exam')
 @ApiBearerAuth('access_token')
 @UseInterceptors(ClassSerializerInterceptor)
 @UseInterceptors(LogInterceptor)
 @Controller({ version: '1', path: '/curriculum' })
-export class ClientCurriculumExamController {
+export class AdminCurriculumExamController {
   constructor(private readonly examService: CurriculumExamService) {}
 
   @Get('/exams/:examId/versions')

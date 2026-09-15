@@ -16,10 +16,10 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EventType } from 'src/app/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
-import { CurriculumLessonMaterialService } from '../services/curriculum-lesson-material.service';
-import { CreateCurriculumMaterialDto } from '../dtos/material/create-curriculum-material.dto';
-import { UpdateCurriculumMaterialDto } from '../dtos/material/update-curriculum-material.dto';
-import { ResponseCurriculumLessonMaterialDto } from '../dtos/material/response-curriculum-lesson-material.dto';
+import { CurriculumLessonMaterialService } from '../../services/curriculum-lesson-material.service';
+import { CreateCurriculumMaterialDto } from '../../dtos/material/create-curriculum-material.dto';
+import { UpdateCurriculumMaterialDto } from '../../dtos/material/update-curriculum-material.dto';
+import { ResponseCurriculumLessonMaterialDto } from '../../dtos/material/response-curriculum-lesson-material.dto';
 
 @ApiTags('curriculum-material')
 @ApiBearerAuth('access_token')
