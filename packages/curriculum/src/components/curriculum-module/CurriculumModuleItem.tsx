@@ -62,7 +62,7 @@ export function CurriculumModuleItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex flex-row items-center p-3 mb-2 gap-3 group bg-card border hover:border-primary/50 transition-colors",
+        "flex flex-row items-center p-3 mb-2 gap-3 group bg-background border hover:border-primary/50 transition-colors",
         isDragging && "shadow-lg border-primary",
         className,
       )}
@@ -90,23 +90,6 @@ export function CurriculumModuleItem({
             />
           )}
         </div>
-
-        {createdBy && (
-          <div
-            className="flex flex-row items-center gap-1"
-            title={identifyUser(createdBy)}
-          >
-            <Avatar className="h-6 w-6">
-              <AvatarImage src={createdByAvatarSrc ?? undefined} />
-              <AvatarFallback className="text-xs">
-                {identifyUserAvatar(createdBy)}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-sm text-muted-foreground truncate">
-              {identifyUser(createdBy)}
-            </span>
-          </div>
-        )}
       </div>
 
       <div className="flex flex-row items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity focus-within:opacity-100">

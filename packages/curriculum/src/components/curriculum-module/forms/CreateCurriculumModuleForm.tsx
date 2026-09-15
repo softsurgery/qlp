@@ -81,11 +81,11 @@ export function CreateCurriculumModuleForm({
       <div className="flex justify-end gap-2 border-t px-4 py-3">
         <Button onClick={handleSubmit} disabled={isPending}>
           <Save />
-          {tCommon("commands.save", "Save")}
+          {tCommon("commands.save")}
         </Button>
         {onCancel && (
           <Button variant="secondary" onClick={onCancel} disabled={isPending}>
-            {tCommon("commands.cancel", "Cancel")}
+            {tCommon("commands.cancel")}
           </Button>
         )}
       </div>

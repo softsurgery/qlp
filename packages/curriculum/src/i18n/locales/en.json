@@ -108,6 +108,12 @@
       "description": "Previous versions are kept. This removes the latest version of the lesson.",
       "confirm": "Delete",
       "cancel": "Cancel"
+    },
+    "deleteMaterial": {
+      "title": "Delete material",
+      "description": "Previous versions are kept. This removes the latest version of this material.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
     }
   },
   "modules": "Modules",
@@ -123,6 +129,26 @@
   "editLesson": "Edit Lesson",
   "lessonVersions": "Lesson Versions",
   "lessonVersionsDescription": "History of lesson changes",
+  "materialsDescription": "Add and reorder the content blocks for this lesson.",
+  "noMaterials": "No materials yet. Add an editor, video, recording, or table.",
+  "materialEditor": "Editor",
+  "materialVideo": "Video",
+  "materialAudio": "Voice recording",
+  "materialTable": "Table",
+  "uploadVideo": "Upload video",
+  "replaceVideo": "Replace video",
+  "uploadAudio": "Upload audio",
+  "replaceAudio": "Replace audio",
+  "noVideo": "No video uploaded",
+  "noAudio": "No recording yet",
+  "startRecording": "Start recording",
+  "stopRecording": "Stop recording",
+  "recordingError": "Could not access the microphone",
+  "addRow": "Add row",
+  "addColumn": "Add column",
+  "removeRow": "Remove row",
+  "removeColumn": "Remove column",
+  "columnN": "Column {{n}}",
   "createTitle": "Create curriculum",
   "createDescription": "Give it a name. You can add modules, lessons, and exams next.",
   "editor": {
@@ -206,7 +232,8 @@
     "document": "Document",
     "audio": "Audio",
     "text": "Text",
-    "link": "Link"
+    "link": "Link",
+    "table": "Table"
   },
   "questionType": {
     "multiple_choice": "Multiple choice",

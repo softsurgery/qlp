@@ -189,26 +189,23 @@ export function UpdateCurriculumForm({
       />
       <div className="flex flex-col gap-2 w-full">
         <Label className="text-xs font-bold text-muted-foreground">
-          {tCommon("commands.actions", "Actions")}
+          {tCommon("commands.actions")}
         </Label>
         <Button
           type="button"
           size="sm"
-          className="rounded-xl w-full"
-          variant={"outline"}
           onClick={handleSubmit}
           disabled={isPending || (workflowData && !workflowData.isUpdatable)}
         >
-          <Save className="mr-2 h-4 w-4" />
-          <span>{tCommon("commands.save", "Save")}</span>
+          <Save className="h-4 w-4" />
+          <span>{tCommon("commands.save")}</span>
         </Button>
-        {workflowData?.nextSteps?.map((step: { label: string }) => (
+        {workflowData?.nextSteps?.map((step) => (
           <Button
             key={step.label}
             type="button"
             size="sm"
-            className="rounded-xl w-full"
-            variant="default"
+            variant="secondary"
             onClick={() => executeWorkflowMutation({ event: step.label })}
             disabled={isPending || isExecutingWorkflow}
           >
@@ -218,13 +215,12 @@ export function UpdateCurriculumForm({
         <Button
           type="button"
           size="sm"
-          className="rounded-xl w-full"
           variant={"ghost"}
           onClick={resetStore}
           disabled={isPending}
         >
-          <Repeat2 className="mr-2 h-4 w-4" />
-          <span>{tCommon("commands.reset", "Reset")}</span>
+          <Repeat2 className="h-4 w-4" />
+          <span>{tCommon("commands.reset")}</span>
         </Button>
       </div>
     </>

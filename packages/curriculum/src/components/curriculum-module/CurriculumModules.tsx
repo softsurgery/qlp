@@ -177,11 +177,11 @@ export function CurriculumModules({
         <Button
           size="sm"
           onClick={dndService.createNewItem}
-          variant="outline"
+          variant="secondary"
           className="gap-2"
         >
           <Plus className="h-4 w-4" />
-          <span>{tCommon("commands.create", "Create")}</span>
+          <span>{tCommon("commands.create")}</span>
         </Button>
       </div>
 

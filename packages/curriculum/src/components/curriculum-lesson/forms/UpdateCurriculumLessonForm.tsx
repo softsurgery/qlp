@@ -21,6 +21,7 @@ import { useUpdateCurriculumLessonFormStructure } from "./useUpdateCurriculumLes
 import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../../curriculum/CurriculumMetaHeader";
+import { CurriculumLessonMaterials } from "../materials/CurriculumLessonMaterials";
 import { useNavigate } from "react-router-dom";
 
 export interface UpdateCurriculumLessonFormProps {
@@ -166,6 +167,12 @@ export function UpdateCurriculumLessonForm({
   const mainContent = (
     <div className="flex flex-col gap-8">
       <FormBuilder structure={updateCurriculumLessonFormStructure} />
+      <Separator />
+      <CurriculumLessonMaterials
+        lessonId={lessonId}
+        moduleId={moduleId}
+        disabled={!!(workflowData && !workflowData.isUpdatable)}
+      />
     </div>
   );
 
@@ -208,8 +215,6 @@ export function UpdateCurriculumLessonForm({
         <Button
           type="button"
           size="sm"
-          className="rounded-xl w-full"
-          variant={"outline"}
           onClick={handleSubmit}
           disabled={
             !!(
@@ -219,16 +224,15 @@ export function UpdateCurriculumLessonForm({
             )
           }
         >
-          <Save className="mr-2 h-4 w-4" />
-          <span>{tCommon("commands.save", "Save")}</span>
+          <Save className="h-4 w-4" />
+          <span>{tCommon("commands.save")}</span>
         </Button>
-        {workflowData?.nextSteps?.map((step: { label: string }) => (
+        {workflowData?.nextSteps?.map((step) => (
           <Button
             key={step.label}
             type="button"
             size="sm"
-            variant="outline"
-            className="rounded-xl w-full"
+            variant="secondary"
             onClick={() => executeWorkflow(step.label)}
             disabled={isPending || isWorkflowPending}
           >
@@ -238,7 +242,6 @@ export function UpdateCurriculumLessonForm({
         <Button
           type="button"
           size="sm"
-          className="rounded-xl w-full"
           variant={"ghost"}
           onClick={resetStore}
           disabled={isPending}

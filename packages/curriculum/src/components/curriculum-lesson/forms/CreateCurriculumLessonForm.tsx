@@ -45,8 +45,7 @@ export function CreateCurriculumLessonForm({
     });
 
   const { mutate: createMutation, isPending } = useMutation({
-    mutationFn: (dto: CreateCurriculumLessonDto) =>
-      api.create(moduleId, dto),
+    mutationFn: (dto: CreateCurriculumLessonDto) => api.create(moduleId, dto),
     onSuccess: () => {
       toast.success(tCommon("commands.created", "Created successfully"));
       void queryClient.invalidateQueries({
@@ -82,11 +81,11 @@ export function CreateCurriculumLessonForm({
       <div className="flex justify-end gap-2 border-t px-4 py-3">
         <Button onClick={handleSubmit} disabled={isPending}>
           <Save />
-          {tCommon("commands.save", "Save")}
+          {tCommon("commands.save")}
         </Button>
         {onCancel && (
           <Button variant="secondary" onClick={onCancel} disabled={isPending}>
-            {tCommon("commands.cancel", "Cancel")}
+            {tCommon("commands.cancel")}
           </Button>
         )}
       </div>

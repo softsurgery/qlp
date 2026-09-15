@@ -203,8 +203,6 @@ export function UpdateCurriculumModuleForm({
         <Button
           type="button"
           size="sm"
-          className="rounded-xl w-full"
-          variant={"outline"}
           onClick={handleSubmit}
           disabled={
             !!(
@@ -214,16 +212,15 @@ export function UpdateCurriculumModuleForm({
             )
           }
         >
-          <Save className="mr-2 h-4 w-4" />
-          <span>{tCommon("commands.save", "Save")}</span>
+          <Save className="h-4 w-4" />
+          <span>{tCommon("commands.save")}</span>
         </Button>
         {workflowData?.nextSteps?.map((step) => (
           <Button
             key={step.label}
             type="button"
             size="sm"
-            variant="outline"
-            className="rounded-xl w-full"
+            variant="secondary"
             onClick={() => executeWorkflow(step.label)}
             disabled={isPending || isWorkflowPending}
           >
@@ -233,7 +230,6 @@ export function UpdateCurriculumModuleForm({
         <Button
           type="button"
           size="sm"
-          className="rounded-xl w-full"
           variant={"ghost"}
           onClick={resetStore}
           disabled={isPending}

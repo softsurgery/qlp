@@ -92,11 +92,12 @@ export function isHttpUrl(value?: string | null) {
 
 export function materialKind(
   type?: string,
-): "video" | "reading" | "audio" | "link" | "text" {
+): "video" | "reading" | "audio" | "link" | "text" | "table" {
   if (type === MaterialType.Video || type === "video") return "video";
   if (type === MaterialType.Audio || type === "audio") return "audio";
   if (type === MaterialType.Link || type === "link") return "link";
   if (type === MaterialType.Text || type === "text") return "text";
+  if (type === MaterialType.Table || type === "table") return "table";
   return "reading";
 }
 
@@ -110,7 +111,7 @@ export function moduleMaterialStats(module?: ResponseCurriculumModuleDto | null)
     .length;
   const readings = materials.filter((item) => {
     const kind = materialKind(item.type);
-    return kind === "reading" || kind === "text" || kind === "link";
+    return kind === "reading" || kind === "text" || kind === "link" || kind === "table";
   }).length;
   const assessments = moduleExams(module).length;
   return { videos, audio, readings, assessments, materials };

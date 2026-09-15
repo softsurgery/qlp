@@ -10,6 +10,7 @@ import {
   Headphones,
   Link2,
   ListChecks,
+  Table2,
 } from "lucide-react";
 import { HtmlContent } from "@qlp/components";
 import { useApp } from "@qlp/contexts";
@@ -36,6 +37,8 @@ import {
   moduleMaterialStats,
   moduleOutline,
 } from "./utils";
+import { hasTableContent } from "../../../utils/material-table";
+import { MaterialTableEditor } from "../../curriculum-lesson/materials/MaterialTableEditor";
 
 interface ModuleOutlineProps {
   module: ResponseCurriculumModuleDto;
@@ -321,7 +324,9 @@ function MaterialRow({
         ? Headphones
         : kind === "link"
           ? Link2
-          : FileText;
+          : kind === "table"
+            ? Table2
+            : FileText;
   const typeLabel = t(`materialType.${material.type}` as "materialType.video", {
     defaultValue: material.type,
   });
@@ -384,6 +389,9 @@ function MaterialPreview({
       {kind === "audio" && mediaSrc ? (
         <audio src={mediaSrc} controls className="w-full" />
       ) : null}
+      {kind === "table" && hasTableContent(material.content) ? (
+        <MaterialTableEditor content={material.content} readOnly />
+      ) : null}
       {mediaSrc && (kind === "link" || kind === "reading") ? (
         <a
           href={mediaSrc}
@@ -395,7 +403,8 @@ function MaterialPreview({
           {t("viewer.openResource")}
         </a>
       ) : null}
-      {kind === "text" || (!mediaSrc && hasRichText(material.content)) ? (
+      {kind === "text" ||
+      (!mediaSrc && kind !== "table" && hasRichText(material.content)) ? (
         isHttpUrl(material.content) ? (
           <a
             href={material.content}
@@ -410,7 +419,10 @@ function MaterialPreview({
           <HtmlContent html={material.content} />
         )
       ) : null}
-      {!mediaSrc && !hasRichText(material.content) && !hasRichText(material.description) ? (
+      {!mediaSrc &&
+      !hasRichText(material.content) &&
+      !hasRichText(material.description) &&
+      !(kind === "table" && hasTableContent(material.content)) ? (
         <p className="text-sm text-muted-foreground">{t("viewer.noMaterials")}</p>
       ) : null}
     </div>

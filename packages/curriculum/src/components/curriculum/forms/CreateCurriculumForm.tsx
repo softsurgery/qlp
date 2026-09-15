@@ -128,29 +128,26 @@ export function CreateCurriculumForm({
       />
       <div className="flex flex-col gap-2 w-full">
         <Label className="text-xs font-bold text-muted-foreground">
-          {tCommon("commands.actions", "Actions")}
+          {tCommon("commands.actions")}
         </Label>
         <Button
           type="button"
-          size="lg"
-          className="rounded-xl w-full"
-          variant={"outline"}
+          size="sm"
           onClick={handleSubmit}
           disabled={isPending}
         >
-          <Save className="mr-2 h-4 w-4" />
-          <span>{tCommon("commands.save", "Save")}</span>
+          <Save className="h-4 w-4" />
+          <span>{tCommon("commands.save")}</span>
         </Button>
         <Button
           type="button"
-          size="lg"
-          className="rounded-xl w-full"
+          size="sm"
           variant={"ghost"}
           onClick={handleReset}
           disabled={isPending}
         >
-          <Repeat2 className="mr-2 h-4 w-4" />
-          <span>{tCommon("commands.reset", "Reset")}</span>
+          <Repeat2 className="h-4 w-4" />
+          <span>{tCommon("commands.reset")}</span>
         </Button>
       </div>
     </>
