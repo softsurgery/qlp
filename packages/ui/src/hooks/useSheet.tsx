@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { cn } from "../lib/utils";
 import {
   Sheet,
@@ -7,6 +7,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "../components/sheet";
+import { useRTL } from "./useRTL";
 
 interface UseSheetOptions {
   children?: React.ReactNode;
@@ -14,6 +15,7 @@ interface UseSheetOptions {
   description?: React.ReactNode;
   className?: string;
   onToggle?: () => void;
+  side?: "top" | "right" | "bottom" | "left";
 }
 
 export function useSheet({
@@ -22,8 +24,11 @@ export function useSheet({
   description,
   className,
   onToggle,
+  side,
 }: UseSheetOptions) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const { isRTL } = useRTL();
+  const resolvedSide = side ?? (isRTL ? "left" : "right");
 
   const openSheet = () => setIsOpen(true);
   const closeSheet = () => setIsOpen(false);
@@ -36,7 +41,10 @@ export function useSheet({
         if (!open) onToggle?.();
       }}
     >
-      <SheetContent className={cn("overflow-y-auto", className)}>
+      <SheetContent
+        side={resolvedSide}
+        className={cn("overflow-y-auto", className)}
+      >
         {(title || description) && (
           <SheetHeader>
             {title && <SheetTitle>{title}</SheetTitle>}
