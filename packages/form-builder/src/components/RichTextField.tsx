@@ -63,7 +63,7 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
   return (
     <div
       className={cn(
-        "w-full rounded-md shadow-sm mt-1 border border-foreground/50 transition-all duration-200",
+        "w-full rounded-md shadow-sm mt-1 transition-all duration-200",
         field.error && "border-destructive focus-within:ring-destructive",
         isFullscreen &&
           "fixed inset-0 z-50 bg-background m-0 p-1 sm:p-3 w-full h-full overflow-hidden flex flex-col rounded-none border-none",
@@ -74,7 +74,6 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
         editor={editor}
         editable={!disabled}
         className={cn(
-          "bg-input",
           isFullscreen && "h-full min-h-0 flex flex-col flex-1 overflow-hidden",
         )}
       >
