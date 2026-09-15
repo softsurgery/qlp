@@ -21,7 +21,7 @@ import { useUpdateCurriculumLessonFormStructure } from "./useUpdateCurriculumLes
 import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../../curriculum/CurriculumMetaHeader";
-import { CurriculumLessonMaterials } from "../materials/CurriculumLessonMaterials";
+import { CurriculumLessonMaterials } from "../../curriculum-material/CurriculumLessonMaterials";
 import { useNavigate } from "react-router-dom";
 
 export interface UpdateCurriculumLessonFormProps {

@@ -15,7 +15,7 @@ import {
   parseMaterialTable,
   stringifyMaterialTable,
   type MaterialTableData,
-} from "../../../utils/material-table";
+} from "../../utils/material-table";
 
 interface MaterialTableEditorProps {
   content?: string;
@@ -109,7 +109,10 @@ export function MaterialTableEditor({
           <TableHeader>
             <TableRow>
               {table.columns.map((column, index) => (
-                <TableHead key={`column-${index}`} className="min-w-36 align-top">
+                <TableHead
+                  key={`column-${index}`}
+                  className="min-w-36 align-top"
+                >
                   {readOnly ? (
                     <span className="font-medium">
                       {column || t("columnN", { n: index + 1 })}
@@ -120,7 +123,9 @@ export function MaterialTableEditor({
                         value={column}
                         disabled={disabled}
                         placeholder={t("columnN", { n: index + 1 })}
-                        onChange={(event) => setColumn(index, event.target.value)}
+                        onChange={(event) =>
+                          setColumn(index, event.target.value)
+                        }
                       />
                       <Button
                         type="button"
@@ -131,7 +136,9 @@ export function MaterialTableEditor({
                         title={t("removeColumn", "Remove column")}
                       >
                         <Trash2 className="size-3.5" />
-                        <span className="sr-only">{t("removeColumn", "Remove column")}</span>
+                        <span className="sr-only">
+                          {t("removeColumn", "Remove column")}
+                        </span>
                       </Button>
                     </div>
                   )}
@@ -169,7 +176,9 @@ export function MaterialTableEditor({
                       title={t("removeRow", "Remove row")}
                     >
                       <Trash2 className="size-3.5" />
-                      <span className="sr-only">{t("removeRow", "Remove row")}</span>
+                      <span className="sr-only">
+                        {t("removeRow", "Remove row")}
+                      </span>
                     </Button>
                   </TableCell>
                 ) : null}

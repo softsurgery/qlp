@@ -42,14 +42,14 @@ import {
   type ServerErrorResponse,
   type UpdateCurriculumMaterialDto,
 } from "@qlp/api-client";
-import { useCurriculumLessonMaterials } from "../../../hooks";
-import { errorMessage } from "../../../utils";
+import { useCurriculumLessonMaterials } from "../../hooks";
+import { errorMessage } from "../../utils";
 import {
   emptyMaterialTable,
   stringifyMaterialTable,
-} from "../../../utils/material-table";
+} from "../../utils/material-table";
 import { CurriculumLessonMaterialItem } from "./CurriculumLessonMaterialItem";
-import { useCurriculumLessonMaterialDeleteDialog } from "../modals/CurriculumLessonMaterialDeleteDialog";
+import { useCurriculumLessonMaterialDeleteDialog } from "../curriculum-lesson/modals/CurriculumLessonMaterialDeleteDialog";
 
 export interface CurriculumLessonMaterialsProps {
   className?: string;

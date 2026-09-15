@@ -23,7 +23,7 @@ import { MaterialTableEditor } from "./MaterialTableEditor";
 import {
   stringifyMaterialTable,
   emptyMaterialTable,
-} from "../../../utils/material-table";
+} from "../../utils/material-table";
 
 export interface CurriculumLessonMaterialItemProps {
   material: ResponseCurriculumLessonMaterialDto;

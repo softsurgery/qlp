@@ -42,7 +42,7 @@ import {
   moduleOutline,
 } from "./utils";
 import { hasTableContent } from "../../../utils/material-table";
-import { MaterialTableEditor } from "../../curriculum-lesson/materials/MaterialTableEditor";
+import { MaterialTableEditor } from "../../curriculum-material/MaterialTableEditor";
 
 type ContentWidth = "full" | "wide" | "narrow";
 

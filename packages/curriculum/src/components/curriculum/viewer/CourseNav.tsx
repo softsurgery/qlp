@@ -1,6 +1,9 @@
 import { Check, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { CurriculumStatus, type ResponseCurriculumModuleDto } from "@qlp/api-client";
+import {
+  CurriculumStatus,
+  type ResponseCurriculumModuleDto,
+} from "@qlp/api-client";
 import { HtmlContent } from "@qlp/components";
 import {
   Button,
@@ -56,7 +59,10 @@ export function CourseNav({
                 {t("viewer.noModules")}
               </p>
             ) : (
-              <nav className="flex flex-col gap-0.5 pt-1" aria-label={t("viewer.courseMaterial")}>
+              <nav
+                className="flex flex-col gap-0.5 pt-1"
+                aria-label={t("viewer.courseMaterial")}
+              >
                 {ordered.map((module, index) => {
                   const selected = module.id === selectedModuleId;
                   const published =
