@@ -12,7 +12,9 @@ export const useCurriculumModules = (
 ) => {
   const { api: baseApi, appType } = useApp();
   const api =
-    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+    appType === "admin"
+      ? baseApi.adminCurriculumModules
+      : baseApi.curriculumModules;
 
   const {
     data: modules,
@@ -20,7 +22,7 @@ export const useCurriculumModules = (
     refetch: refetchModules,
   } = useQuery({
     queryKey: ["curriculum-modules", id, join],
-    queryFn: () => api.findModulesByCurriculum(id!, { join }),
+    queryFn: () => api.findByCurriculum(id!, { join }),
     enabled: !!id && enabled,
   });
 

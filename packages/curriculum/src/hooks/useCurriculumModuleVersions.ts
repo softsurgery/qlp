@@ -10,7 +10,10 @@ export interface UseCurriculumModuleVersionsProps {
 
 export const useCurriculumModuleVersions = ({ moduleId, join, enabled = true }: UseCurriculumModuleVersionsProps = { enabled: true }) => {
   const { api: baseApi, appType } = useApp();
-  const api = appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+  const api =
+    appType === "admin"
+      ? baseApi.adminCurriculumModules
+      : baseApi.curriculumModules;
 
   const {
     data: versionsResp,
@@ -18,7 +21,7 @@ export const useCurriculumModuleVersions = ({ moduleId, join, enabled = true }: 
     refetch: refetchVersions
   } = useQuery({
     queryKey: ["curriculum", "modules", moduleId, "versions", join],
-    queryFn: () => api.findModuleVersions(moduleId!, { join }),
+    queryFn: () => api.findVersions(moduleId!, { join }),
     enabled: !!moduleId && enabled,
   });
 

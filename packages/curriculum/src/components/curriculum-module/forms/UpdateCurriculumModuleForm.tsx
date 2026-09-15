@@ -39,7 +39,9 @@ export function UpdateCurriculumModuleForm({
   const { t: tCommon } = useTranslation("common");
   const { api: baseApi, appType } = useApp();
   const api =
-    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+    appType === "admin"
+      ? baseApi.adminCurriculumModules
+      : baseApi.curriculumModules;
   const { t } = useTranslation("curriculum");
   const queryClient = useQueryClient();
 
@@ -106,7 +108,7 @@ export function UpdateCurriculumModuleForm({
   const { mutate: updateMutation, isPending } = useMutation({
     mutationFn: (dto: UpdateCurriculumModuleDto) => {
       if (!module) throw new Error("Module not found");
-      return api.updateModule(module.id, dto);
+      return api.update(module.id, dto);
     },
     onSuccess: () => {
       toast.success(tCommon("commands.saved", "Saved successfully"));
@@ -124,7 +126,7 @@ export function UpdateCurriculumModuleForm({
   const { mutate: executeWorkflow, isPending: isWorkflowPending } = useMutation(
     {
       mutationFn: (event: string) =>
-        api.executeModuleWorkflow(moduleId, { event }),
+        api.workflow.executeWorkflow(moduleId, { event }),
       onSuccess: () => {
         toast.success(tCommon("commands.saved", "Saved successfully"));
         void queryClient.invalidateQueries({

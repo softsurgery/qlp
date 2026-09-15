@@ -15,7 +15,9 @@ export const useCurriculumLessons = (
 ) => {
   const { api: baseApi, appType } = useApp();
   const api =
-    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+    appType === "admin"
+      ? baseApi.adminCurriculumLessons
+      : baseApi.curriculumLessons;
 
   const {
     data: lessons,
@@ -23,7 +25,7 @@ export const useCurriculumLessons = (
     refetch: refetchLessons,
   } = useQuery({
     queryKey: ["curriculum-lessons", moduleId, join],
-    queryFn: () => api.findLessonsByModule(moduleId!, { join }),
+    queryFn: () => api.findByModule(moduleId!, { join }),
     enabled: !!moduleId && enabled,
   });
 

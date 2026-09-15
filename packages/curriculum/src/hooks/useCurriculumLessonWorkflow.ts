@@ -14,7 +14,10 @@ export const useCurriculumLessonWorkflow = ({
   enabled = true,
 }: UseCurriculumLessonWorkflowProps = { enabled: true }) => {
   const { api: baseApi, appType } = useApp();
-  const api = appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+  const api =
+    appType === "admin"
+      ? baseApi.adminCurriculumLessons
+      : baseApi.curriculumLessons;
 
   const {
     data: workflowResp,
@@ -22,7 +25,7 @@ export const useCurriculumLessonWorkflow = ({
     refetch: refetchWorkflow,
   } = useQuery({
     queryKey: ["curriculum", "lessons", lessonId, "workflow", join],
-    queryFn: () => api.findLessonWorkflow(lessonId!, { join }),
+    queryFn: () => api.workflow.findWorkflow(lessonId!, { join }),
     enabled: !!lessonId && enabled,
   });
 

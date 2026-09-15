@@ -31,7 +31,9 @@ export function CreateCurriculumLessonForm({
   const { t: tCommon } = useTranslation("common");
   const { api: baseApi, appType } = useApp();
   const api =
-    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+    appType === "admin"
+      ? baseApi.adminCurriculumLessons
+      : baseApi.curriculumLessons;
   const { t } = useTranslation("curriculum");
   const queryClient = useQueryClient();
 
@@ -44,7 +46,7 @@ export function CreateCurriculumLessonForm({
 
   const { mutate: createMutation, isPending } = useMutation({
     mutationFn: (dto: CreateCurriculumLessonDto) =>
-      api.createLesson(moduleId, dto),
+      api.create(moduleId, dto),
     onSuccess: () => {
       toast.success(tCommon("commands.created", "Created successfully"));
       void queryClient.invalidateQueries({

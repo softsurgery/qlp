@@ -22,7 +22,9 @@ export function CurriculumModuleVersionsList({
   const { t } = useTranslation("curriculum");
   const { api: baseApi, appType } = useApp();
   const api =
-    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+    appType === "admin"
+      ? baseApi.adminCurriculumModules
+      : baseApi.curriculumModules;
 
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setIntro, clearIntro } = useIntro();

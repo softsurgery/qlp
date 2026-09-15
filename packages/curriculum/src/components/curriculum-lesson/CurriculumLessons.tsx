@@ -44,7 +44,9 @@ export function CurriculumLessons({
   const { t } = useTranslation("curriculum");
   const { api: baseApi, appType } = useApp();
   const api =
-    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+    appType === "admin"
+      ? baseApi.adminCurriculumLessons
+      : baseApi.curriculumLessons;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -68,7 +70,7 @@ export function CurriculumLessons({
 
   const { mutate: updateLessonOrder } = useMutation({
     mutationFn: async (updates: { id: string; sortOrder: number }[]) => {
-      return api.reorderLessons(updates);
+      return api.reorder(updates);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({
@@ -83,7 +85,7 @@ export function CurriculumLessons({
   const { mutate: deleteLessonMutation, isPending: isDeletionPending } =
     useMutation({
       mutationFn: async (lessonId: string) => {
-        return api.removeLesson(lessonId);
+        return api.remove(lessonId);
       },
       onSuccess: () => {
         void queryClient.invalidateQueries({

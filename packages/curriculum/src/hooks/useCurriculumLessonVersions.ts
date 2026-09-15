@@ -14,7 +14,10 @@ export const useCurriculumLessonVersions = ({
   enabled = true,
 }: UseCurriculumLessonVersionsProps = { enabled: true }) => {
   const { api: baseApi, appType } = useApp();
-  const api = appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+  const api =
+    appType === "admin"
+      ? baseApi.adminCurriculumLessons
+      : baseApi.curriculumLessons;
 
   const {
     data: versionsResp,
@@ -22,7 +25,7 @@ export const useCurriculumLessonVersions = ({
     refetch: refetchVersions,
   } = useQuery({
     queryKey: ["curriculum", "lessons", lessonId, "versions", join],
-    queryFn: () => api.findLessonVersions(lessonId!, { join }),
+    queryFn: () => api.findVersions(lessonId!, { join }),
     enabled: !!lessonId && enabled,
   });
 

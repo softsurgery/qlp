@@ -10,7 +10,10 @@ export interface UseCurriculumModuleWorkflowProps {
 
 export const useCurriculumModuleWorkflow = ({ moduleId, join, enabled = true }: UseCurriculumModuleWorkflowProps = { enabled: true }) => {
   const { api: baseApi, appType } = useApp();
-  const api = appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+  const api =
+    appType === "admin"
+      ? baseApi.adminCurriculumModules
+      : baseApi.curriculumModules;
 
   const {
     data: workflowResp,
@@ -18,7 +21,7 @@ export const useCurriculumModuleWorkflow = ({ moduleId, join, enabled = true }: 
     refetch: refetchWorkflow
   } = useQuery({
     queryKey: ["curriculum", "modules", moduleId, "workflow", join],
-    queryFn: () => api.findModuleWorkflow(moduleId!, { join }),
+    queryFn: () => api.workflow.findWorkflow(moduleId!, { join }),
     enabled: !!moduleId && enabled,
   });
 

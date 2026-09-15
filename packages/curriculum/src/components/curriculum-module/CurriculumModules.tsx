@@ -42,7 +42,9 @@ export function CurriculumModules({
   const { t } = useTranslation("curriculum");
   const { api: baseApi, appType } = useApp();
   const api =
-    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+    appType === "admin"
+      ? baseApi.adminCurriculumModules
+      : baseApi.curriculumModules;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -66,7 +68,7 @@ export function CurriculumModules({
 
   const { mutate: updateModuleOrder } = useMutation({
     mutationFn: async (updates: { id: string; sortOrder: number }[]) => {
-      return api.reorderModules(updates);
+      return api.reorder(updates);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({
@@ -81,7 +83,7 @@ export function CurriculumModules({
   const { mutate: deleteModuleMutation, isPending: isDeletionPending } =
     useMutation({
       mutationFn: async (moduleId: string) => {
-        return api.removeModule(moduleId);
+        return api.remove(moduleId);
       },
       onSuccess: () => {
         void queryClient.invalidateQueries({

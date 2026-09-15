@@ -41,7 +41,9 @@ export function UpdateCurriculumLessonForm({
   const { t: tCommon } = useTranslation("common");
   const { api: baseApi, appType } = useApp();
   const api =
-    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+    appType === "admin"
+      ? baseApi.adminCurriculumLessons
+      : baseApi.curriculumLessons;
   const { t } = useTranslation("curriculum");
   const queryClient = useQueryClient();
 
@@ -116,7 +118,7 @@ export function UpdateCurriculumLessonForm({
   const { mutate: updateMutation, isPending } = useMutation({
     mutationFn: (dto: UpdateCurriculumLessonDto) => {
       if (!lesson) throw new Error("Lesson not found");
-      return api.updateLesson(lesson.id, dto);
+      return api.update(lesson.id, dto);
     },
     onSuccess: () => {
       toast.success(tCommon("commands.saved", "Saved successfully"));
@@ -134,7 +136,7 @@ export function UpdateCurriculumLessonForm({
   const { mutate: executeWorkflow, isPending: isWorkflowPending } = useMutation(
     {
       mutationFn: (event: string) =>
-        api.executeLessonWorkflow(lessonId, { event }),
+        api.workflow.executeWorkflow(lessonId, { event }),
       onSuccess: () => {
         toast.success(tCommon("commands.saved", "Saved successfully"));
         void queryClient.invalidateQueries({
