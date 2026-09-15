@@ -3,14 +3,14 @@ import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { resolveSupportedLng } from "@qlp/components/i18n";
 import { SidebarInset, SidebarProvider } from "@qlp/ui/components/sidebar";
-import { useUI } from "@qlp/contexts";
+import { UIProvider, useUI } from "@qlp/contexts";
 import { AppSidebar } from "./sidebar/AppSidebar";
 import { SiteHeader } from "./sidebar/SiteHeader";
 import { cn } from "@qlp/ui";
 
-export default function Layout() {
+function LayoutShell() {
   const { i18n } = useTranslation();
-  const { enableMainOverflow } = useUI();
+  const { enableMainOverflow, showSidebar = true } = useUI();
 
   return (
     <SidebarProvider
@@ -22,10 +22,12 @@ export default function Layout() {
         } as CSSProperties
       }
     >
-      <AppSidebar
-        variant="inset"
-        side={resolveSupportedLng(i18n.language) === "ar" ? "right" : "left"}
-      />
+      {showSidebar ? (
+        <AppSidebar
+          variant="inset"
+          side={resolveSupportedLng(i18n.language) === "ar" ? "right" : "left"}
+        />
+      ) : null}
       <SidebarInset className="min-h-0 overflow-hidden">
         <SiteHeader />
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -49,5 +51,13 @@ export default function Layout() {
         </div>
       </SidebarInset>
     </SidebarProvider>
+  );
+}
+
+export default function Layout() {
+  return (
+    <UIProvider>
+      <LayoutShell />
+    </UIProvider>
   );
 }

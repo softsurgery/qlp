@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 function LayoutShell() {
   const { title, description } = useIntro();
   const { content } = useFooter();
-  const { enableMainOverflow } = useUI();
+  const { enableMainOverflow, showSidebar = true } = useUI();
   const { i18n } = useTranslation();
 
   return (
@@ -25,10 +25,12 @@ function LayoutShell() {
         } as CSSProperties
       }
     >
-      <AppSidebar
-        variant="inset"
-        side={resolveSupportedLng(i18n.language) === "ar" ? "right" : "left"}
-      />
+      {showSidebar ? (
+        <AppSidebar
+          variant="inset"
+          side={resolveSupportedLng(i18n.language) === "ar" ? "right" : "left"}
+        />
+      ) : null}
       <SidebarInset className="min-h-0 overflow-hidden">
         <SiteHeader />
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden">

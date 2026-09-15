@@ -3,7 +3,7 @@ import {
   BreadcrumbContext,
   FooterContext,
   IntroContext,
-  UIContext,
+  UIProvider,
   type BreadcrumbRoute,
 } from "@qlp/contexts";
 
@@ -12,7 +12,6 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   const [routes, setRoutes] = useState<BreadcrumbRoute[]>([]);
   const [intro, setIntroState] = useState({ title: "", description: "" });
   const [floating, setFloating] = useState<React.ReactNode>(null);
-  const [enableMainOverflow, setEnableMainOverflow] = useState(false);
 
   const clearContent = useCallback(() => setFooter(null), []);
   const clearRoutes = useCallback(() => setRoutes([]), []);
@@ -31,10 +30,6 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     );
   }, []);
   const clearFloating = useCallback(() => setFloating(null), []);
-  const clearEnableMainOverflow = useCallback(
-    () => setEnableMainOverflow(false),
-    [],
-  );
 
   const footerValue = useMemo(
     () => ({
@@ -67,17 +62,8 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     [clearFloating, clearIntro, floating, intro.description, intro.title, setIntro],
   );
 
-  const uiValue = useMemo(
-    () => ({
-      enableMainOverflow,
-      setEnableMainOverflow,
-      clearEnableMainOverflow,
-    }),
-    [clearEnableMainOverflow, enableMainOverflow],
-  );
-
   return (
-    <UIContext.Provider value={uiValue}>
+    <UIProvider>
       <BreadcrumbContext.Provider value={breadcrumbValue}>
         <IntroContext.Provider value={introValue}>
           <FooterContext.Provider value={footerValue}>
@@ -85,6 +71,6 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
           </FooterContext.Provider>
         </IntroContext.Provider>
       </BreadcrumbContext.Provider>
-    </UIContext.Provider>
+    </UIProvider>
   );
 }
