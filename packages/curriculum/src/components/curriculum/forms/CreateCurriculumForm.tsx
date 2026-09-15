@@ -60,19 +60,15 @@ export function CreateCurriculumForm({
       ]);
     }
     if (setEnableMainOverflow) setEnableMainOverflow(true);
+  }, [setEnableMainOverflow, setRoutes, t]);
+
+  React.useEffect(() => {
     return () => {
       if (clearRoutes) clearRoutes();
       if (clearEnableMainOverflow) clearEnableMainOverflow();
       resetStore();
     };
-  }, [
-    clearEnableMainOverflow,
-    clearRoutes,
-    resetStore,
-    setEnableMainOverflow,
-    setRoutes,
-    t,
-  ]);
+  }, [clearEnableMainOverflow, clearRoutes, resetStore]);
 
   const { createCurriculumFormStructure } = useCreateCurriculumFormStructure({
     curriculumStore,

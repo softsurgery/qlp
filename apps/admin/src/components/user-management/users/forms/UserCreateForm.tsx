@@ -45,22 +45,16 @@ export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) =>
       { title: tUser("userManagement.sheet.createUserTitle") },
     ]);
     setEnableMainOverflow?.(true);
+  }, [setEnableMainOverflow, setIntro, setRoutes, tUser]);
+
+  React.useEffect(() => {
     return () => {
       clearIntro?.();
       clearRoutes?.();
       clearEnableMainOverflow?.();
       resetUser();
     };
-  }, [
-    clearEnableMainOverflow,
-    clearIntro,
-    clearRoutes,
-    resetUser,
-    setEnableMainOverflow,
-    setIntro,
-    setRoutes,
-    tUser,
-  ]);
+  }, [clearEnableMainOverflow, clearIntro, clearRoutes, resetUser]);
 
   const {
     mutate: uploadProfilePicture,
