@@ -4,12 +4,13 @@ import { useApp } from "@qlp/contexts";
 
 export interface UseCurriculumProps {
   id?: string;
+  version?: number;
   join?: string;
   enabled?: boolean;
 }
 
 export const useCurriculum = (
-  { id, join, enabled = true }: UseCurriculumProps = { enabled: true },
+  { id, version, join, enabled = true }: UseCurriculumProps = { enabled: true },
 ) => {
   const { api: baseApi, appType } = useApp();
   const api =
@@ -18,10 +19,14 @@ export const useCurriculum = (
   const {
     data: curriculumResp,
     isPending: isCurriculumPending,
+    isError: isCurriculumError,
     refetch: refetchCurriculum,
   } = useQuery({
-    queryKey: ["curriculum", id, join],
-    queryFn: () => api.findById(id!, { join }),
+    queryKey: ["curriculum", id, version ?? "latest", join],
+    queryFn: () =>
+      version != null
+        ? api.findByVersion(id!, version, { join })
+        : api.findById(id!, { join }),
     enabled: !!id && enabled,
   });
 
@@ -33,6 +38,7 @@ export const useCurriculum = (
   return {
     curriculum,
     isCurriculumPending,
+    isCurriculumError,
     refetchCurriculum,
   };
 };

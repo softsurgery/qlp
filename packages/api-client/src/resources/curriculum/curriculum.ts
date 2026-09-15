@@ -48,6 +48,18 @@ export function createCurriculumResource(
     return response.data;
   };
 
+  const findByVersion = async (
+    id: string,
+    version: number,
+    params?: QueryParams,
+  ): Promise<ResponseCurriculumDto> => {
+    const response = await http.get<ResponseCurriculumDto>(
+      `${basePath}/${id}/versions/${version}`,
+      { params },
+    );
+    return response.data;
+  };
+
   const findVersions = async (
     id: string,
     params?: QueryParams,
@@ -110,6 +122,7 @@ export function createCurriculumResource(
     findPaginated,
     findAll,
     findById,
+    findByVersion,
     findVersions,
     workflow: {
       findWorkflow,

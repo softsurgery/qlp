@@ -68,10 +68,9 @@ export const CurriculumFormLayout = ({
               </Button>
             </SheetTrigger>
             <SheetContent
-              side="right"
               className="flex w-full flex-col overflow-y-auto p-4 sm:max-w-md sm:p-6"
             >
-              <SheetHeader className="text-left">
+              <SheetHeader className="text-start">
                 <SheetTitle>{sidebarTitle}</SheetTitle>
                 {sidebarDescription && (
                   <SheetDescription>{sidebarDescription}</SheetDescription>
