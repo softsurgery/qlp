@@ -34,4 +34,11 @@ export class CurriculumLessonMaterialService extends AbstractVersioningCrudServi
       sort: 'sortOrder',
     });
   }
+
+  async reorderMaterials(updates: { id: string; sortOrder: number }[]) {
+    await Promise.all(
+      updates.map((update) => this.updateMaterial(update.id, { sortOrder: update.sortOrder })),
+    );
+    return { success: true };
+  }
 }

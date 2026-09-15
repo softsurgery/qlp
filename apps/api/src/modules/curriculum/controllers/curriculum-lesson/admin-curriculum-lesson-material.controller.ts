@@ -29,6 +29,16 @@ import { ResponseCurriculumLessonMaterialDto } from '../../dtos/material/respons
 export class AdminCurriculumLessonMaterialController {
   constructor(private readonly materialService: CurriculumLessonMaterialService) {}
 
+  @Get('/lessons/:lessonId/materials')
+  async findByLesson(
+    @Param('lessonId') lessonId: string,
+  ): Promise<ResponseCurriculumLessonMaterialDto[]> {
+    return toDtoArray(
+      ResponseCurriculumLessonMaterialDto,
+      await this.materialService.findLatestByLesson(lessonId),
+    );
+  }
+
   @Get('/materials/:materialId/versions')
   async findVersions(
     @Param('materialId') materialId: string,
@@ -49,6 +59,11 @@ export class AdminCurriculumLessonMaterialController {
     const material = await this.materialService.createForLesson(lessonId, dto);
     req.logInfo = { id: material.id, lessonId };
     return toDto(ResponseCurriculumLessonMaterialDto, material);
+  }
+
+  @Put('/materials/reorder')
+  async reorder(@Body() dto: { updates: { id: string; sortOrder: number }[] }) {
+    return this.materialService.reorderMaterials(dto.updates);
   }
 
   @Put('/materials/:materialId')

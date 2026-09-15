@@ -14,6 +14,7 @@ export enum MaterialType {
   Audio = "audio",
   Text = "text",
   Link = "link",
+  Table = "table",
 }
 
 export enum ExamQuestionType {

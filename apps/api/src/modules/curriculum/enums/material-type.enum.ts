@@ -1,7 +1,7 @@
 export enum MaterialType {
-  Video = 'video',
-  Document = 'document',
-  Audio = 'audio',
   Text = 'text',
-  Link = 'link',
+  Document = 'document',
+  Table = 'table',
+  Video = 'video',
+  Audio = 'audio',
 }

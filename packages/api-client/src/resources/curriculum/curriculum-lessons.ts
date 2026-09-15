@@ -100,6 +100,15 @@ export function createCurriculumLessonsResource(
     return response.data;
   };
 
+  const findMaterials = async (
+    lessonId: string,
+  ): Promise<ResponseCurriculumLessonMaterialDto[]> => {
+    const response = await http.get<ResponseCurriculumLessonMaterialDto[]>(
+      `${basePath}/lessons/${lessonId}/materials`,
+    );
+    return response.data;
+  };
+
   const createMaterial = async (
     lessonId: string,
     dto: CreateCurriculumMaterialDto,
@@ -118,6 +127,16 @@ export function createCurriculumLessonsResource(
     const response = await http.put<ResponseCurriculumLessonMaterialDto>(
       `${basePath}/materials/${materialId}`,
       dto,
+    );
+    return response.data;
+  };
+
+  const reorderMaterials = async (
+    updates: { id: string; sortOrder: number }[],
+  ): Promise<{ success: boolean }> => {
+    const response = await http.put<{ success: boolean }>(
+      `${basePath}/materials/reorder`,
+      { updates },
     );
     return response.data;
   };
@@ -151,8 +170,10 @@ export function createCurriculumLessonsResource(
       executeWorkflow,
     },
     reorder,
+    findMaterials,
     createMaterial,
     updateMaterial,
+    reorderMaterials,
     removeMaterial,
     findMaterialVersions,
   };
