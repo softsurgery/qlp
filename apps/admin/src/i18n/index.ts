@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import { componentsResources } from "@qlp/components/i18n";
+import { componentsResources, excelEditorResources } from "@qlp/components/i18n";
 import { datatableResources } from "@qlp/datatable-builder/i18n";
 import { formBuilderResources } from "@qlp/form-builder/i18n";
 import { uiResources } from "@qlp/ui/i18n";
@@ -26,6 +26,7 @@ void i18n
         datatable: datatableResources.en,
         "form-builder": formBuilderResources.en,
         components: componentsResources.en,
+        "excel-editor": excelEditorResources.en,
         curriculum: curriculumResources.en,
         "user-management": userManagementEn,
         role: roleEn,
@@ -36,6 +37,7 @@ void i18n
         datatable: datatableResources.ar,
         "form-builder": formBuilderResources.ar,
         components: componentsResources.ar,
+        "excel-editor": excelEditorResources.ar,
         curriculum: curriculumResources.ar,
         "user-management": userManagementAr,
         role: roleAr,
