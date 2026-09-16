@@ -19,6 +19,8 @@ interface RichTextFieldProps {
 export const RichTextField = ({ field }: RichTextFieldProps) => {
   const { value, onChange, disabled, maxLength, height } = field.props || {};
   const [isFullscreen, setIsFullscreen] = React.useState(false);
+  const onChangeRef = React.useRef(onChange);
+  onChangeRef.current = onChange;
 
   const editor = useEditor({
     extensions: [
@@ -36,10 +38,15 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
     ],
     content: value || "",
     editable: !disabled,
-    onUpdate: ({ editor }) => {
-      onChange?.(editor.getHTML());
+    immediatelyRender: false,
+    onUpdate: ({ editor: instance }) => {
+      onChangeRef.current?.(instance.getHTML());
     },
   });
+
+  React.useEffect(() => {
+    editor?.setEditable(!disabled);
+  }, [disabled, editor]);
 
   React.useEffect(() => {
     if (editor && value !== undefined && value !== editor.getHTML()) {
