@@ -144,11 +144,6 @@
   "startRecording": "بدء التسجيل",
   "stopRecording": "إيقاف التسجيل",
   "recordingError": "تعذر الوصول إلى الميكروفون",
-  "addRow": "إضافة صف",
-  "addColumn": "إضافة عمود",
-  "removeRow": "حذف صف",
-  "removeColumn": "حذف عمود",
-  "columnN": "العمود {{n}}",
   "createTitle": "إنشاء منهج",
   "createDescription": "سمِّ المنهج. يمكنك إضافة الوحدات والدروس والاختبارات بعد ذلك.",
   "editor": {

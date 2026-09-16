@@ -16,14 +16,14 @@ import {
   type ResponseCurriculumLessonMaterialDto,
   type UpdateCurriculumMaterialDto,
 } from "@qlp/api-client";
+import {
+  ExcelEditor,
+  emptyExcelEditor,
+  stringifyExcelEditor,
+} from "@qlp/components";
 import { Button, Input, cn } from "@qlp/ui";
 import { useTranslation } from "react-i18next";
 import { MaterialMediaField } from "./MaterialMediaField";
-import { MaterialTableEditor } from "./MaterialTableEditor";
-import {
-  stringifyMaterialTable,
-  emptyMaterialTable,
-} from "../../utils/material-table";
 
 export interface CurriculumLessonMaterialItemProps {
   className?: string;
@@ -178,9 +178,10 @@ export const CurriculumLessonMaterialItem = ({
             }}
           />
         ) : material.type === MaterialType.Table ? (
-          <MaterialTableEditor
+          <ExcelEditor
+            key={material.id}
             content={
-              material.content || stringifyMaterialTable(emptyMaterialTable())
+              material.content || stringifyExcelEditor(emptyExcelEditor())
             }
             disabled={disabled}
             onChange={(content) => onChange({ content })}

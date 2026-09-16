@@ -8,3 +8,11 @@ export {
   type MetaTableRow,
   type DocumentMetaTableProps,
 } from "./DocumentMetaTable";
+export {
+  ExcelEditor,
+  emptyExcelEditor,
+  parseExcelEditor,
+  stringifyExcelEditor,
+  hasExcelEditorContent,
+} from "./excel-editor";
+export type { ExcelEditorProps, ExcelEditorData, ExcelEditorRange } from "./excel-editor";

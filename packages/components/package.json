@@ -25,8 +25,13 @@
     "@qlp/contexts": "workspace:*",
     "@qlp/form-builder": "workspace:*",
     "@qlp/ui": "workspace:*",
+    "@univerjs/preset-sheets-core": "^0.25.1",
+    "@univerjs/presets": "^0.25.1",
+    "fflate": "^0.8.3",
     "i18next": "^23.15.1",
+    "lucide-react": "^0.441.0",
     "react-i18next": "^15.0.2",
+    "rxjs": "^7.8.2",
     "sonner": "^1.7.1"
   },
   "peerDependencies": {

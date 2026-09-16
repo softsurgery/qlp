@@ -144,11 +144,6 @@
   "startRecording": "Start recording",
   "stopRecording": "Stop recording",
   "recordingError": "Could not access the microphone",
-  "addRow": "Add row",
-  "addColumn": "Add column",
-  "removeRow": "Remove row",
-  "removeColumn": "Remove column",
-  "columnN": "Column {{n}}",
   "createTitle": "Create curriculum",
   "createDescription": "Give it a name. You can add modules, lessons, and exams next.",
   "editor": {

@@ -20,9 +20,17 @@ export {
   Spinner,
   DocumentMetaTable,
   HtmlContent,
+  ExcelEditor,
+  emptyExcelEditor,
+  parseExcelEditor,
+  stringifyExcelEditor,
+  hasExcelEditorContent,
 } from "./shared";
 export type {
   MetaTableRow,
   DocumentMetaTableProps,
   HtmlContentProps,
+  ExcelEditorProps,
+  ExcelEditorData,
+  ExcelEditorRange,
 } from "./shared";

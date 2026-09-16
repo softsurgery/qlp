@@ -12,7 +12,11 @@ import {
   ListChecks,
   Table2,
 } from "lucide-react";
-import { HtmlContent } from "@qlp/components";
+import {
+  HtmlContent,
+  ExcelEditor,
+  hasExcelEditorContent,
+} from "@qlp/components";
 import { useApp } from "@qlp/contexts";
 import { useLocalStorage, useUploadSrc } from "@qlp/hooks";
 import {
@@ -41,8 +45,6 @@ import {
   moduleMaterialStats,
   moduleOutline,
 } from "./utils";
-import { hasTableContent } from "../../../utils/material-table";
-import { MaterialTableEditor } from "../../curriculum-material/MaterialTableEditor";
 
 type ContentWidth = "full" | "wide" | "narrow";
 
@@ -502,7 +504,7 @@ function MaterialPreview({
     src || (isHttpUrl(material.content) ? material.content : undefined);
 
   return (
-    <div className="mb-3 ms-11 rounded-md border bg-card p-4">
+    <div className="mt-3 ms-11 p-4">
       <HtmlContent html={material.description} className="mb-3" />
       {kind === "video" && mediaSrc ? (
         <video src={mediaSrc} controls className="w-full rounded-md" />
@@ -510,8 +512,12 @@ function MaterialPreview({
       {kind === "audio" && mediaSrc ? (
         <audio src={mediaSrc} controls className="w-full" />
       ) : null}
-      {kind === "table" && hasTableContent(material.content) ? (
-        <MaterialTableEditor content={material.content} readOnly />
+      {kind === "table" && hasExcelEditorContent(material.content) ? (
+        <ExcelEditor
+          key={material.id}
+          content={material.content}
+          readOnly
+        />
       ) : null}
       {mediaSrc && (kind === "link" || kind === "reading") ? (
         <a
@@ -543,7 +549,7 @@ function MaterialPreview({
       {!mediaSrc &&
       !hasRichText(material.content) &&
       !hasRichText(material.description) &&
-      !(kind === "table" && hasTableContent(material.content)) ? (
+      !(kind === "table" && hasExcelEditorContent(material.content)) ? (
         <p className="text-sm text-muted-foreground">
           {t("viewer.noMaterials")}
         </p>

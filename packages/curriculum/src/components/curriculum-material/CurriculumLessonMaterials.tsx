@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { emptyExcelEditor, stringifyExcelEditor } from "@qlp/components";
 import { useApp } from "@qlp/contexts";
 import { useDnDService } from "@qlp/hooks";
 import {
@@ -44,10 +45,6 @@ import {
 } from "@qlp/api-client";
 import { useCurriculumLessonMaterials } from "../../hooks";
 import { errorMessage } from "../../utils";
-import {
-  emptyMaterialTable,
-  stringifyMaterialTable,
-} from "../../utils/material-table";
 import { CurriculumLessonMaterialItem } from "./CurriculumLessonMaterialItem";
 import { useCurriculumLessonMaterialDeleteDialog } from "../curriculum-lesson/modals/CurriculumLessonMaterialDeleteDialog";
 
@@ -219,7 +216,7 @@ export const CurriculumLessonMaterials = ({
       type,
       content:
         type === MaterialType.Table
-          ? stringifyMaterialTable(emptyMaterialTable())
+          ? stringifyExcelEditor(emptyExcelEditor())
           : undefined,
       sortOrder: materials.length,
     });

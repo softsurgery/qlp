@@ -16,6 +16,11 @@ export default defineConfig(({ mode }) => {
       ],
     },
     optimizeDeps: {
+      include: [
+        "rxjs",
+        "@univerjs/presets",
+        "@univerjs/preset-sheets-core",
+      ],
       exclude: [
         "@qlp/api-client",
         "@qlp/components",
