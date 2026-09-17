@@ -101,23 +101,34 @@ export function materialKind(
   return "reading";
 }
 
-export function moduleMaterialStats(module?: ResponseCurriculumModuleDto | null) {
+export function moduleMaterialStats(
+  module?: ResponseCurriculumModuleDto | null,
+) {
   const materials = moduleLessons(module).flatMap((lesson) =>
     lessonMaterials(lesson),
   );
-  const videos = materials.filter((item) => materialKind(item.type) === "video")
-    .length;
-  const audio = materials.filter((item) => materialKind(item.type) === "audio")
-    .length;
+  const videos = materials.filter(
+    (item) => materialKind(item.type) === "video",
+  ).length;
+  const audio = materials.filter(
+    (item) => materialKind(item.type) === "audio",
+  ).length;
   const readings = materials.filter((item) => {
     const kind = materialKind(item.type);
-    return kind === "reading" || kind === "text" || kind === "link" || kind === "table";
+    return (
+      kind === "reading" ||
+      kind === "text" ||
+      kind === "link" ||
+      kind === "table"
+    );
   }).length;
   const assessments = moduleExams(module).length;
   return { videos, audio, readings, assessments, materials };
 }
 
-export function firstOutlineItemId(module?: ResponseCurriculumModuleDto | null) {
+export function firstOutlineItemId(
+  module?: ResponseCurriculumModuleDto | null,
+) {
   const outline = moduleOutline(module);
   for (const entry of outline) {
     if (entry.kind === "lesson") {
@@ -128,6 +139,24 @@ export function firstOutlineItemId(module?: ResponseCurriculumModuleDto | null) 
     return `exam:${entry.exam.id}`;
   }
   return undefined;
+}
+
+export function outlineItemExists(
+  module?: ResponseCurriculumModuleDto | null,
+  itemId?: string,
+) {
+  if (!module || !itemId) return false;
+  for (const entry of moduleOutline(module)) {
+    if (entry.kind === "lesson") {
+      if (itemId === `lesson:${entry.lesson.id}`) return true;
+      for (const material of lessonMaterials(entry.lesson)) {
+        if (itemId === `material:${material.id}`) return true;
+      }
+      continue;
+    }
+    if (itemId === `exam:${entry.exam.id}`) return true;
+  }
+  return false;
 }
 
 export function formatShortDate(value?: Date | string | null) {

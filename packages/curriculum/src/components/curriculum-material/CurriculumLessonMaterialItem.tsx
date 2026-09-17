@@ -185,6 +185,7 @@ export const CurriculumLessonMaterialItem = ({
             }
             disabled={disabled}
             onChange={(content) => onChange({ content })}
+            enableFragmentation
           />
         ) : (
           <FieldBuilder

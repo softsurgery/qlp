@@ -13,12 +13,17 @@ import {
   useMediaQuery,
 } from "@qlp/ui";
 import { useCurriculum } from "../../hooks/useCurriculum";
-import { useCurriculumLessons } from "../../hooks/useCurriculumLessons";
+import { useCurriculumModuleLessonMaterials } from "../../hooks/useCurriculumModuleLessonMaterials";
 import { useCurriculumModules } from "../../hooks/useCurriculumModules";
 import { CourseAside } from "./viewer/CourseAside";
 import { CourseNav } from "./viewer/CourseNav";
 import { ModuleOutline } from "./viewer/ModuleOutline";
-import { firstOutlineItemId, latestById, sortByOrder } from "./viewer/utils";
+import {
+  firstOutlineItemId,
+  latestById,
+  outlineItemExists,
+  sortByOrder,
+} from "./viewer/utils";
 
 interface CurriculumViewerProps {
   className?: string;
@@ -66,11 +71,11 @@ export function CurriculumViewer({
     ? modules.findIndex((module) => module.id === selectedModule.id)
     : -1;
 
-  const { lessons, isLessonsPending } = useCurriculumLessons({
-    moduleId: selectedModule?.id,
-    join: "materials",
-    enabled: !!selectedModule?.id,
-  });
+  const { lessons, isLessonsPending, isMaterialsPending } =
+    useCurriculumModuleLessonMaterials({
+      moduleId: selectedModule?.id,
+      enabled: !!selectedModule?.id,
+    });
 
   const selectedModuleWithLessons = React.useMemo(() => {
     if (!selectedModule) return undefined;
@@ -84,7 +89,23 @@ export function CurriculumViewer({
 
   React.useEffect(() => {
     setActiveItemId(firstOutlineItemId(selectedModuleWithLessons));
-  }, [selectedModuleWithLessons?.id, lessons]);
+  }, [selectedModuleWithLessons?.id]);
+
+  React.useEffect(() => {
+    if (isLessonsPending || isMaterialsPending || !selectedModuleWithLessons) {
+      return;
+    }
+    setActiveItemId((current) => {
+      if (current && outlineItemExists(selectedModuleWithLessons, current)) {
+        return current;
+      }
+      return firstOutlineItemId(selectedModuleWithLessons);
+    });
+  }, [
+    isLessonsPending,
+    isMaterialsPending,
+    selectedModuleWithLessons,
+  ]);
 
   React.useEffect(() => {
     setShowSidebar?.(false);

@@ -502,58 +502,68 @@ function MaterialPreview({
   const kind = materialKind(material.type);
   const mediaSrc =
     src || (isHttpUrl(material.content) ? material.content : undefined);
+  const showTable =
+    kind === "table" && hasExcelEditorContent(material.content);
 
   return (
-    <div className="mt-3 ms-11 p-4">
-      <HtmlContent html={material.description} className="mb-3" />
-      {kind === "video" && mediaSrc ? (
-        <video src={mediaSrc} controls className="w-full rounded-md" />
+    <div className="mt-3 w-full min-w-0">
+      {hasRichText(material.description) ? (
+        <HtmlContent
+          html={material.description}
+          className={cn("mb-3 ms-11 px-4", showTable && "pt-4")}
+        />
       ) : null}
-      {kind === "audio" && mediaSrc ? (
-        <audio src={mediaSrc} controls className="w-full" />
-      ) : null}
-      {kind === "table" && hasExcelEditorContent(material.content) ? (
+      {showTable ? (
         <ExcelEditor
           key={material.id}
           content={material.content}
           readOnly
+          className="w-full"
         />
-      ) : null}
-      {mediaSrc && (kind === "link" || kind === "reading") ? (
-        <a
-          href={mediaSrc}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-        >
-          <ExternalLink className="size-3.5" />
-          {t("viewer.openResource")}
-        </a>
-      ) : null}
-      {kind === "text" ||
-      (!mediaSrc && kind !== "table" && hasRichText(material.content)) ? (
-        isHttpUrl(material.content) ? (
-          <a
-            href={material.content}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-          >
-            <ExternalLink className="size-3.5" />
-            {t("viewer.openResource")}
-          </a>
-        ) : (
-          <HtmlContent html={material.content} />
-        )
-      ) : null}
-      {!mediaSrc &&
-      !hasRichText(material.content) &&
-      !hasRichText(material.description) &&
-      !(kind === "table" && hasExcelEditorContent(material.content)) ? (
-        <p className="text-sm text-muted-foreground">
-          {t("viewer.noMaterials")}
-        </p>
-      ) : null}
+      ) : (
+        <div className="ms-11 p-4 pt-0">
+          {kind === "video" && mediaSrc ? (
+            <video src={mediaSrc} controls className="w-full rounded-md" />
+          ) : null}
+          {kind === "audio" && mediaSrc ? (
+            <audio src={mediaSrc} controls className="w-full" />
+          ) : null}
+          {mediaSrc && (kind === "link" || kind === "reading") ? (
+            <a
+              href={mediaSrc}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              <ExternalLink className="size-3.5" />
+              {t("viewer.openResource")}
+            </a>
+          ) : null}
+          {kind === "text" ||
+          (!mediaSrc && kind !== "table" && hasRichText(material.content)) ? (
+            isHttpUrl(material.content) ? (
+              <a
+                href={material.content}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+              >
+                <ExternalLink className="size-3.5" />
+                {t("viewer.openResource")}
+              </a>
+            ) : (
+              <HtmlContent html={material.content} />
+            )
+          ) : null}
+          {!mediaSrc &&
+          !hasRichText(material.content) &&
+          !hasRichText(material.description) ? (
+            <p className="text-sm text-muted-foreground">
+              {t("viewer.noMaterials")}
+            </p>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

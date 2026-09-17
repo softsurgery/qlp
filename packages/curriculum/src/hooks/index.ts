@@ -8,3 +8,4 @@ export * from "./useCurriculumLesson";
 export * from "./useCurriculumLessonWorkflow";
 export * from "./useCurriculumLessonVersions";
 export * from "./useCurriculumLessonMaterials";
+export * from "./useCurriculumModuleLessonMaterials";
