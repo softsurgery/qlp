@@ -226,7 +226,10 @@
     "contentWidth": "عرض المحتوى",
     "widthFull": "عرض كامل",
     "widthWide": "عريض",
-    "widthNarrow": "ضيق"
+    "widthNarrow": "ضيق",
+    "expandModule": "توسيع الوحدة",
+    "collapseModule": "طي الوحدة",
+    "close": "إغلاق"
   },
   "materialType": {
     "video": "فيديو",

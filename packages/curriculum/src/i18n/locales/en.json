@@ -226,7 +226,10 @@
     "contentWidth": "Content width",
     "widthFull": "Full width",
     "widthWide": "Wide",
-    "widthNarrow": "Narrow"
+    "widthNarrow": "Narrow",
+    "expandModule": "Expand module",
+    "collapseModule": "Collapse module",
+    "close": "Close"
   },
   "materialType": {
     "video": "Video",

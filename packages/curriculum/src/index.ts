@@ -1,7 +1,7 @@
 export { CurriculumList } from "./components/curriculum/CurriculumList";
 export { CreateCurriculumForm } from "./components/curriculum/forms/CreateCurriculumForm";
 export { UpdateCurriculumForm } from "./components/curriculum/forms/UpdateCurriculumForm";
-export { CurriculumViewer } from "./components/curriculum/CurriculumViewer";
+export { CurriculumViewer } from "./components/curriculum/viewer/CurriculumViewer";
 export { CurriculumVersionsList } from "./components/curriculum/version-list/CurriculumVersionsList";
 export { UpdateCurriculumModuleForm } from "./components/curriculum-module/forms/UpdateCurriculumModuleForm";
 export * from "./components/curriculum-module/version-list/CurriculumModuleVersionsList";

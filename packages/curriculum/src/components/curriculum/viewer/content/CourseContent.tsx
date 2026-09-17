@@ -58,7 +58,7 @@ export const CourseContent = ({
   return (
     <div className={cn("w-full", className)}>
       {material || exam || lesson ? (
-        <div className="flex justify-end px-4 pt-4 sm:px-8">
+        <div className="sticky top-5 right-0 flex justify-end px-4 pt-4 sm:px-8">
           <CourseContentWidthSwitch
             value={contentWidth}
             onChange={setStoredWidth}

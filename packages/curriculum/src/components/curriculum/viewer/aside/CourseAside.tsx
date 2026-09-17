@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Calendar, History, Pencil, CircleDot } from "lucide-react";
+import { Calendar, History, Pencil, CircleDot, PanelRight } from "lucide-react";
 import {
   CurriculumStatus,
   type ResponseCurriculumDto,
@@ -11,16 +11,18 @@ import { Button, cn } from "@qlp/ui";
 import { formatShortDate, moduleLessons, moduleExams } from "../utils";
 
 interface CourseAsideProps {
+  className?: string;
   curriculum: ResponseCurriculumDto;
   modules: ResponseCurriculumModuleDto[];
-  className?: string;
+  onClose?: () => void;
 }
 
-export function CourseAside({
+export const CourseAside = ({
   curriculum,
   modules,
   className,
-}: CourseAsideProps) {
+  onClose,
+}: CourseAsideProps) => {
   const { t } = useTranslation("curriculum");
   const navigate = useNavigate();
   const published =
@@ -47,7 +49,21 @@ export function CourseAside({
       )}
     >
       <section className="rounded-xl border bg-card p-4 shadow-sm">
-        <h3 className="text-sm font-semibold">{t("viewer.overview")}</h3>
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-sm font-semibold">{t("viewer.overview")}</h3>
+          {onClose ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className="-me-1.5 -mt-1.5 shrink-0"
+              onClick={onClose}
+              aria-label={t("viewer.close")}
+            >
+              <PanelRight className="size-4" />
+            </Button>
+          ) : null}
+        </div>
         <div
           className={cn(
             "mt-3 rounded-lg p-3 text-sm",
@@ -160,4 +176,4 @@ export function CourseAside({
       </section>
     </div>
   );
-}
+};
