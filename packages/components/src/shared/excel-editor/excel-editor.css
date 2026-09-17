@@ -1,26 +1,41 @@
 .excel-editor-preview {
+  display: block;
   width: 100%;
   max-width: 100%;
+  min-width: 0;
 }
 
-.excel-editor-preview [data-slot="table"] {
+.excel-editor-preview-grid {
+  display: grid;
   width: 100%;
-  min-width: 100%;
+  min-width: 0;
 }
 
-.excel-editor-shell,
-.excel-editor-preview,
-.excel-editor-univer {
+.excel-editor-preview-cell {
+  min-width: 0;
+  padding: 0.5rem;
+  border-bottom: 1px solid hsl(var(--border));
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   transition:
     background-color 200ms ease,
     color 200ms ease,
     border-color 200ms ease;
 }
 
-.excel-editor-preview [data-slot="table"],
-.excel-editor-preview [data-slot="table-row"],
-.excel-editor-preview [data-slot="table-cell"],
-.excel-editor-preview [data-slot="table-head"] {
+.excel-editor-preview-header {
+  font-weight: 500;
+}
+
+.excel-editor-preview-grid > [role="row"]:last-child > .excel-editor-preview-cell {
+  border-bottom: 0;
+}
+
+.excel-editor-shell,
+.excel-editor-preview,
+.excel-editor-univer {
   transition:
     background-color 200ms ease,
     color 200ms ease,

@@ -218,26 +218,34 @@ const FALLBACK_TOKENS = {
 } satisfies Record<"light" | "dark", Record<string, Hsl>>;
 
 type TokenName = keyof (typeof FALLBACK_TOKENS)["light"];
+export type ExcelColorScheme = "light" | "dark";
 
-function token(name: TokenName): Hsl {
-  const scheme =
-    typeof document !== "undefined" &&
+export function documentExcelColorScheme(): ExcelColorScheme {
+  return typeof document !== "undefined" &&
     document.documentElement.classList.contains("dark")
-      ? "dark"
-      : "light";
-  return readCssHsl(name) ?? FALLBACK_TOKENS[scheme][name];
+    ? "dark"
+    : "light";
+}
+
+function token(name: TokenName, scheme: ExcelColorScheme): Hsl {
+  if (documentExcelColorScheme() === scheme) {
+    return readCssHsl(name) ?? FALLBACK_TOKENS[scheme][name];
+  }
+  return FALLBACK_TOKENS[scheme][name];
 }
 
 function hueOf(color: Hsl, fallback: number) {
   return color.s >= 0.05 && Number.isFinite(color.h) ? color.h : fallback;
 }
 
-export function readExcelThemeTokens(): ExcelThemeTokens {
-  const background = token("--background");
-  const foreground = token("--foreground");
-  const border = token("--border");
-  const muted = token("--muted");
-  const primary = token("--primary");
+export function readExcelThemeTokens(
+  scheme: ExcelColorScheme = documentExcelColorScheme(),
+): ExcelThemeTokens {
+  const background = token("--background", scheme);
+  const foreground = token("--foreground", scheme);
+  const border = token("--border", scheme);
+  const muted = token("--muted", scheme);
+  const primary = token("--primary", scheme);
   const accentHue = hueOf(primary, 158);
   return {
     background: hslToRgb(background),
@@ -349,13 +357,12 @@ export function resolveExcelCellColors(
   const surface = paper?.rgb ?? tokens.background;
 
   if (isDefaultExcelInk(cell.color)) {
-    const minimum = paper ? ADAPTED_CONTRAST : RESCUE_CONTRAST;
-    if (contrastRatio(tokens.foreground, surface) >= minimum) {
-      return { paper: paint, inkFollowsTheme: true };
+    if (!paper) {
+      return { inkFollowsTheme: true };
     }
     return {
       ink: rgbToHex(
-        ensureReadable(tokens.foreground, surface, tokens, minimum),
+        ensureReadable(tokens.foreground, surface, tokens, ADAPTED_CONTRAST),
       ),
       paper: paint,
       inkFollowsTheme: false,
@@ -363,7 +370,16 @@ export function resolveExcelCellColors(
   }
 
   const authored = parseExcelColor(cell.color);
-  if (!authored) return { paper: paint, inkFollowsTheme: true };
+  if (!authored) {
+    if (!paper) return { inkFollowsTheme: true };
+    return {
+      ink: rgbToHex(
+        ensureReadable(tokens.foreground, surface, tokens, ADAPTED_CONTRAST),
+      ),
+      paper: paint,
+      inkFollowsTheme: false,
+    };
+  }
   const toned = isDark ? adaptForDark(authored.rgb, tokens) : authored.rgb;
   const ink = ensureReadable(
     toned,
@@ -388,7 +404,9 @@ export function createExcelCanvasColorService(
     if (!palette || palette.darkMode !== themeService.darkMode) {
       palette = {
         darkMode: themeService.darkMode,
-        tokens: readExcelThemeTokens(),
+        tokens: readExcelThemeTokens(
+          themeService.darkMode ? "dark" : "light",
+        ),
       };
       cache.clear();
     }

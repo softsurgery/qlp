@@ -1,22 +1,41 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-  cn,
-  useTheme,
-} from "@qlp/ui";
+import { cn, useTheme } from "@qlp/ui";
 import { excelEditorPreviewLayout, type ExcelEditorCell } from "./utils";
 import {
+  documentExcelColorScheme,
   readExcelThemeTokens,
   resolveExcelCellColors,
   type ExcelCellPaint,
+  type ExcelColorScheme,
   type ExcelThemeTokens,
 } from "./theme";
 import "./excel-editor.css";
 import React from "react";
+
+function useExcelPreviewPalette() {
+  const { resolvedTheme } = useTheme();
+  const [scheme, setScheme] = React.useState<ExcelColorScheme>(() =>
+    documentExcelColorScheme(),
+  );
+
+  React.useEffect(() => {
+    const apply = () => setScheme(documentExcelColorScheme());
+    apply();
+    const root = document.documentElement;
+    const observer = new MutationObserver(apply);
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["class", "style"],
+    });
+    return () => observer.disconnect();
+  }, [resolvedTheme]);
+
+  const tokens = React.useMemo(
+    () => readExcelThemeTokens(scheme),
+    [scheme],
+  );
+
+  return { isDark: scheme === "dark", tokens };
+}
 
 function previewCellStyle(
   cell: ExcelEditorCell,
@@ -32,13 +51,11 @@ function previewCellStyle(
   return {
     color: paint.ink,
     backgroundColor: paint.paper,
-    fontWeight: cell.bold ? 700 : header ? 400 : undefined,
+    fontWeight: cell.bold ? 700 : header ? 500 : undefined,
     fontStyle: cell.italic ? "italic" : undefined,
     textDecoration: decorations || undefined,
     textAlign: cell.align,
     verticalAlign: cell.verticalAlign,
-    whiteSpace: "pre-wrap",
-    overflowWrap: "anywhere",
     fontSize: cell.fontSize ? `${cell.fontSize}pt` : undefined,
     fontFamily: cell.fontFamily,
   };
@@ -57,24 +74,18 @@ function PreviewCell({
 }) {
   const paint = resolveExcelCellColors(cell, isDark, tokens);
   const style = previewCellStyle(cell, header, paint);
-  const className = paint.inkFollowsTheme ? "text-foreground" : undefined;
-  if (header) {
-    return (
-      <TableHead
-        className={cn(className, "whitespace-pre-wrap break-words")}
-        style={style}
-      >
-        {cell.text}
-      </TableHead>
-    );
-  }
   return (
-    <TableCell
-      className={cn(className, "whitespace-pre-wrap break-words")}
+    <div
+      role={header ? "columnheader" : "cell"}
+      className={cn(
+        "excel-editor-preview-cell min-w-0",
+        header && "excel-editor-preview-header",
+        paint.inkFollowsTheme && "text-foreground",
+      )}
       style={style}
     >
       {cell.text}
-    </TableCell>
+    </div>
   );
 }
 
@@ -85,14 +96,10 @@ export function ExcelPreview({
   className?: string;
   content?: string;
 }) {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  const tokens = React.useMemo(() => readExcelThemeTokens(), [theme]);
+  const { isDark, tokens } = useExcelPreviewPalette();
   const layout = excelEditorPreviewLayout(content);
   if (!layout) return null;
-  const { grid, columnWidthPercents, rowHeightPercents, totalHeightPx } =
-    layout;
-  const [header, ...rows] = grid;
+  const { grid, columnWidthPercents } = layout;
 
   return (
     <div
@@ -101,54 +108,29 @@ export function ExcelPreview({
         className,
       )}
     >
-      <Table
-        className="w-full min-w-full table-fixed"
+      <div
+        role="table"
+        className="excel-editor-preview-grid w-full min-w-0"
         style={{
-          height: totalHeightPx > 0 ? `${totalHeightPx}px` : undefined,
+          gridTemplateColumns: columnWidthPercents
+            .map((width) => `minmax(0, ${width}fr)`)
+            .join(" "),
         }}
       >
-        <colgroup>
-          {columnWidthPercents.map((width, index) => (
-            <col key={index} style={{ width: `${width}%` }} />
-          ))}
-        </colgroup>
-        <TableHeader>
-          <TableRow
-            className="hover:bg-transparent"
-            style={{ height: `${rowHeightPercents[0]}%` }}
-          >
-            {header.map((cell, index) => (
+        {grid.map((row, rowIndex) => (
+          <div key={rowIndex} role="row" className="contents">
+            {row.map((cell, cellIndex) => (
               <PreviewCell
-                key={index}
+                key={cellIndex}
                 cell={cell}
-                header
+                header={rowIndex === 0}
                 isDark={isDark}
                 tokens={tokens}
               />
             ))}
-          </TableRow>
-        </TableHeader>
-        {rows.length > 0 ? (
-          <TableBody>
-            {rows.map((row, rowIndex) => (
-              <TableRow
-                key={rowIndex}
-                className="hover:bg-transparent"
-                style={{ height: `${rowHeightPercents[rowIndex + 1]}%` }}
-              >
-                {row.map((cell, cellIndex) => (
-                  <PreviewCell
-                    key={cellIndex}
-                    cell={cell}
-                    isDark={isDark}
-                    tokens={tokens}
-                  />
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        ) : null}
-      </Table>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
