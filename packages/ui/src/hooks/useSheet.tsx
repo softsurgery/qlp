@@ -14,8 +14,12 @@ interface UseSheetOptions {
   title?: React.ReactNode;
   description?: React.ReactNode;
   className?: string;
+  headerClassName?: string;
+  overlayClassName?: string;
   onToggle?: () => void;
   side?: "top" | "right" | "bottom" | "left";
+  showCloseButton?: boolean;
+  animated?: boolean;
 }
 
 export function useSheet({
@@ -23,8 +27,12 @@ export function useSheet({
   title,
   description,
   className,
+  headerClassName,
+  overlayClassName,
   onToggle,
   side,
+  showCloseButton,
+  animated = true,
 }: UseSheetOptions) {
   const [isOpen, setIsOpen] = React.useState(false);
   const { isRTL } = useRTL();
@@ -43,10 +51,21 @@ export function useSheet({
     >
       <SheetContent
         side={resolvedSide}
-        className={cn("overflow-y-auto", className)}
+        showCloseButton={showCloseButton}
+        overlayClassName={cn(
+          !animated &&
+            "!duration-0 data-[state=open]:!duration-0 data-[state=closed]:!duration-0",
+          overlayClassName,
+        )}
+        className={cn(
+          "overflow-y-auto",
+          !animated &&
+            "transition-none !duration-0 data-[state=open]:!duration-0 data-[state=closed]:!duration-0",
+          className,
+        )}
       >
         {(title || description) && (
-          <SheetHeader>
+          <SheetHeader className={headerClassName}>
             {title && <SheetTitle>{title}</SheetTitle>}
             {description && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>
