@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useApp } from "@qlp/contexts";
 import { useUploadSrc } from "@qlp/hooks";
-import { Button, Progress, cn } from "@qlp/ui";
+import { Button, Progress, Video, cn } from "@qlp/ui";
 
 interface MaterialMediaFieldProps {
   kind: "video" | "audio";
@@ -129,7 +129,7 @@ export function MaterialMediaField({
     <div className="flex flex-col gap-3">
       {previewSrc ? (
         kind === "video" ? (
-          <video src={previewSrc} controls className="w-full rounded-md bg-black" />
+          <Video src={previewSrc} className="w-full rounded-md" />
         ) : (
           <audio src={previewSrc} controls className="w-full" />
         )

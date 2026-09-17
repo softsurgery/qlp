@@ -8,7 +8,7 @@ import {
 } from "@qlp/components";
 import { useApp } from "@qlp/contexts";
 import { useUploadSrc } from "@qlp/hooks";
-import { cn } from "@qlp/ui";
+import { cn, Video } from "@qlp/ui";
 import { hasRichText, isHttpUrl, materialKind } from "../utils";
 
 interface CourseMaterialPreviewProps {
@@ -50,7 +50,11 @@ export const CourseMaterialPreview = ({
       ) : (
         <div>
           {kind === "video" && mediaSrc ? (
-            <video src={mediaSrc} controls className="w-full rounded-md" />
+            <Video
+              src={mediaSrc}
+              title={material.title}
+              className="w-full rounded-md"
+            />
           ) : null}
           {kind === "audio" && mediaSrc ? (
             <audio src={mediaSrc} controls className="w-full" />
