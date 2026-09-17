@@ -1,5 +1,10 @@
 export { cn } from "./lib/utils";
 export {
+  Video,
+  type VideoProps,
+  type VideoSourceKind,
+} from "./components/video";
+export {
   Breadcrumb,
   BreadcrumbEllipsis,
   BreadcrumbItem,

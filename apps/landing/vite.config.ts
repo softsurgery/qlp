@@ -22,6 +22,13 @@ export default defineConfig(({ mode }) => {
       ],
     },
     optimizeDeps: {
+      include: [
+        "@videojs/react",
+        "@videojs/react/video",
+        "@videojs/react/i18n",
+        "@videojs/hlsjs-video",
+        "@videojs/youtube-video",
+      ],
       exclude: [
         "@qlp/datatable-builder",
         "@qlp/form-builder",

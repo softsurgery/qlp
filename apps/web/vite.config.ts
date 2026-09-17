@@ -20,6 +20,11 @@ export default defineConfig(({ mode }) => {
         "rxjs",
         "@univerjs/presets",
         "@univerjs/preset-sheets-core",
+        "@videojs/react",
+        "@videojs/react/video",
+        "@videojs/react/i18n",
+        "@videojs/hlsjs-video",
+        "@videojs/youtube-video",
       ],
       exclude: [
         "@qlp/api-client",

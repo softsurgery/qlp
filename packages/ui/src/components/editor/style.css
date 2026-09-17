@@ -218,12 +218,20 @@ button.rte-control-button:active {
   transition:
     color 150ms ease-out,
     text-decoration-color 150ms ease-out;
-  text-decoration-color: color-mix(in srgb, hsl(var(--primary)) 40%, transparent);
+  text-decoration-color: color-mix(
+    in srgb,
+    hsl(var(--primary)) 40%,
+    transparent
+  );
 }
 
 .rte-content .ProseMirror a:hover {
   color: color-mix(in srgb, hsl(var(--primary)) 80%, transparent);
-  text-decoration-color: color-mix(in srgb, hsl(var(--primary)) 80%, transparent);
+  text-decoration-color: color-mix(
+    in srgb,
+    hsl(var(--primary)) 80%,
+    transparent
+  );
 }
 
 .rte-content .ProseMirror::selection,
@@ -345,7 +353,11 @@ button.rte-control-button:active {
   flex-shrink: 0;
   gap: 0.5rem;
   top: var(--rte-sticky-offset, 0px);
-  background-color: color-mix(in srgb, hsl(var(--muted)) 35%, hsl(var(--background)));
+  background-color: color-mix(
+    in srgb,
+    hsl(var(--muted)) 35%,
+    hsl(var(--background))
+  );
   z-index: 1;
   border-start-end-radius: var(--radius);
   border-start-start-radius: var(--radius);
@@ -785,7 +797,8 @@ button.rte-control-button:active {
   overflow: visible;
   border-radius: var(--radius);
   background: hsl(var(--muted));
-  display: inline-block;
+  display: block;
+  width: 100%;
   transition:
     outline-color 150ms ease-out,
     box-shadow 150ms ease-out;
