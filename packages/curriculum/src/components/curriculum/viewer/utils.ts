@@ -126,37 +126,120 @@ export function moduleMaterialStats(
   return { videos, audio, readings, assessments, materials };
 }
 
+export function outlineItemId(entry: OutlineEntry) {
+  return entry.kind === "lesson"
+    ? `lesson:${entry.lesson.id}`
+    : `exam:${entry.exam.id}`;
+}
+
+export function moduleItemId(moduleId: string) {
+  return `module:${moduleId}`;
+}
+
+export function materialItemId(materialId: string) {
+  return `material:${materialId}`;
+}
+
 export function firstOutlineItemId(
   module?: ResponseCurriculumModuleDto | null,
 ) {
-  const outline = moduleOutline(module);
-  for (const entry of outline) {
-    if (entry.kind === "lesson") {
-      const materials = lessonMaterials(entry.lesson);
-      if (materials[0]) return `material:${materials[0].id}`;
-      return `lesson:${entry.lesson.id}`;
+  const entry = moduleOutline(module)[0];
+  return entry ? outlineItemId(entry) : undefined;
+}
+
+export function firstCourseItemId(
+  modules?: ResponseCurriculumModuleDto[] | null,
+) {
+  const module = sortByOrder(latestById(modules ?? []))[0];
+  return module ? moduleItemId(module.id) : undefined;
+}
+
+export type CourseItem =
+  | {
+      kind: "module";
+      id: string;
+      module: ResponseCurriculumModuleDto;
     }
-    return `exam:${entry.exam.id}`;
+  | {
+      kind: "lesson";
+      id: string;
+      module: ResponseCurriculumModuleDto;
+      lesson: ResponseCurriculumLessonDto;
+    }
+  | {
+      kind: "exam";
+      id: string;
+      module: ResponseCurriculumModuleDto;
+      exam: ResponseCurriculumExamDto;
+    }
+  | {
+      kind: "material";
+      id: string;
+      module: ResponseCurriculumModuleDto;
+      lesson: ResponseCurriculumLessonDto;
+      materialId: string;
+      material?: ResponseCurriculumLessonMaterialDto;
+    };
+
+export function findCourseItem(
+  modules?: ResponseCurriculumModuleDto[] | null,
+  itemId?: string | null,
+  parentLessonId?: string | null,
+): CourseItem | undefined {
+  if (!itemId) return undefined;
+  if (itemId.startsWith("module:")) {
+    const moduleId = itemId.slice("module:".length);
+    const module = (modules ?? []).find((item) => item.id === moduleId);
+    return module ? { kind: "module", id: itemId, module } : undefined;
+  }
+  if (itemId.startsWith("material:")) {
+    const materialId = itemId.slice("material:".length);
+    if (!parentLessonId) return undefined;
+    for (const module of modules ?? []) {
+      for (const entry of moduleOutline(module)) {
+        if (entry.kind !== "lesson" || entry.lesson.id !== parentLessonId) {
+          continue;
+        }
+        const material = lessonMaterials(entry.lesson).find(
+          (item) => item.id === materialId,
+        );
+        return {
+          kind: "material",
+          id: itemId,
+          module,
+          lesson: entry.lesson,
+          materialId,
+          material,
+        };
+      }
+    }
+    return undefined;
+  }
+  for (const module of modules ?? []) {
+    for (const entry of moduleOutline(module)) {
+      const id = outlineItemId(entry);
+      if (id !== itemId) continue;
+      if (entry.kind === "lesson") {
+        return { kind: "lesson", id, module, lesson: entry.lesson };
+      }
+      return { kind: "exam", id, module, exam: entry.exam };
+    }
   }
   return undefined;
 }
 
 export function outlineItemExists(
-  module?: ResponseCurriculumModuleDto | null,
+  modules?: ResponseCurriculumModuleDto[] | null,
   itemId?: string,
+  parentLessonId?: string | null,
 ) {
-  if (!module || !itemId) return false;
-  for (const entry of moduleOutline(module)) {
-    if (entry.kind === "lesson") {
-      if (itemId === `lesson:${entry.lesson.id}`) return true;
-      for (const material of lessonMaterials(entry.lesson)) {
-        if (itemId === `material:${material.id}`) return true;
-      }
-      continue;
-    }
-    if (itemId === `exam:${entry.exam.id}`) return true;
-  }
-  return false;
+  return !!findCourseItem(modules, itemId, parentLessonId);
+}
+
+export function openAccordionIdForItem(item?: CourseItem | null) {
+  if (!item || item.kind === "module") return undefined;
+  if (item.kind === "exam") return item.id;
+  return `lesson:${item.lesson.id}`;
 }
 
 export function formatShortDate(value?: Date | string | null) {

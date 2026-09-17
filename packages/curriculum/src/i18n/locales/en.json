@@ -206,6 +206,8 @@
     "draftBanner": "This curriculum is still a draft. Publish it when the outline is ready.",
     "versionLabel": "v{{version}}",
     "selectModule": "Select a module to view its lessons.",
+    "selectLesson": "Select a lesson to view its materials.",
+    "selectMaterial": "Select a material to view it.",
     "emptyModule": "No lessons or exams in this module yet.",
     "correctAnswer": "Answer: {{answer}}",
     "loading": "Loading curriculum...",

@@ -206,6 +206,8 @@
     "draftBanner": "هذا المنهج ما زال مسودة. انشره عندما يصبح الهيكل جاهزًا.",
     "versionLabel": "الإصدار {{version}}",
     "selectModule": "اختر وحدة لعرض دروسها.",
+    "selectLesson": "اختر درساً لعرض مواده.",
+    "selectMaterial": "اختر مادة لعرضها.",
     "emptyModule": "لا توجد دروس أو اختبارات في هذه الوحدة بعد.",
     "correctAnswer": "الإجابة: {{answer}}",
     "loading": "جارٍ تحميل المنهج...",

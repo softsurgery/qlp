@@ -1,8 +1,13 @@
 import React from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Info, Loader2, Menu, Pencil } from "lucide-react";
-import { useApp, useBreadcrumb, useUI } from "@qlp/contexts";
+import {
+  useApp,
+  useBreadcrumb,
+  useUI,
+  type BreadcrumbRoute,
+} from "@qlp/contexts";
 import {
   Button,
   Sheet,
@@ -13,14 +18,16 @@ import {
   useMediaQuery,
 } from "@qlp/ui";
 import { useCurriculum } from "../../hooks/useCurriculum";
-import { useCurriculumModuleLessonMaterials } from "../../hooks/useCurriculumModuleLessonMaterials";
+import { useCurriculumLessonMaterials } from "../../hooks/useCurriculumLessonMaterials";
 import { useCurriculumModules } from "../../hooks/useCurriculumModules";
 import { CourseAside } from "./viewer/CourseAside";
+import { CourseContent } from "./viewer/CourseContent";
 import { CourseNav } from "./viewer/CourseNav";
-import { ModuleOutline } from "./viewer/ModuleOutline";
 import {
-  firstOutlineItemId,
+  findCourseItem,
   latestById,
+  moduleItemId,
+  openAccordionIdForItem,
   outlineItemExists,
   sortByOrder,
 } from "./viewer/utils";
@@ -43,6 +50,7 @@ export function CurriculumViewer({
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setShowSidebar, clearShowSidebar } = useUI();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { pathname } = useLocation();
   const isCompact = useMediaQuery("(max-width: 1023px)");
   const isNarrow = useMediaQuery("(max-width: 1279px)");
   const [navOpen, setNavOpen] = React.useState(false);
@@ -64,48 +72,79 @@ export function CurriculumViewer({
     [loadedModules],
   );
 
-  const selectedModuleId = searchParams.get("module") || modules[0]?.id;
+  const requestedItemId = searchParams.get("item") || undefined;
+  const parentLessonId = searchParams.get("lesson") || undefined;
+  const selectedItemId =
+    requestedItemId &&
+    outlineItemExists(modules, requestedItemId, parentLessonId)
+      ? requestedItemId
+      : undefined;
+  const selectedItem = findCourseItem(modules, selectedItemId, parentLessonId);
+  const openAccordionId = openAccordionIdForItem(selectedItem);
+
+  const { materials, isMaterialsPending } = useCurriculumLessonMaterials({
+    lessonId:
+      selectedItem?.kind === "lesson" || selectedItem?.kind === "material"
+        ? selectedItem.lesson.id
+        : undefined,
+    enabled:
+      selectedItem?.kind === "lesson" || selectedItem?.kind === "material",
+  });
+
   const selectedModule =
-    modules.find((module) => module.id === selectedModuleId) ?? modules[0];
-  const selectedIndex = selectedModule
-    ? modules.findIndex((module) => module.id === selectedModule.id)
-    : -1;
+    selectedItem?.kind === "module" ? selectedItem.module : undefined;
+  const selectedLesson =
+    selectedItem?.kind === "lesson"
+      ? { ...selectedItem.lesson, materials }
+      : undefined;
+  const selectedMaterial =
+    selectedItem?.kind === "material"
+      ? materials.find((item) => item.id === selectedItem.materialId) ||
+        selectedItem.material
+      : undefined;
+  const selectedExam =
+    selectedItem?.kind === "exam" ? selectedItem.exam : undefined;
 
-  const { lessons, isLessonsPending, isMaterialsPending } =
-    useCurriculumModuleLessonMaterials({
-      moduleId: selectedModule?.id,
-      enabled: !!selectedModule?.id,
+  const itemHref = React.useCallback(
+    (itemId?: string, lessonId?: string) => {
+      const next = new URLSearchParams(searchParams);
+      next.delete("module");
+      if (itemId) next.set("item", itemId);
+      else next.delete("item");
+      if (lessonId) next.set("lesson", lessonId);
+      else next.delete("lesson");
+      const query = next.toString();
+      return query ? `${pathname}?${query}` : pathname;
+    },
+    [pathname, searchParams],
+  );
+
+  const viewerCrumbs = React.useMemo((): BreadcrumbRoute[] => {
+    if (!curriculum) return [];
+    const crumbs: BreadcrumbRoute[] = [
+      { title: curriculum.title, href: itemHref() },
+    ];
+    if (!selectedItem) return crumbs;
+    crumbs.push({
+      title: selectedItem.module.title,
+      href: itemHref(moduleItemId(selectedItem.module.id)),
     });
-
-  const selectedModuleWithLessons = React.useMemo(() => {
-    if (!selectedModule) return undefined;
-    return {
-      ...selectedModule,
-      lessons: isLessonsPending ? selectedModule.lessons : lessons,
-    };
-  }, [isLessonsPending, lessons, selectedModule]);
-
-  const [activeItemId, setActiveItemId] = React.useState<string | undefined>();
-
-  React.useEffect(() => {
-    setActiveItemId(firstOutlineItemId(selectedModuleWithLessons));
-  }, [selectedModuleWithLessons?.id]);
-
-  React.useEffect(() => {
-    if (isLessonsPending || isMaterialsPending || !selectedModuleWithLessons) {
-      return;
+    if (selectedItem.kind === "lesson" || selectedItem.kind === "material") {
+      crumbs.push({
+        title: selectedItem.lesson.title,
+        href: itemHref(`lesson:${selectedItem.lesson.id}`),
+      });
     }
-    setActiveItemId((current) => {
-      if (current && outlineItemExists(selectedModuleWithLessons, current)) {
-        return current;
-      }
-      return firstOutlineItemId(selectedModuleWithLessons);
-    });
-  }, [
-    isLessonsPending,
-    isMaterialsPending,
-    selectedModuleWithLessons,
-  ]);
+    if (selectedItem.kind === "material") {
+      crumbs.push({
+        title: selectedMaterial?.title || selectedItem.material?.title || "",
+      });
+    }
+    if (selectedItem.kind === "exam") {
+      crumbs.push({ title: selectedItem.exam.title });
+    }
+    return crumbs.filter((crumb) => crumb.title);
+  }, [curriculum, itemHref, selectedItem, selectedMaterial]);
 
   React.useEffect(() => {
     setShowSidebar?.(false);
@@ -116,26 +155,31 @@ export function CurriculumViewer({
 
   React.useEffect(() => {
     if (!setRoutes || !curriculum) return;
-    setRoutes([
+    const routes: BreadcrumbRoute[] = [
       { title: t("title"), href: "/curriculum" },
-      { title: curriculum.title },
-    ]);
+      ...viewerCrumbs,
+    ];
+    setRoutes(routes);
     return () => {
       clearRoutes?.();
     };
-  }, [clearRoutes, curriculum, setRoutes, t]);
+  }, [clearRoutes, curriculum, setRoutes, t, viewerCrumbs]);
 
-  const selectModule = React.useCallback(
-    (moduleId: string) => {
+  const selectItem = React.useCallback(
+    (itemId?: string, lessonId?: string, closeNav = true) => {
       setSearchParams(
         (prev) => {
           const next = new URLSearchParams(prev);
-          next.set("module", moduleId);
+          if (itemId) next.set("item", itemId);
+          else next.delete("item");
+          next.delete("module");
+          if (lessonId) next.set("lesson", lessonId);
+          else next.delete("lesson");
           return next;
         },
         { replace: true },
       );
-      setNavOpen(false);
+      if (closeNav) setNavOpen(false);
     },
     [setSearchParams],
   );
@@ -172,8 +216,9 @@ export function CurriculumViewer({
       title={curriculum.title}
       description={curriculum.description}
       modules={modules}
-      selectedModuleId={selectedModule?.id}
-      onSelectModule={selectModule}
+      selectedItemId={selectedItemId}
+      openAccordionId={openAccordionId}
+      onSelectItem={selectItem}
     />
   );
 
@@ -250,18 +295,22 @@ export function CurriculumViewer({
                   </Button>
                 ) : null}
               </div>
-            ) : selectedModuleWithLessons ? (
-              <ModuleOutline
-                module={selectedModuleWithLessons}
-                moduleIndex={Math.max(selectedIndex, 0)}
-                revealAnswers={revealAnswers}
-                activeItemId={activeItemId}
-                onActiveItemChange={setActiveItemId}
-              />
             ) : (
-              <p className="p-8 text-center text-sm text-muted-foreground">
-                {t("viewer.selectModule")}
-              </p>
+              <CourseContent
+                curriculumTitle={curriculum.title}
+                modules={modules}
+                module={selectedModule}
+                lesson={selectedLesson}
+                material={selectedMaterial}
+                exam={selectedExam}
+                isMaterialsPending={
+                  (selectedItem?.kind === "lesson" ||
+                    selectedItem?.kind === "material") &&
+                  isMaterialsPending
+                }
+                revealAnswers={revealAnswers}
+                onSelectItem={selectItem}
+              />
             )}
           </main>
         </div>
