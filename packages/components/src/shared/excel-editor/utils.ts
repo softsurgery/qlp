@@ -9,6 +9,7 @@ import {
   type IStyleData,
   type IWorkbookData,
 } from "@univerjs/presets";
+import { isDefaultExcelInk, isDefaultExcelPaper } from "./theme";
 
 export type ExcelEditorRange = {
   startRow: number;
@@ -158,7 +159,9 @@ function documentFromFortune(
   return {
     format: "univer",
     snapshot: sheetsToSnapshot(named),
-    range: range ? normalizeRange(range) : inferRangeFromCells(named.flatMap((sheet) => sheet.cells)),
+    range: range
+      ? normalizeRange(range)
+      : inferRangeFromCells(named.flatMap((sheet) => sheet.cells)),
   };
 }
 
@@ -342,11 +345,16 @@ function emptySnapshot(): IWorkbookData {
 function withDefaultWrap(snapshot: IWorkbookData): IWorkbookData {
   return {
     ...snapshot,
-    defaultStyle: { ...WRAP_STYLE, ...(snapshot.defaultStyle as IStyleData | undefined) },
+    defaultStyle: {
+      ...WRAP_STYLE,
+      ...(snapshot.defaultStyle as IStyleData | undefined),
+    },
   };
 }
 
-function fortuneToEditorCell(cell: FortuneCell): ExcelEditorCell & { row: number; col: number } {
+function fortuneToEditorCell(
+  cell: FortuneCell,
+): ExcelEditorCell & { row: number; col: number } {
   const raw = cell.v;
   const object =
     raw && typeof raw === "object" ? (raw as Record<string, unknown>) : null;
@@ -365,7 +373,8 @@ function fortuneToEditorCell(cell: FortuneCell): ExcelEditorCell & { row: number
 
 function styleToUniver(cell: ExcelEditorCell): IStyleData {
   const style: IStyleData = { ...WRAP_STYLE };
-  if (cell.color && cell.color !== "transparent") style.cl = { rgb: cell.color };
+  if (cell.color && cell.color !== "transparent")
+    style.cl = { rgb: cell.color };
   if (cell.background && cell.background !== "transparent") {
     style.bg = { rgb: cell.background };
   }
@@ -387,10 +396,11 @@ function styleToUniver(cell: ExcelEditorCell): IStyleData {
 
 function styleFromUniver(style?: IStyleData | null): ExcelEditorCellStyle {
   if (!style) return { wrap: true };
-  const color = style.cl?.rgb ?? undefined;
+  const color = style.cl?.rgb;
   const background = style.bg?.rgb ?? undefined;
   return {
-    color: color && color !== "transparent" ? color : undefined,
+    color:
+      typeof color === "string" && color !== "transparent" ? color : undefined,
     background:
       background && background !== "transparent" ? background : undefined,
     bold: style.bl === BooleanNumber.TRUE,
@@ -420,7 +430,10 @@ function styleFromUniver(style?: IStyleData | null): ExcelEditorCellStyle {
 }
 
 function sheetsToSnapshot(
-  sheets: { name: string; cells: Array<ExcelEditorCell & { row: number; col: number }> }[],
+  sheets: {
+    name: string;
+    cells: Array<ExcelEditorCell & { row: number; col: number }>;
+  }[],
 ): IWorkbookData {
   const workbook = emptySnapshot();
   const named = sheets.length > 0 ? sheets : [{ name: "Sheet1", cells: [] }];
@@ -437,7 +450,9 @@ function sheetsToSnapshot(
       const row = cellData[cell.row] ?? {};
       const next: ICellData = { s: styleToUniver(cell) };
       if (cell.formula) {
-        next.f = cell.formula.startsWith("=") ? cell.formula : `=${cell.formula}`;
+        next.f = cell.formula.startsWith("=")
+          ? cell.formula
+          : `=${cell.formula}`;
       }
       if (cell.text !== "") next.v = cell.text;
       row[cell.col] = next;
@@ -532,7 +547,9 @@ function colorFromAttrs(attrs: string, theme: string[]) {
   const base = theme[index];
   if (!base) return undefined;
   const tint = Number(attrs.match(/\btint="([^"]+)"/i)?.[1] ?? 0);
-  return Number.isFinite(tint) && tint !== 0 ? applyTint(base, tint) : `#${base}`;
+  return Number.isFinite(tint) && tint !== 0
+    ? applyTint(base, tint)
+    : `#${base}`;
 }
 
 function parseXmlAttrs(tag: string) {
@@ -544,39 +561,45 @@ function parseXmlAttrs(tag: string) {
 }
 
 function parseFonts(xml: string, theme: string[]): ExcelEditorCellStyle[] {
-  const block = xml.match(/<(?:\w+:)?fonts\b[^>]*>([\s\S]*?)<\/(?:\w+:)?fonts>/i)?.[1] ?? "";
-  return [...block.matchAll(/<(?:\w+:)?font\b([^>]*)(?:\/>|>([\s\S]*?)<\/(?:\w+:)?font>)/gi)].map(
-    (match) => {
-      const inner = match[2] ?? "";
-      const colorTag = inner.match(/<(?:\w+:)?color\b([^>]*)\/?>/i)?.[1] ?? "";
-      const size = Number(inner.match(/<(?:\w+:)?sz\b[^>]*val="([^"]+)"/i)?.[1]);
-      const name = inner.match(/<(?:\w+:)?name\b[^>]*val="([^"]+)"/i)?.[1];
-      return {
-        bold: /<(?:\w+:)?b\b/i.test(inner),
-        italic: /<(?:\w+:)?i\b/i.test(inner),
-        underline: /<(?:\w+:)?u\b/i.test(inner),
-        strikethrough: /<(?:\w+:)?strike\b/i.test(inner),
-        color: colorFromAttrs(colorTag, theme),
-        fontSize: Number.isFinite(size) ? size : undefined,
-        fontFamily: name,
-      };
-    },
-  );
+  const block =
+    xml.match(/<(?:\w+:)?fonts\b[^>]*>([\s\S]*?)<\/(?:\w+:)?fonts>/i)?.[1] ??
+    "";
+  return [
+    ...block.matchAll(
+      /<(?:\w+:)?font\b([^>]*)(?:\/>|>([\s\S]*?)<\/(?:\w+:)?font>)/gi,
+    ),
+  ].map((match) => {
+    const inner = match[2] ?? "";
+    const colorTag = inner.match(/<(?:\w+:)?color\b([^>]*)\/?>/i)?.[1] ?? "";
+    const size = Number(inner.match(/<(?:\w+:)?sz\b[^>]*val="([^"]+)"/i)?.[1]);
+    const name = inner.match(/<(?:\w+:)?name\b[^>]*val="([^"]+)"/i)?.[1];
+    return {
+      bold: /<(?:\w+:)?b\b/i.test(inner),
+      italic: /<(?:\w+:)?i\b/i.test(inner),
+      underline: /<(?:\w+:)?u\b/i.test(inner),
+      strikethrough: /<(?:\w+:)?strike\b/i.test(inner),
+      color: colorFromAttrs(colorTag, theme),
+      fontSize: Number.isFinite(size) ? size : undefined,
+      fontFamily: name,
+    };
+  });
 }
 
 function parseFills(xml: string, theme: string[]): Array<string | undefined> {
-  const block = xml.match(/<(?:\w+:)?fills\b[^>]*>([\s\S]*?)<\/(?:\w+:)?fills>/i)?.[1] ?? "";
-  return [...block.matchAll(/<(?:\w+:)?fill\b[^>]*>([\s\S]*?)<\/(?:\w+:)?fill>/gi)].map(
-    (match) => {
-      const inner = match[1];
-      if (!/patternType="solid"/i.test(inner)) return undefined;
-      const colorTag =
-        inner.match(/<(?:\w+:)?fgColor\b([^>]*)\/?>/i)?.[1] ??
-        inner.match(/<(?:\w+:)?bgColor\b([^>]*)\/?>/i)?.[1] ??
-        "";
-      return colorFromAttrs(colorTag, theme);
-    },
-  );
+  const block =
+    xml.match(/<(?:\w+:)?fills\b[^>]*>([\s\S]*?)<\/(?:\w+:)?fills>/i)?.[1] ??
+    "";
+  return [
+    ...block.matchAll(/<(?:\w+:)?fill\b[^>]*>([\s\S]*?)<\/(?:\w+:)?fill>/gi),
+  ].map((match) => {
+    const inner = match[1];
+    if (!/patternType="solid"/i.test(inner)) return undefined;
+    const colorTag =
+      inner.match(/<(?:\w+:)?fgColor\b([^>]*)\/?>/i)?.[1] ??
+      inner.match(/<(?:\w+:)?bgColor\b([^>]*)\/?>/i)?.[1] ??
+      "";
+    return colorFromAttrs(colorTag, theme);
+  });
 }
 
 function parseCellXfs(xml: string): Array<{
@@ -590,36 +613,43 @@ function parseCellXfs(xml: string): Array<{
   wrap: boolean;
 }> {
   const block =
-    xml.match(/<(?:\w+:)?cellXfs\b[^>]*>([\s\S]*?)<\/(?:\w+:)?cellXfs>/i)?.[1] ?? "";
-  return [...block.matchAll(/<(?:\w+:)?xf\b([^>]*)(?:\/>|>([\s\S]*?)<\/(?:\w+:)?xf>)/gi)].map(
-    (match) => {
-      const attrs = parseXmlAttrs(match[1] ?? "");
-      const alignment = match[2]?.match(/<(?:\w+:)?alignment\b([^>]*)\/?>/i)?.[1] ?? "";
-      const alignAttrs = parseXmlAttrs(alignment);
-      const horizontal = alignAttrs.horizontal;
-      const vertical = alignAttrs.vertical;
-      return {
-        fontId: Number(attrs.fontid ?? 0),
-        fillId: Number(attrs.fillid ?? 0),
-        applyFont: attrs.applyfont === "1",
-        applyFill: attrs.applyfill === "1",
-        applyAlignment: attrs.applyalignment === "1",
-        align:
-          horizontal === "left" || horizontal === "center" || horizontal === "right"
-            ? horizontal
-            : undefined,
-        verticalAlign:
-          vertical === "top"
-            ? "top"
-            : vertical === "center"
-              ? "middle"
-              : vertical === "bottom"
-                ? "bottom"
-                : undefined,
-        wrap: alignAttrs.wraptext === "1",
-      };
-    },
-  );
+    xml.match(
+      /<(?:\w+:)?cellXfs\b[^>]*>([\s\S]*?)<\/(?:\w+:)?cellXfs>/i,
+    )?.[1] ?? "";
+  return [
+    ...block.matchAll(
+      /<(?:\w+:)?xf\b([^>]*)(?:\/>|>([\s\S]*?)<\/(?:\w+:)?xf>)/gi,
+    ),
+  ].map((match) => {
+    const attrs = parseXmlAttrs(match[1] ?? "");
+    const alignment =
+      match[2]?.match(/<(?:\w+:)?alignment\b([^>]*)\/?>/i)?.[1] ?? "";
+    const alignAttrs = parseXmlAttrs(alignment);
+    const horizontal = alignAttrs.horizontal;
+    const vertical = alignAttrs.vertical;
+    return {
+      fontId: Number(attrs.fontid ?? 0),
+      fillId: Number(attrs.fillid ?? 0),
+      applyFont: attrs.applyfont === "1",
+      applyFill: attrs.applyfill === "1",
+      applyAlignment: attrs.applyalignment === "1",
+      align:
+        horizontal === "left" ||
+        horizontal === "center" ||
+        horizontal === "right"
+          ? horizontal
+          : undefined,
+      verticalAlign:
+        vertical === "top"
+          ? "top"
+          : vertical === "center"
+            ? "middle"
+            : vertical === "bottom"
+              ? "bottom"
+              : undefined,
+      wrap: alignAttrs.wraptext === "1",
+    };
+  });
 }
 
 function styleFromXf(
@@ -633,7 +663,7 @@ function styleFromXf(
   const font = fonts[xf.fontId] ?? {};
   const background = fills[xf.fillId];
   return {
-    ...((xf.applyFont || xf.fontId > 0) ? font : {}),
+    ...(xf.applyFont || xf.fontId > 0 ? font : {}),
     background,
     align: xf.align,
     verticalAlign: xf.verticalAlign,
@@ -728,22 +758,65 @@ function extractRangeCells(bytes: Uint8Array, range: ExcelEditorRange) {
 
 function cellHasVisibleStyle(cell: ExcelEditorCell) {
   return Boolean(
-    cell.background ||
-      cell.color ||
-      cell.bold ||
-      cell.italic ||
-      cell.underline ||
-      cell.strikethrough,
+    !isDefaultExcelPaper(cell.background) ||
+    !isDefaultExcelInk(cell.color) ||
+    cell.bold ||
+    cell.italic ||
+    cell.underline ||
+    cell.strikethrough,
   );
 }
 
-export function excelEditorToGrid(content?: string | null): ExcelEditorCell[][] {
+type WorksheetSnapshot = NonNullable<IWorkbookData["sheets"][string]>;
+
+const UNIVER_DEFAULT_COLUMN_WIDTH = 88;
+const UNIVER_DEFAULT_ROW_HEIGHT = 24;
+
+export type ExcelEditorPreviewLayout = {
+  grid: ExcelEditorCell[][];
+  columnWidthPercents: number[];
+  rowHeightPercents: number[];
+  totalHeightPx: number;
+};
+
+function sheetColumnWidth(sheet: WorksheetSnapshot, col: number) {
+  const width = sheet.columnData?.[col]?.w;
+  if (width != null && width > 0) return width;
+  if (sheet.defaultColumnWidth != null && sheet.defaultColumnWidth > 0) {
+    return sheet.defaultColumnWidth;
+  }
+  return UNIVER_DEFAULT_COLUMN_WIDTH;
+}
+
+function sheetRowHeight(sheet: WorksheetSnapshot, row: number) {
+  const height = sheet.rowData?.[row]?.h;
+  if (height != null && height > 0) return height;
+  if (sheet.defaultRowHeight != null && sheet.defaultRowHeight > 0) {
+    return sheet.defaultRowHeight;
+  }
+  return UNIVER_DEFAULT_ROW_HEIGHT;
+}
+
+function sizePercents(values: number[]): number[] {
+  const total = values.reduce((sum, value) => sum + value, 0);
+  if (total <= 0) {
+    const share = 100 / Math.max(values.length, 1);
+    return values.map(() => share);
+  }
+  return values.map((value) => (value / total) * 100);
+}
+
+export function excelEditorPreviewLayout(
+  content?: string | null,
+): ExcelEditorPreviewLayout | null {
   const document = parseExcelEditor(content);
   const snapshot = document.snapshot;
   const range = document.range;
   const sheetId = snapshot.sheetOrder?.[0];
-  const sheet = sheetId ? snapshot.sheets[sheetId] : Object.values(snapshot.sheets)[0];
-  if (!sheet?.cellData) return [];
+  const sheet = sheetId
+    ? snapshot.sheets[sheetId]
+    : Object.values(snapshot.sheets)[0];
+  if (!sheet?.cellData) return null;
   const cells: (ExcelEditorCell & { row: number; col: number })[] = [];
   for (const [rowKey, row] of Object.entries(sheet.cellData)) {
     const rowIndex = Number(rowKey);
@@ -763,7 +836,7 @@ export function excelEditorToGrid(content?: string | null): ExcelEditorCell[][] 
       cells.push({ row: rowIndex, col: colIndex, ...value });
     }
   }
-  if (cells.length === 0) return [];
+  if (cells.length === 0) return null;
   const minRow = Math.min(...cells.map((cell) => cell.row));
   const maxRow = Math.max(...cells.map((cell) => cell.row));
   const minCol = Math.min(...cells.map((cell) => cell.col));
@@ -776,7 +849,25 @@ export function excelEditorToGrid(content?: string | null): ExcelEditorCell[][] 
     const { row: _row, col: _col, ...value } = cell;
     grid[cell.row - minRow][cell.col - minCol] = value;
   }
-  return grid;
+  const columnWidths = Array.from(
+    { length: maxCol - minCol + 1 },
+    (_, offset) => sheetColumnWidth(sheet, minCol + offset),
+  );
+  const rowHeights = Array.from({ length: maxRow - minRow + 1 }, (_, offset) =>
+    sheetRowHeight(sheet, minRow + offset),
+  );
+  return {
+    grid,
+    columnWidthPercents: sizePercents(columnWidths),
+    rowHeightPercents: sizePercents(rowHeights),
+    totalHeightPx: rowHeights.reduce((sum, height) => sum + height, 0),
+  };
+}
+
+export function excelEditorToGrid(
+  content?: string | null,
+): ExcelEditorCell[][] {
+  return excelEditorPreviewLayout(content)?.grid ?? [];
 }
 
 export function hasExcelEditorContent(content?: string | null) {

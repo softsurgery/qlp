@@ -1,14 +1,15 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React from "react";
 import { createPortal } from "react-dom";
 import { Maximize, Minimize } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Button, Input, Label, cn, useTheme } from "@qlp/ui";
+import { Button, cn, useTheme } from "@qlp/ui";
 import type { IWorkbookData } from "@univerjs/presets";
 import { ExcelPreview } from "./ExcelPreview";
+import { ExcelFragmentFields } from "./ExcelFragmentFields";
 import { UniverWorkbook } from "./UniverWorkbook";
+import "./excel-editor.css";
 import {
   colToLetter,
-  letterToCol,
   normalizeRange,
   parseExcelEditor,
   stringifyExcelEditor,
@@ -22,6 +23,8 @@ export interface ExcelEditorProps {
   disabled?: boolean;
   readOnly?: boolean;
   onChange?: (content: string) => void;
+  height?: string;
+  enableFragmentation?: boolean;
 }
 
 export function ExcelEditor({
@@ -30,17 +33,26 @@ export function ExcelEditor({
   disabled,
   readOnly,
   onChange,
+  height = "680px",
+  enableFragmentation,
 }: ExcelEditorProps) {
   if (readOnly) {
-    return <ExcelPreview className={className} content={content} />;
+    return (
+      <ExcelPreview
+        className={cn("w-full min-w-0", className)}
+        content={content}
+      />
+    );
   }
 
   return (
     <ExcelEditorWorkspace
       className={className}
+      height={height}
       content={content}
       disabled={disabled}
       onChange={onChange}
+      enableFragmentation={enableFragmentation}
     />
   );
 }
@@ -50,6 +62,8 @@ function ExcelEditorWorkspace({
   content,
   disabled,
   onChange,
+  height,
+  enableFragmentation,
 }: Omit<ExcelEditorProps, "readOnly">) {
   const { t, i18n } = useTranslation("excel-editor");
   const { resolvedTheme } = useTheme();
@@ -72,7 +86,9 @@ function ExcelEditorWorkspace({
     String(parsedRef.current.range.endRow + 1),
   );
   const [viewerKey, setViewerKey] = React.useState(0);
-  const lastSerializedRef = useRef(stringifyExcelEditor(parsedRef.current));
+  const lastSerializedRef = React.useRef(
+    stringifyExcelEditor(parsedRef.current),
+  );
 
   const syncRangeFields = (next: ExcelEditorRange) => {
     setRange(next);
@@ -97,10 +113,10 @@ function ExcelEditorWorkspace({
     onChange?.(serialized);
   };
 
-  const commitRef = useRef(commit);
+  const commitRef = React.useRef(commit);
   commitRef.current = commit;
 
-  const handleSnapshot = useCallback((snapshot: IWorkbookData) => {
+  const handleSnapshot = React.useCallback((snapshot: IWorkbookData) => {
     commitRef.current({ snapshot });
   }, []);
 
@@ -108,7 +124,7 @@ function ExcelEditorWorkspace({
     commit({ range: { ...range, ...patch } });
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     const next = parseExcelEditor(content);
     const serialized = stringifyExcelEditor(next);
     if (serialized === lastSerializedRef.current) return;
@@ -122,7 +138,7 @@ function ExcelEditorWorkspace({
     setIsFullscreen((open) => !open);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isFullscreen) return;
 
     const previousOverflow = document.body.style.overflow;
@@ -143,102 +159,25 @@ function ExcelEditorWorkspace({
   const editor = (
     <div
       className={cn(
-        "flex h-full min-h-0 w-full flex-col overflow-hidden border bg-background",
+        "flex h-full min-h-0 w-full flex-col overflow-hidden border bg-background excel-editor-shell",
         className,
       )}
     >
       <div className="flex shrink-0 flex-wrap items-center gap-2 border-b bg-muted/40 px-2 py-1">
-        {editable ? (
-          <>
-            <div className="flex items-center gap-1">
-              <Label
-                htmlFor={`${fieldId}-start-col`}
-                className="text-xs font-normal text-muted-foreground"
-              >
-                {t("startCol")}
-              </Label>
-              <Input
-                id={`${fieldId}-start-col`}
-                value={startColText}
-                disabled={disabled}
-                className="h-7 w-14 px-1.5 text-xs uppercase"
-                onChange={(event) => {
-                  const value = event.target.value.toUpperCase();
-                  setStartColText(value);
-                  const index = letterToCol(value);
-                  if (index != null) commitRange({ startCol: index });
-                }}
-              />
-            </div>
-            <div className="flex items-center gap-1">
-              <Label
-                htmlFor={`${fieldId}-end-col`}
-                className="text-xs font-normal text-muted-foreground"
-              >
-                {t("endCol")}
-              </Label>
-              <Input
-                id={`${fieldId}-end-col`}
-                value={endColText}
-                disabled={disabled}
-                className="h-7 w-14 px-1.5 text-xs uppercase"
-                onChange={(event) => {
-                  const value = event.target.value.toUpperCase();
-                  setEndColText(value);
-                  const index = letterToCol(value);
-                  if (index != null) commitRange({ endCol: index });
-                }}
-              />
-            </div>
-            <div className="flex items-center gap-1">
-              <Label
-                htmlFor={`${fieldId}-start-row`}
-                className="text-xs font-normal text-muted-foreground"
-              >
-                {t("startRow")}
-              </Label>
-              <Input
-                id={`${fieldId}-start-row`}
-                type="number"
-                min={1}
-                value={startRowText}
-                disabled={disabled}
-                className="h-7 w-16 px-1.5 text-xs"
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setStartRowText(value);
-                  const row = Number(value);
-                  if (Number.isInteger(row) && row >= 1) {
-                    commitRange({ startRow: row - 1 });
-                  }
-                }}
-              />
-            </div>
-            <div className="flex items-center gap-1">
-              <Label
-                htmlFor={`${fieldId}-end-row`}
-                className="text-xs font-normal text-muted-foreground"
-              >
-                {t("endRow")}
-              </Label>
-              <Input
-                id={`${fieldId}-end-row`}
-                type="number"
-                min={1}
-                value={endRowText}
-                disabled={disabled}
-                className="h-7 w-16 px-1.5 text-xs"
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setEndRowText(value);
-                  const row = Number(value);
-                  if (Number.isInteger(row) && row >= 1) {
-                    commitRange({ endRow: row - 1 });
-                  }
-                }}
-              />
-            </div>
-          </>
+        {enableFragmentation && editable ? (
+          <ExcelFragmentFields
+            fieldId={fieldId}
+            startColText={startColText}
+            endColText={endColText}
+            startRowText={startRowText}
+            endRowText={endRowText}
+            disabled={disabled}
+            setStartColText={setStartColText}
+            setEndColText={setEndColText}
+            setStartRowText={setStartRowText}
+            setEndRowText={setEndRowText}
+            commitRange={commitRange}
+          />
         ) : null}
         <Button
           type="button"
@@ -273,16 +212,16 @@ function ExcelEditorWorkspace({
   );
 
   return (
-    <>
+    <React.Fragment>
       {isFullscreen ? (
         <div
-          className={cn(
-            "h-[480px] w-full rounded-md border bg-muted/20",
-            className,
-          )}
+          className={cn("w-full rounded-md border bg-muted/20", className)}
+          style={{ height }}
         />
       ) : (
-        <div className={cn("h-[480px] w-full", className)}>{editor}</div>
+        <div className={cn("w-full", className)} style={{ height }}>
+          {editor}
+        </div>
       )}
       {isFullscreen
         ? createPortal(
@@ -292,6 +231,6 @@ function ExcelEditorWorkspace({
             document.body,
           )
         : null}
-    </>
+    </React.Fragment>
   );
 }

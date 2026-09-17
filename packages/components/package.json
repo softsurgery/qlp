@@ -25,6 +25,7 @@
     "@qlp/contexts": "workspace:*",
     "@qlp/form-builder": "workspace:*",
     "@qlp/ui": "workspace:*",
+    "@univerjs/engine-render": "^0.25.1",
     "@univerjs/preset-sheets-core": "^0.25.1",
     "@univerjs/presets": "^0.25.1",
     "fflate": "^0.8.3",

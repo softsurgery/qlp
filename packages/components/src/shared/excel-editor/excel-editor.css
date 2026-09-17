@@ -1,0 +1,43 @@
+.excel-editor-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+.excel-editor-preview [data-slot="table"] {
+  width: 100%;
+  min-width: 100%;
+}
+
+.excel-editor-shell,
+.excel-editor-preview,
+.excel-editor-univer {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease;
+}
+
+.excel-editor-preview [data-slot="table"],
+.excel-editor-preview [data-slot="table-row"],
+.excel-editor-preview [data-slot="table-cell"],
+.excel-editor-preview [data-slot="table-head"] {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease;
+}
+
+.excel-editor-univer {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.excel-editor-univer .univer {
+  height: 100%;
+}
+
+.univer-dark .univer-popup,
+.univer-dark .univer-context-menu,
+.univer-dark [data-radix-popper-content-wrapper] {
+  color: hsl(var(--foreground));
+}
