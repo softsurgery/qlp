@@ -20,9 +20,9 @@ import {
 import { useCurriculum } from "../../hooks/useCurriculum";
 import { useCurriculumLessonMaterials } from "../../hooks/useCurriculumLessonMaterials";
 import { useCurriculumModules } from "../../hooks/useCurriculumModules";
-import { CourseAside } from "./viewer/CourseAside";
-import { CourseContent } from "./viewer/CourseContent";
-import { CourseNav } from "./viewer/CourseNav";
+import { CourseAside } from "./viewer/aside/CourseAside";
+import { CourseContent } from "./viewer/content/CourseContent";
+import { CourseNav } from "./viewer/nav/CourseNav";
 import {
   findCourseItem,
   latestById,

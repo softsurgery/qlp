@@ -8,7 +8,7 @@ import {
 } from "@qlp/api-client";
 import { identifyUser } from "@qlp/lib";
 import { Button, cn } from "@qlp/ui";
-import { formatShortDate, moduleLessons, moduleExams } from "./utils";
+import { formatShortDate, moduleLessons, moduleExams } from "../utils";
 
 interface CourseAsideProps {
   curriculum: ResponseCurriculumDto;

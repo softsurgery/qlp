@@ -1,94 +1,30 @@
-import {
-  Check,
-  ClipboardList,
-} from "lucide-react";
+import { CurriculumStatus, ResponseCurriculumModuleDto } from "@qlp/api-client";
 import { useTranslation } from "react-i18next";
-import {
-  CurriculumStatus,
-  type ResponseCurriculumModuleDto,
-} from "@qlp/api-client";
-import { HtmlContent } from "@qlp/components";
+import { moduleItemId, moduleOutline, outlineItemId } from "../utils";
+import { Check, ClipboardList } from "lucide-react";
 import { cn } from "@qlp/ui";
-import {
-  moduleItemId,
-  moduleOutline,
-  outlineItemId,
-  sortByOrder,
-} from "./utils";
 
-interface CourseNavProps {
-  title: string;
-  description?: string;
-  modules: ResponseCurriculumModuleDto[];
+interface ModuleTreeProps {
+  className?: string;
+  module: ResponseCurriculumModuleDto;
+  index: number;
   selectedItemId?: string;
   openAccordionId?: string;
-  onSelectItem: (itemId: string, parentLessonId?: string, closeNav?: boolean) => void;
+  onSelectItem: (
+    itemId: string,
+    parentLessonId?: string,
+    closeNav?: boolean,
+  ) => void;
 }
 
-export function CourseNav({
-  title,
-  description,
-  modules,
-  selectedItemId,
-  openAccordionId,
-  onSelectItem,
-}: CourseNavProps) {
-  const { t } = useTranslation("curriculum");
-  const ordered = sortByOrder(modules);
-
-  return (
-    <div className="flex h-full min-h-0 flex-col">
-      <div className="border-b px-4 py-5">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          {t("viewer.title")}
-        </p>
-        <h2 className="mt-1 text-lg font-semibold leading-snug">{title}</h2>
-        <HtmlContent html={description} className="mt-2 line-clamp-3 text-xs" />
-      </div>
-
-      <div className="min-h-0 flex-1 overflow-y-auto px-2 py-3">
-        <p className="px-2 pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          {t("viewer.courseMaterial")}
-        </p>
-        {ordered.length === 0 ? (
-          <p className="px-2 py-3 text-sm text-muted-foreground">
-            {t("viewer.noModules")}
-          </p>
-        ) : (
-          <nav
-            className="flex flex-col gap-1"
-            aria-label={t("viewer.courseMaterial")}
-          >
-            {ordered.map((module, index) => (
-              <ModuleTree
-                key={module.id}
-                module={module}
-                index={index}
-                selectedItemId={selectedItemId}
-                openAccordionId={openAccordionId}
-                onSelectItem={onSelectItem}
-              />
-            ))}
-          </nav>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ModuleTree({
+export const ModuleTree = ({
+  className,
   module,
   index,
   selectedItemId,
   openAccordionId,
   onSelectItem,
-}: {
-  module: ResponseCurriculumModuleDto;
-  index: number;
-  selectedItemId?: string;
-  openAccordionId?: string;
-  onSelectItem: (itemId: string, parentLessonId?: string, closeNav?: boolean) => void;
-}) {
+}: ModuleTreeProps) => {
   const { t } = useTranslation("curriculum");
   const outline = moduleOutline(module);
   const moduleSelected = selectedItemId === moduleItemId(module.id);
@@ -98,7 +34,8 @@ function ModuleTree({
       const itemId = outlineItemId(entry);
       if (itemId === selectedItemId || itemId === openAccordionId) return true;
       return (
-        entry.kind === "lesson" && openAccordionId === `lesson:${entry.lesson.id}`
+        entry.kind === "lesson" &&
+        openAccordionId === `lesson:${entry.lesson.id}`
       );
     });
   const published =
@@ -106,7 +43,7 @@ function ModuleTree({
     module.status === "published";
 
   return (
-    <div className="rounded-md">
+    <div className={cn("rounded-md", className)}>
       <button
         type="button"
         onClick={() => onSelectItem(moduleItemId(module.id))}
@@ -182,4 +119,4 @@ function ModuleTree({
       )}
     </div>
   );
-}
+};
