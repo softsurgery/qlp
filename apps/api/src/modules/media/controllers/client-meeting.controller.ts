@@ -24,6 +24,7 @@ import { MediaRoomParticipantService } from '../services/media-room-participant.
 import { CreateMediaRoomDto } from '../dtos/create-media-room.dto';
 import { UpdateMediaRoomDto } from '../dtos/update-media-room.dto';
 import { CreateMediaRoomParticipantDto } from '../dtos/create-media-room-participant.dto';
+import { MediaCalendarQueryDto } from '../dtos/media-calendar-query.dto';
 import { ResponseMediaRoomDto } from '../dtos/response-media-room.dto';
 import { ResponseMediaRoomParticipantDto } from '../dtos/response-media-room-participant.dto';
 import { ResponseMediaRoomSummaryDto } from '../dtos/response-media-room-summary.dto';
@@ -45,6 +46,28 @@ export class ClientMeetingController {
     return req.user.sub;
   }
 
+  @Get('/calendar')
+  @ApiOperation({
+    summary: 'Sessions scheduled in a window',
+    description:
+      'Non-admins see sessions they host plus sessions they were invited to. ' +
+      'Admins see every host by default, or one host via hostId.',
+  })
+  async calendar(
+    @Query() query: MediaCalendarQueryDto,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseMediaRoomDto[]> {
+    return toDtoArray(
+      ResponseMediaRoomDto,
+      await this.mediaService.getCalendar(
+        this.requireUser(req),
+        new Date(query.from),
+        new Date(query.to),
+        query.hostId,
+      ),
+    );
+  }
+
   @Get('/capabilities')
   @ApiOperation({
     summary: 'What the caller may do',
@@ -55,6 +78,15 @@ export class ClientMeetingController {
     @Request() req: AdvancedRequest,
   ): Promise<{ canSchedule: boolean; isAdmin: boolean }> {
     return this.mediaService.getCapabilities(this.requireUser(req));
+  }
+
+  @Get('/mine')
+  @ApiOperation({ summary: 'Sessions the caller hosts or was invited to' })
+  async mine(@Request() req: AdvancedRequest): Promise<ResponseMediaRoomDto[]> {
+    return toDtoArray(
+      ResponseMediaRoomDto,
+      await this.mediaRoomService.findVisibleToUser(this.requireUser(req)),
+    );
   }
 
   @Get('/:id/participants')
