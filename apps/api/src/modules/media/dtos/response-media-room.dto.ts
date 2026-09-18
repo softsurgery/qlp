@@ -55,4 +55,8 @@ export class ResponseMediaRoomDto extends ResponseDtoHelper {
   @ApiProperty({ required: false })
   @Expose()
   curriculumLessonId?: string;
+
+  @ApiProperty({ required: false })
+  @Expose()
+  livekitSid?: string;
 }

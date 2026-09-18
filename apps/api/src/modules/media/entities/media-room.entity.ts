@@ -56,6 +56,9 @@ export class MediaRoomEntity extends EntityHelper {
   @Column({ default: false })
   isRecordingEnabled: boolean;
 
+  @Column({ nullable: true })
+  livekitSid?: string;
+
   @Index()
   @Column({ nullable: true })
   curriculumLessonId?: string;

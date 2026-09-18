@@ -44,6 +44,10 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
     return room;
   }
 
+  findByRoomName(roomName: string): Promise<MediaRoomEntity | null> {
+    return this.mediaRoomRepository.findOne({ where: { roomName } });
+  }
+
   private isPrivilegedUser(user?: AbstractUserEntity | null): boolean {
     return Boolean(user?.roleId && MEDIA_PRIVILEGED_ROLE_IDS.includes(user.roleId));
   }
@@ -189,6 +193,29 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
     }
 
     return (await this.mediaRoomRepository.update(roomId, payload)) ?? room;
+  }
+
+  @Transactional()
+  async markStarted(
+    roomId: string,
+    livekitSid?: string,
+    startedAt?: Date,
+  ): Promise<MediaRoomEntity | null> {
+    const room = await this.findRoomOrFail(roomId);
+    if (room.status === MediaRoomStatus.FINISHED) {
+      return room;
+    }
+
+    const payload: QueryDeepPartialEntity<MediaRoomEntity> = {};
+    if (room.status !== MediaRoomStatus.ACTIVE) payload.status = MediaRoomStatus.ACTIVE;
+    if (!room.startedAt) payload.startedAt = startedAt ?? new Date();
+    if (livekitSid && !room.livekitSid) payload.livekitSid = livekitSid;
+
+    if (Object.keys(payload).length === 0) {
+      return room;
+    }
+
+    return this.mediaRoomRepository.update(roomId, payload);
   }
 
   @Transactional()
