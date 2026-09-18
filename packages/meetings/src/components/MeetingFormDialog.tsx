@@ -5,8 +5,14 @@ import {
   Button,
   Input,
   Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@qlp/ui";
 import type { ResponseMediaRoomDto } from "@qlp/api-client";
+import type { MeetingUser } from "../types";
 
 export interface MeetingFormValues {
   title: string;
@@ -20,6 +26,8 @@ export interface MeetingFormValues {
 interface MeetingFormProps {
   meeting?: ResponseMediaRoomDto;
   defaultStart?: Date;
+  hostOptions?: MeetingUser[];
+  isAdmin?: boolean;
   isPending?: boolean;
   onSubmit: (values: MeetingFormValues) => void;
   onCancel: () => void;
@@ -35,6 +43,8 @@ const toLocalInput = (value?: string | Date | null) => {
 export function MeetingForm({
   meeting,
   defaultStart,
+  hostOptions,
+  isAdmin,
   isPending,
   onSubmit,
   onCancel,
@@ -109,6 +119,29 @@ export function MeetingForm({
           onChange={(e) => set("description", e.target.value)}
         />
       </div>
+
+      {isAdmin && hostOptions && (
+        <div className="space-y-2">
+          <Label>{t("form.host")}</Label>
+          <Select
+            value={values.hostId ?? ""}
+            onValueChange={(value) => set("hostId", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={t("form.hostPlaceholder")} />
+            </SelectTrigger>
+            <SelectContent>
+              {hostOptions.map((user) => (
+                <SelectItem key={user.id} value={user.id as string}>
+                  {[user.firstName, user.lastName].filter(Boolean).join(" ") ||
+                    user.username}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">{t("form.hostHint")}</p>
+        </div>
+      )}
 
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-2">

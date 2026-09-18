@@ -132,6 +132,8 @@ export function MeetingsManager({
       <MeetingForm
         meeting={editing}
         defaultStart={draftStart}
+        hostOptions={hostOptions}
+        isAdmin={isAdmin}
         isPending={isMutating}
         onSubmit={submitForm}
         onCancel={() => closeRef.current()}
