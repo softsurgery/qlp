@@ -2,6 +2,7 @@ import type { AxiosInstance } from "axios";
 import { createAdminAuthResource } from "./admin-auth.js";
 import { createAuthResource } from "./auth.js";
 import { createCurriculumResource } from "./curriculum.js";
+import { createAdminMediaResource } from "./admin-media.js";
 import { createPermissionResource } from "./permission.js";
 import { createRoleResource } from "./roles.js";
 import { createUploadResource } from "./storage.js";
@@ -17,6 +18,7 @@ export function createResources(http: AxiosInstance) {
     upload: createUploadResource(http),
     curriculum: createCurriculumResource(http, "/curriculum"),
     adminCurriculum: createCurriculumResource(http, "/admin/curriculum"),
+    adminMedia: createAdminMediaResource(http),
   };
 }
 
