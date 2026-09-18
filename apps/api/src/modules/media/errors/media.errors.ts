@@ -39,6 +39,12 @@ export class MediaHostAssignmentDeniedException extends HttpException {
   }
 }
 
+export class MediaRoomCapacityException extends HttpException {
+  constructor(capacity: number) {
+    super(`This session is limited to ${capacity} participant(s)`, HttpStatus.CONFLICT);
+  }
+}
+
 export class MediaNotConfiguredException extends HttpException {
   constructor() {
     super('Media service is not configured', HttpStatus.SERVICE_UNAVAILABLE);

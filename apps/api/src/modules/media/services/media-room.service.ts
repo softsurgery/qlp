@@ -21,6 +21,7 @@ import {
   MediaAccessDeniedException,
   MediaHostAssignmentDeniedException,
   MediaRoleEscalationException,
+  MediaRoomCapacityException,
   MediaRoomClosedException,
   MediaRoomManagementDeniedException,
   MediaRoomNotFoundException,
@@ -86,6 +87,16 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
     return user;
   }
 
+  async assertCapacityForInvite(room: MediaRoomEntity, incoming = 1): Promise<void> {
+    if (!room.maxParticipants || room.maxParticipants <= 0) return;
+
+    const roster = await this.participantService.findByRoom(room.id);
+    const taken = roster.length + 1;
+    if (taken + incoming > room.maxParticipants) {
+      throw new MediaRoomCapacityException(room.maxParticipants);
+    }
+  }
+
   async resolveParticipantRole(
     room: MediaRoomEntity,
     userId: string,
@@ -139,6 +150,9 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
 
     const capacity = dto.maxParticipants ?? 0;
     const invites = dto.participants?.filter((p) => p.userId !== hostId) ?? [];
+    if (capacity > 0 && invites.length + 1 > capacity) {
+      throw new MediaRoomCapacityException(capacity);
+    }
 
     const id = randomUUID();
     const room = await this.mediaRoomRepository.save({
@@ -166,6 +180,7 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
   async inviteParticipant(roomId: string, userId: string, role: ParticipantRole) {
     const room = await this.findRoomOrFail(roomId);
     await this.getUserOrFail(userId);
+    await this.assertCapacityForInvite(room);
     return this.participantService.enroll(roomId, userId, role);
   }
 
@@ -187,6 +202,12 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
       return room;
     }
 
+    if (dto.maxParticipants !== undefined && dto.maxParticipants > 0) {
+      const roster = await this.participantService.findByRoom(roomId);
+      if (roster.length + 1 > dto.maxParticipants) {
+        throw new MediaRoomCapacityException(dto.maxParticipants);
+      }
+    }
 
     if (dto.status === MediaRoomStatus.FINISHED && !room.endedAt) {
       payload.endedAt = new Date();
