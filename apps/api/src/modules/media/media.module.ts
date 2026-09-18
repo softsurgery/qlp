@@ -9,6 +9,7 @@ import { MediaRoomParticipantRepository } from './repositories/media-room-partic
 import { MediaTokenService } from './services/media-token.service';
 import { MediaRoomService } from './services/media-room.service';
 import { MediaRoomParticipantService } from './services/media-room-participant.service';
+import { MediaService } from './services/media.service';
 
 @Module({
   providers: [
@@ -17,8 +18,10 @@ import { MediaRoomParticipantService } from './services/media-room-participant.s
     MediaTokenService,
     MediaRoomParticipantService,
     MediaRoomService,
+    MediaService,
   ],
   exports: [
+    MediaService,
     MediaRoomService,
     MediaRoomParticipantService,
     MediaTokenService,

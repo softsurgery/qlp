@@ -51,6 +51,13 @@ export class MediaRoomParticipantService extends AbstractCrudService<MediaRoomPa
   }
 
   @Transactional()
+  async markJoined(roomId: string, userId: string): Promise<void> {
+    const participant = await this.findByRoomAndUser(roomId, userId);
+    if (!participant) return;
+    await this.participantRepository.update(participant.id, { lastJoinedAt: new Date() });
+  }
+
+  @Transactional()
   async removeFromRoom(roomId: string, userId: string): Promise<void> {
     const participant = await this.findByRoomAndUser(roomId, userId);
     if (!participant) return;
