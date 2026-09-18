@@ -14,6 +14,7 @@ import { ClientCurriculumExamController } from 'src/modules/curriculum/controlle
 import { MediaModule } from 'src/modules/media/media.module';
 import { ClientMediaController } from 'src/modules/media/controllers/client-media.controller';
 import { MediaWebhookController } from 'src/modules/media/controllers/media-webhook.controller';
+import { ClientMeetingController } from 'src/modules/media/controllers/client-meeting.controller';
 
 @Module({
   controllers: [
@@ -26,6 +27,7 @@ import { MediaWebhookController } from 'src/modules/media/controllers/media-webh
     ClientCurriculumExamController,
     ClientMediaController,
     MediaWebhookController,
+    ClientMeetingController,
   ],
   providers: [],
   exports: [],
