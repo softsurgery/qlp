@@ -10,7 +10,7 @@ import {
 import { useRTL } from "./useRTL";
 
 interface UseSheetOptions {
-  children?: React.ReactNode;
+  children?: React.ReactNode | ((isOpen: boolean) => React.ReactNode);
   title?: React.ReactNode;
   description?: React.ReactNode;
   className?: string;
@@ -70,7 +70,7 @@ export function useSheet({
             {description && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>
         )}
-        {children}
+        {typeof children === "function" ? children(isOpen) : children}
       </SheetContent>
     </Sheet>
   );

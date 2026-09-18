@@ -4,7 +4,7 @@ import { useApp } from "@qlp/contexts";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Save, Repeat2, Loader2 } from "lucide-react";
+import { Save, Repeat2, Loader2, Eye } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useBreadcrumb, useUI } from "@qlp/contexts";
 import { Button, Label } from "@qlp/ui";
@@ -17,6 +17,7 @@ import { useUpdateCurriculumFormStructure } from "./useUpdateCurriculumFormStruc
 import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
+import { useCurriculumPreviewDialog } from "../modals/useCurriculumPreviewDialog";
 import { CurriculumModules } from "../../curriculum-module/CurriculumModules";
 import { useTutors } from "@qlp/hooks";
 
@@ -42,6 +43,11 @@ export function UpdateCurriculumForm({
   const uploadApi = baseApi.upload;
   const { t } = useTranslation("curriculum");
   const queryClient = useQueryClient();
+
+  const { previewDialog, openPreviewDialog } = useCurriculumPreviewDialog({
+    curriculumId,
+    previewUrl: `/curriculum/${curriculumId}`,
+  });
 
   const { tutorOptions: ownerOptions } = useTutors({
     enabled: appType === "admin",
@@ -189,6 +195,15 @@ export function UpdateCurriculumForm({
         <Button
           type="button"
           size="sm"
+          variant="secondary"
+          onClick={openPreviewDialog}
+        >
+          <Eye className="h-4 w-4" />
+          <span>{tCommon("commands.preview", "Preview")}</span>
+        </Button>
+        <Button
+          type="button"
+          size="sm"
           onClick={handleSubmit}
           disabled={isPending || (workflowData && !workflowData.isUpdatable)}
         >
@@ -218,6 +233,7 @@ export function UpdateCurriculumForm({
           <span>{tCommon("commands.reset")}</span>
         </Button>
       </div>
+      {previewDialog}
     </>
   ) : null;
 

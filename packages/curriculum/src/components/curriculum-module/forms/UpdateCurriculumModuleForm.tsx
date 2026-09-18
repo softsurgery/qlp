@@ -2,7 +2,7 @@ import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Save, Repeat2 } from "lucide-react";
+import { Save, Repeat2, Eye } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useApp, useBreadcrumb, useUI } from "@qlp/contexts";
 import { Button, Label, Separator } from "@qlp/ui";
@@ -21,6 +21,7 @@ import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../../curriculum/CurriculumMetaHeader";
 import { CurriculumLessons } from "../../curriculum-lesson/CurriculumLessons";
+import { useCurriculumPreviewDialog } from "../../curriculum/modals/useCurriculumPreviewDialog";
 import { useNavigate } from "react-router-dom";
 
 export interface UpdateCurriculumModuleFormProps {
@@ -58,6 +59,12 @@ export function UpdateCurriculumModuleForm({
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
   const navigate = useNavigate();
 
+  const { previewDialog, openPreviewDialog } = useCurriculumPreviewDialog({
+    curriculumId,
+    previewItem: `module:${moduleId}`,
+    previewUrl: `/curriculum/${curriculumId}?item=module:${moduleId}`,
+  });
+
   const isLoading = isModulesPending || isWorkflowLoading;
 
   const module = modules.find((m) => m.id === moduleId);
@@ -83,14 +90,7 @@ export function UpdateCurriculumModuleForm({
       ]);
     }
     if (setEnableMainOverflow) setEnableMainOverflow(true);
-  }, [
-    curriculum,
-    curriculumId,
-    module,
-    setEnableMainOverflow,
-    setRoutes,
-    t,
-  ]);
+  }, [curriculum, curriculumId, module, setEnableMainOverflow, setRoutes, t]);
 
   React.useEffect(() => {
     return () => {
@@ -164,42 +164,48 @@ export function UpdateCurriculumModuleForm({
   const sidebarContent = (
     <>
       {module && (
-        <>
-          <CurriculumMetaHeader
-            curriculum={{
-              ...module,
-              status: module.status || workflowData?.status,
-              owner: appType === "admin" ? undefined : module.owner,
-              createdAt: appType !== "admin" ? undefined : module.createdAt,
-              createdBy: module.createdBy,
-            }}
-            extraRows={[
-              {
-                label: t("versions"),
-                value: (
-                  <span
-                    className="cursor-pointer text-primary hover:underline font-semibold"
-                    onClick={() =>
-                      navigate(
-                        `/curriculum/${curriculumId}/modules/${moduleId}/versions`,
-                      )
-                    }
-                  >
-                    {module?.version != null ? module?.version : "-"}
-                  </span>
-                ),
-              },
-            ]}
-            uploadApi={baseApi.upload}
-          />
-          <Separator />
-        </>
+        <CurriculumMetaHeader
+          curriculum={{
+            ...module,
+            status: module.status || workflowData?.status,
+            owner: appType === "admin" ? undefined : module.owner,
+            createdAt: appType !== "admin" ? undefined : module.createdAt,
+            createdBy: module.createdBy,
+          }}
+          extraRows={[
+            {
+              label: t("versions"),
+              value: (
+                <span
+                  className="cursor-pointer text-primary hover:underline font-semibold"
+                  onClick={() =>
+                    navigate(
+                      `/curriculum/${curriculumId}/modules/${moduleId}/versions`,
+                    )
+                  }
+                >
+                  {module?.version != null ? module?.version : "-"}
+                </span>
+              ),
+            },
+          ]}
+          uploadApi={baseApi.upload}
+        />
       )}
 
       <div className="flex flex-col gap-2 w-full">
         <Label className="text-xs font-bold text-muted-foreground">
           {tCommon("commands.actions", "Actions")}
         </Label>
+        <Button
+          type="button"
+          size="sm"
+          variant="secondary"
+          onClick={openPreviewDialog}
+        >
+          <Eye className="h-4 w-4" />
+          <span>{tCommon("commands.preview", "Preview")}</span>
+        </Button>
         <Button
           type="button"
           size="sm"
@@ -238,6 +244,8 @@ export function UpdateCurriculumModuleForm({
           <span>{tCommon("commands.reset", "Reset")}</span>
         </Button>
       </div>
+
+      {previewDialog}
     </>
   );
 

@@ -2,7 +2,7 @@ import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Save, Repeat2 } from "lucide-react";
+import { Save, Repeat2, Eye } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useApp, useBreadcrumb, useUI } from "@qlp/contexts";
 import { Button, Label, Separator } from "@qlp/ui";
@@ -22,6 +22,7 @@ import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../../curriculum/CurriculumMetaHeader";
 import { CurriculumLessonMaterials } from "../../curriculum-material/CurriculumLessonMaterials";
+import { useCurriculumPreviewDialog } from "../../curriculum/modals/useCurriculumPreviewDialog";
 import { useNavigate } from "react-router-dom";
 
 export interface UpdateCurriculumLessonFormProps {
@@ -62,6 +63,12 @@ export function UpdateCurriculumLessonForm({
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
   const navigate = useNavigate();
+
+  const { previewDialog, openPreviewDialog } = useCurriculumPreviewDialog({
+    curriculumId,
+    previewItem: `lesson:${lessonId}`,
+    previewUrl: `/curriculum/${curriculumId}?item=lesson:${lessonId}`,
+  });
 
   const isLoading = isLessonPending || isWorkflowLoading;
 
@@ -215,6 +222,15 @@ export function UpdateCurriculumLessonForm({
         <Button
           type="button"
           size="sm"
+          variant="secondary"
+          onClick={openPreviewDialog}
+        >
+          <Eye className="h-4 w-4" />
+          <span>{tCommon("commands.preview", "Preview")}</span>
+        </Button>
+        <Button
+          type="button"
+          size="sm"
           onClick={handleSubmit}
           disabled={
             !!(
@@ -250,6 +266,8 @@ export function UpdateCurriculumLessonForm({
           <span>{tCommon("commands.reset", "Reset")}</span>
         </Button>
       </div>
+
+      {previewDialog}
     </>
   );
 
