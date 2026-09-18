@@ -13,6 +13,10 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
 
+  app.useBodyParser('json', {
+    type: ['application/json', 'application/webhook+json'],
+  });
+
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
