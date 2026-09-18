@@ -9,6 +9,7 @@ import RolesPage from "./pages/RolesPage";
 import CurriculumPage from "./pages/CurriculumPage";
 import CurriculumEditPage from "./pages/CurriculumEditPage";
 import CurriculumViewPage from "./pages/CurriculumViewPage";
+import MeetingsPage from "./pages/MeetingsPage";
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, isAdmin } = useIsAdminSession();
@@ -53,6 +54,7 @@ export default function App() {
           <Route path="roles" element={<RolesPage />} />
         </Route>
         <Route path="tutors" element={<div>Tutors</div>} />
+        <Route path="meetings" element={<MeetingsPage />} />
         <Route path="curriculum" element={<CurriculumPage />} />
         <Route path="curriculum/:id" element={<CurriculumViewPage />} />
         <Route path="curriculum/:id/edit" element={<CurriculumEditPage />} />
