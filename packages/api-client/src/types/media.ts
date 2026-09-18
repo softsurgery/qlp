@@ -12,6 +12,17 @@ export enum MediaRoomStatus {
   FINISHED = "finished",
 }
 
+export enum LiveKitEventType {
+  ROOM_STARTED = "room_started",
+  ROOM_FINISHED = "room_finished",
+  PARTICIPANT_JOINED = "participant_joined",
+  PARTICIPANT_LEFT = "participant_left",
+  TRACK_PUBLISHED = "track_published",
+  TRACK_UNPUBLISHED = "track_unpublished",
+  EGRESS_STARTED = "egress_started",
+  EGRESS_ENDED = "egress_ended",
+}
+
 export interface CreateMediaTokenDto {
   roomId: string;
   participantId?: string;
@@ -51,6 +62,7 @@ export interface ResponseMediaRoomDto extends DatabaseEntity {
   maxParticipants: number;
   isRecordingEnabled: boolean;
   curriculumLessonId?: string;
+  livekitSid?: string;
 }
 
 export interface ResponseMediaRoomParticipantDto extends DatabaseEntity {
@@ -96,4 +108,40 @@ export interface LiveSubtitlePacket {
   timestamp: number;
   isFinal: boolean;
   language?: string;
+}
+
+export interface LiveKitWebhookPayload {
+  event: LiveKitEventType | string;
+  room?: {
+    sid: string;
+    name: string;
+    emptyTimeout: number;
+    maxParticipants: number;
+    creationTime: number;
+    metadata?: string;
+    numParticipants: number;
+  };
+  participant?: {
+    sid: string;
+    identity: string;
+    state: number;
+    joinedAt: number;
+    name: string;
+    metadata?: string;
+  };
+  egressInfo?: {
+    egressId: string;
+    roomId: string;
+    roomName: string;
+    status: number;
+    startedAt?: number;
+    endedAt?: number;
+    fileResults?: Array<{
+      filename: string;
+      downloadUrl?: string;
+      size: number;
+    }>;
+  };
+  id?: string;
+  createdAt?: number;
 }
