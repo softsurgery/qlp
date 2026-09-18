@@ -1,9 +1,8 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { UpdateCurriculumLessonForm } from "@qlp/curriculum";
 
 export default function CurriculumLessonEditPage() {
   const { id: curriculumId, moduleId, lessonId } = useParams();
-  const navigate = useNavigate();
 
   if (!curriculumId || !moduleId || !lessonId) return null;
 
@@ -13,9 +12,6 @@ export default function CurriculumLessonEditPage() {
       curriculumId={curriculumId}
       moduleId={moduleId}
       lessonId={lessonId}
-      onSuccess={() =>
-        navigate(`/curriculum/${curriculumId}/modules/${moduleId}/edit`)
-      }
     />
   );
 }
