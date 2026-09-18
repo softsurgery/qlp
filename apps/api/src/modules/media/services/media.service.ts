@@ -88,6 +88,33 @@ export class MediaService {
     };
   }
 
+  async getCalendar(
+    userId: string,
+    from: Date,
+    to: Date,
+    requestedHostId?: string,
+  ): Promise<MediaRoomEntity[]> {
+    const user = await this.mediaRoomService.getUserOrFail(userId);
+
+    if (this.mediaRoomService.isPrivileged(user)) {
+      return this.mediaRoomService.attachHostNames(
+        await this.mediaRoomService.findScheduledBetween(from, to, requestedHostId || undefined),
+      );
+    }
+
+    return this.mediaRoomService.attachHostNames(
+      await this.mediaRoomService.findScheduledVisibleTo(from, to, userId),
+    );
+  }
+
+  async getCapabilities(userId: string): Promise<{ canSchedule: boolean; isAdmin: boolean }> {
+    const user = await this.mediaRoomService.getUserOrFail(userId);
+    return {
+      canSchedule: this.mediaRoomService.canSchedule(user),
+      isAdmin: this.mediaRoomService.isPrivileged(user),
+    };
+  }
+
   async getRoomSummary(roomId: string, userId: string): Promise<MediaRoomSummary> {
     const room = await this.mediaRoomService.findRoomOrFail(roomId);
     await this.mediaRoomService.resolveParticipantRole(room, userId);

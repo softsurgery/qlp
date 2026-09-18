@@ -65,4 +65,6 @@ export class MediaRoomEntity extends EntityHelper {
 
   @OneToMany(() => MediaRoomParticipantEntity, (participant) => participant.room)
   participants?: MediaRoomParticipantEntity[];
+
+  hostName?: string;
 }

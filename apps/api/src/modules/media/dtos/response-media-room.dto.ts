@@ -28,6 +28,10 @@ export class ResponseMediaRoomDto extends ResponseDtoHelper {
   @Expose()
   hostId: string;
 
+  @ApiProperty({ required: false })
+  @Expose()
+  hostName?: string;
+
   @ApiProperty({ required: false, type: Date })
   @Expose()
   scheduledStartAt?: Date;

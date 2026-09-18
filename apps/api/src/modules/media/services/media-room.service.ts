@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
+import { Between, FindOptionsWhere, In } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { AbstractCrudService } from 'src/shared/database/services/abstract-crud.service';
 import { AbstractUserEntity } from 'src/shared/abstract-user-management/entities/abstract-user.entity';
@@ -214,6 +215,77 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
     }
 
     return (await this.mediaRoomRepository.update(roomId, payload)) ?? room;
+  }
+
+  findScheduledBetween(from: Date, to: Date, hostId?: string): Promise<MediaRoomEntity[]> {
+    return this.mediaRoomRepository.findAll({
+      where: {
+        scheduledStartAt: Between(from, to),
+        ...(hostId ? { hostId } : {}),
+      },
+      order: { scheduledStartAt: 'ASC' },
+    });
+  }
+
+  async attachHostNames(rooms: MediaRoomEntity[]): Promise<MediaRoomEntity[]> {
+    const hostIds = [...new Set(rooms.map((room) => room.hostId))];
+    if (hostIds.length === 0) return rooms;
+
+    const hosts = await this.userService.repository.findAll({ where: { id: In(hostIds) } });
+    const nameById = new Map(
+      hosts.map((host) => [
+        host.id,
+        [host.firstName, host.lastName].filter(Boolean).join(' ').trim() || host.username,
+      ]),
+    );
+
+    for (const room of rooms) room.hostName = nameById.get(room.hostId);
+    return rooms;
+  }
+
+  async findScheduledVisibleTo(
+    from: Date,
+    to: Date,
+    userId: string,
+  ): Promise<MediaRoomEntity[]> {
+    const invitedIds = (await this.participantService.findByUser(userId)).map(
+      (row) => row.roomId,
+    );
+
+    const where: FindOptionsWhere<MediaRoomEntity>[] = [
+      { scheduledStartAt: Between(from, to), hostId: userId },
+    ];
+    if (invitedIds.length) {
+      where.push({ scheduledStartAt: Between(from, to), id: In(invitedIds) });
+    }
+
+    return this.mediaRoomRepository.findAll({
+      where,
+      order: { scheduledStartAt: 'ASC' },
+    });
+  }
+
+  findByHost(hostId: string): Promise<MediaRoomEntity[]> {
+    return this.mediaRoomRepository.findAll({
+      where: { hostId },
+      order: { scheduledStartAt: 'DESC' },
+    });
+  }
+
+  async findVisibleToUser(userId: string): Promise<MediaRoomEntity[]> {
+    const hosted = await this.findByHost(userId);
+    const invitedRows = await this.participantService.findByUser(userId);
+    const invitedIds = invitedRows
+      .map((row) => row.roomId)
+      .filter((id) => !hosted.some((room) => room.id === id));
+
+    if (invitedIds.length === 0) return hosted;
+
+    const invited = await this.mediaRoomRepository.findAll({
+      where: { id: In(invitedIds) },
+    });
+
+    return [...hosted, ...invited];
   }
 
   @Transactional()

@@ -21,6 +21,10 @@ export class MediaRoomParticipantService extends AbstractCrudService<MediaRoomPa
     return this.participantRepository.findAll({ where: { roomId } });
   }
 
+  findByUser(userId: string): Promise<MediaRoomParticipantEntity[]> {
+    return this.participantRepository.findAll({ where: { userId } });
+  }
+
   @Transactional()
   async enroll(
     roomId: string,
