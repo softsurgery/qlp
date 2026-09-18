@@ -8,12 +8,14 @@ import { useDialog } from "@qlp/hooks";
 import { Button, cn } from "@qlp/ui";
 import {
   MediaRoomStatus,
+  ParticipantRole,
   type ResponseMediaRoomDto,
 } from "@qlp/api-client";
 import {
   meetingErrorMessage,
   useMeetingCapabilities,
   useMeetingMutations,
+  useMeetingParticipants,
   useMeetingsCalendar,
 } from "../hooks/useMeetings";
 import { MeetingsWeekGrid } from "./MeetingsWeekGrid";
@@ -54,6 +56,10 @@ export function MeetingsManager({
   const canManage = (meeting?: ResponseMediaRoomDto) =>
     Boolean(meeting && (isAdmin || meeting.hostId === currentUserId));
 
+  const participants = useMeetingParticipants(
+    api,
+    canManage(selected) ? selected?.id : undefined,
+  );
   const mutations = useMeetingMutations(api);
 
   const usersQuery = useQuery({
@@ -64,10 +70,16 @@ export function MeetingsManager({
   });
   const users = (usersQuery.data ?? []) as MeetingUser[];
 
+  const hostOptions = useMemo(
+    () => users.filter((u) => u.roleId === "Admin" || u.roleId === "Tutor"),
+    [users],
+  );
 
   const isMutating =
     mutations.create.isPending ||
     mutations.update.isPending ||
+    mutations.invite.isPending ||
+    mutations.removeParticipant.isPending ||
     mutations.end.isPending ||
     mutations.remove.isPending;
 
@@ -205,7 +217,9 @@ export function MeetingsManager({
           <aside className="hidden w-80 shrink-0 overflow-hidden rounded-lg border lg:block">
             <MeetingDetailPanel
               meeting={selected}
+              participants={participants.data ?? []}
               users={users}
+              isLoadingParticipants={participants.isLoading}
               isMutating={isMutating}
               canManage={canManage(selected)}
               joinHref={
@@ -228,6 +242,24 @@ export function MeetingsManager({
                   },
                   onError: (error) => fail(error, "messages.deleteFailed"),
                 })
+              }
+              onInvite={(userId, role: ParticipantRole) =>
+                mutations.invite.mutate(
+                  { id: selected.id, dto: { userId, role } },
+                  {
+                    onSuccess: () => toast.success(t("messages.invited")),
+                    onError: (error) => fail(error, "messages.inviteFailed"),
+                  },
+                )
+              }
+              onRemoveParticipant={(userId) =>
+                mutations.removeParticipant.mutate(
+                  { id: selected.id, userId },
+                  {
+                    onSuccess: () => toast.success(t("messages.participantRemoved")),
+                    onError: (error) => fail(error, "messages.removeFailed"),
+                  },
+                )
               }
               onClose={() => setSelectedId(undefined)}
             />
