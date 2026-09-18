@@ -4,8 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserManagementModule } from 'src/modules/user-management/user-management.module';
 import { MediaRoomEntity } from './entities/media-room.entity';
 import { MediaRoomParticipantEntity } from './entities/media-room-participant.entity';
+import { MediaWebhookEventEntity } from './entities/media-webhook-event.entity';
 import { MediaRoomRepository } from './repositories/media-room.repository';
 import { MediaRoomParticipantRepository } from './repositories/media-room-participant.repository';
+import { MediaWebhookEventRepository } from './repositories/media-webhook-event.repository';
 import { MediaTokenService } from './services/media-token.service';
 import { MediaRoomService } from './services/media-room.service';
 import { MediaRoomParticipantService } from './services/media-room-participant.service';
@@ -15,6 +17,7 @@ import { MediaService } from './services/media.service';
   providers: [
     MediaRoomRepository,
     MediaRoomParticipantRepository,
+    MediaWebhookEventRepository,
     MediaTokenService,
     MediaRoomParticipantService,
     MediaRoomService,
@@ -30,6 +33,7 @@ import { MediaService } from './services/media.service';
     TypeOrmModule.forFeature([
       MediaRoomEntity,
       MediaRoomParticipantEntity,
+      MediaWebhookEventEntity,
     ]),
     ConfigModule,
     UserManagementModule,
