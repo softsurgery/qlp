@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAuthSession } from "./hooks/useAuth";
 import Layout from "./components/layout/Layout";
 import AuthPage from "./pages/AuthPage";
@@ -9,16 +9,24 @@ import CurriculumViewPage from "./pages/CurriculumViewPage";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, user } = useAuthSession();
+  const location = useLocation();
 
   if (!isReady) return null;
-  return isAuthed && user ? <>{children}</> : <Navigate to="/auth" replace />;
+  if (isAuthed && user) return <>{children}</>;
+  return <Navigate to="/auth" replace state={{ from: location }} />;
 }
 
 function GuestRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, user } = useAuthSession();
+  const location = useLocation();
 
   if (!isReady) return null;
-  if (isAuthed && user) return <Navigate to="/" replace />;
+  if (isAuthed && user) {
+    const from = (location.state as { from?: { pathname?: string; search?: string } } | null)
+      ?.from;
+    const target = from?.pathname ? `${from.pathname}${from.search ?? ""}` : "/";
+    return <Navigate to={target} replace />;
+  }
   return <>{children}</>;
 }
 
