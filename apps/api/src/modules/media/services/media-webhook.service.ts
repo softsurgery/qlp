@@ -7,6 +7,7 @@ import { WebhookEventStatus } from '../enums/webhook-event-status.enum';
 import { MediaWebhookEventRepository } from '../repositories/media-webhook-event.repository';
 import { MediaRoomService } from './media-room.service';
 import { MediaRoomParticipantService } from './media-room-participant.service';
+import { MediaAttendanceService } from './media-attendance.service';
 import { fromSeconds } from '../utils/livekit-time.util';
 import {
   MediaNotConfiguredException,
@@ -29,6 +30,7 @@ export class MediaWebhookService {
     private readonly webhookEventRepository: MediaWebhookEventRepository,
     private readonly mediaRoomService: MediaRoomService,
     private readonly participantService: MediaRoomParticipantService,
+    private readonly attendanceService: MediaAttendanceService,
   ) {}
 
   private getReceiver(): WebhookReceiver {
@@ -145,6 +147,13 @@ export class MediaWebhookService {
       case LiveKitEventType.ROOM_FINISHED:
         return this.onRoomFinished(event, room);
 
+      case LiveKitEventType.PARTICIPANT_JOINED:
+        return this.onParticipantJoined(event, room);
+
+      case LiveKitEventType.PARTICIPANT_LEFT:
+      case LiveKitEventType.PARTICIPANT_CONNECTION_ABORTED:
+        return this.onParticipantLeft(event, room);
+
       default:
         this.logger.debug(`No handler for webhook event ${event.event}`);
         return false;
@@ -175,6 +184,36 @@ export class MediaWebhookService {
 
     const endedAt = fromSeconds(event.createdAt);
     await this.mediaRoomService.markFinished(room.id, endedAt);
+    const closed = await this.attendanceService.closeAllOpen(room.id, endedAt);
+
+    this.logger.log(`Room ${room.id} finished, closed ${closed} open attendance record(s)`);
+    return true;
+  }
+
+  private async onParticipantJoined(event: WebhookEvent, room: MediaRoomEntity | null) {
+    if (!room) return this.unknownRoom(event);
+    if (!event.participant) return false;
+
+    await this.attendanceService.openAttendance(room.id, {
+      sid: event.participant.sid,
+      identity: event.participant.identity,
+      name: event.participant.name || undefined,
+      joinedAt: fromSeconds(event.participant.joinedAt) ?? fromSeconds(event.createdAt),
+    });
+
+    await this.participantService.markJoined(room.id, event.participant.identity);
+    return true;
+  }
+
+  private async onParticipantLeft(event: WebhookEvent, room: MediaRoomEntity | null) {
+    if (!room) return this.unknownRoom(event);
+    if (!event.participant) return false;
+
+    await this.attendanceService.closeAttendance(
+      room.id,
+      event.participant.sid,
+      fromSeconds(event.createdAt) ?? new Date(),
+    );
     return true;
   }
 
