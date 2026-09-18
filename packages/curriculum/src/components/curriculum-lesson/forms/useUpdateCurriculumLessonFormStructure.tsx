@@ -15,16 +15,16 @@ interface UseUpdateCurriculumLessonFormStructureProps {
 export const useUpdateCurriculumLessonFormStructure = ({
   curriculumLessonStore,
 }: UseUpdateCurriculumLessonFormStructureProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const getError = (err?: string[]) => err?.[0];
 
   const titleField: Field<TextFieldProps> = {
     id: "title",
-    label: t("fields.title", "Title"),
+    label: tCommon("fields.title"),
     variant: FieldVariant.TEXT,
     required: true,
-    placeholder: t("fields.titlePlaceholder"),
-    description: t("fields.titleDescription"),
+    placeholder: tCommon("fields.titlePlaceholder"),
+    description: tCommon("fields.titleDescription"),
     error: getError(curriculumLessonStore.updateDtoErrors?.title),
     props: {
       value: curriculumLessonStore.updateDto.title || "",
@@ -37,10 +37,10 @@ export const useUpdateCurriculumLessonFormStructure = ({
 
   const descriptionField: Field<EditorFieldProps> = {
     id: "description",
-    label: t("fields.description"),
+    label: tCommon("fields.description"),
     variant: FieldVariant.EDITOR,
-    placeholder: t("fields.descriptionPlaceholder"),
-    description: t("fields.descriptionHint"),
+    placeholder: tCommon("fields.descriptionPlaceholder"),
+    description: tCommon("fields.descriptionHint"),
     error: getError(curriculumLessonStore.updateDtoErrors?.description),
     props: {
       height: 300,

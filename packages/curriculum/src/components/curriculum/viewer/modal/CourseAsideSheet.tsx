@@ -17,14 +17,14 @@ export const useCourseAsideSheet = ({
   curriculum,
   modules,
 }: CourseAsideSheetProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const close = { current: () => {} };
   const {
     SheetFragment: courseAsideSheet,
     openSheet: openCourseAsideSheet,
     closeSheet: closeCourseAsideSheet,
   } = useSheet({
-    title: t("viewer.overview"),
+    title: tCommon("viewer.overview"),
     headerClassName: "sr-only",
     showCloseButton: false,
     className: cn("w-[70vw] max-w-none p-0 sm:max-w-none", className),

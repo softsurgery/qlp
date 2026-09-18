@@ -23,7 +23,10 @@ export const CourseAside = ({
   className,
   onClose,
 }: CourseAsideProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
+    const { t: tModule } = useTranslation("curriculum-module");
+    const { t: tLesson } = useTranslation("curriculum-lesson");
+    const { t: tGlobal } = useTranslation("global");
   const navigate = useNavigate();
   const published =
     curriculum.status === CurriculumStatus.Published ||
@@ -50,7 +53,7 @@ export const CourseAside = ({
     >
       <section className="rounded-xl border bg-card p-4 shadow-sm">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-sm font-semibold">{t("viewer.overview")}</h3>
+          <h3 className="text-sm font-semibold">{tCommon("viewer.overview")}</h3>
           {onClose ? (
             <Button
               type="button"
@@ -58,7 +61,7 @@ export const CourseAside = ({
               size="icon-sm"
               className="-me-1.5 -mt-1.5 shrink-0"
               onClick={onClose}
-              aria-label={t("viewer.close")}
+              aria-label={tCommon("viewer.close")}
             >
               <PanelRight className="size-4" />
             </Button>
@@ -74,61 +77,61 @@ export const CourseAside = ({
         >
           <p className="font-semibold">
             {published
-              ? t("viewer.publishedBannerTitle")
-              : t("viewer.draftBannerTitle")}
+              ? tCommon("viewer.publishedBannerTitle")
+              : tCommon("viewer.draftBannerTitle")}
           </p>
           <p className="mt-1 text-xs leading-relaxed">
-            {published ? t("viewer.publishedBanner") : t("viewer.draftBanner")}
+            {published ? tCommon("viewer.publishedBanner") : tCommon("viewer.draftBanner")}
           </p>
         </div>
         <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
           <div>
             <dt className="text-xs text-muted-foreground">
-              {t("columns.status")}
+              {tCommon("columns.status")}
             </dt>
             <dd className="font-medium">
-              {t(`status.${curriculum.status}` as "status.draft")}
+              {tCommon(`status.${curriculum.status}` as "status.draft")}
             </dd>
           </div>
           <div>
             <dt className="text-xs text-muted-foreground">
-              {t("columns.version")}
+              {tCommon("columns.version")}
             </dt>
             <dd className="font-medium">
-              {t("viewer.versionLabel", { version: curriculum.version })}
+              {tCommon("viewer.versionLabel", { version: curriculum.version })}
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-muted-foreground">{t("modules")}</dt>
+            <dt className="text-xs text-muted-foreground">{tModule("modules")}</dt>
             <dd className="font-medium">
-              {t("viewer.modules", { count: modules.length })}
+              {tCommon("viewer.modules", { count: modules.length })}
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-muted-foreground">{t("lessons")}</dt>
+            <dt className="text-xs text-muted-foreground">{tLesson("lessons")}</dt>
             <dd className="font-medium">
-              {t("viewer.lessons", { count: lessonCount })}
+              {tCommon("viewer.lessons", { count: lessonCount })}
             </dd>
           </div>
           <div className="col-span-2">
             <dt className="text-xs text-muted-foreground">
-              {t("editor.exams")}
+              {tCommon("editor.exams")}
             </dt>
             <dd className="font-medium">
-              {t("viewer.exams", { count: examCount })}
+              {tCommon("viewer.exams", { count: examCount })}
             </dd>
           </div>
         </dl>
       </section>
 
       <section className="rounded-xl border bg-card p-4 shadow-sm">
-        <h3 className="text-sm font-semibold">{t("viewer.timeline")}</h3>
+        <h3 className="text-sm font-semibold">{tCommon("viewer.timeline")}</h3>
         <ol className="mt-4 space-y-4 border-s-2 border-dashed border-border ps-4">
           {created ? (
             <li className="relative">
               <CircleDot className="absolute -start-[1.4rem] top-0.5 size-3.5 text-muted-foreground" />
               <p className="text-xs text-muted-foreground">
-                {t("viewer.startDate")}
+                {tCommon("viewer.startDate")}
               </p>
               <p className="text-sm font-medium">{created}</p>
             </li>
@@ -137,7 +140,7 @@ export const CourseAside = ({
             <li className="relative">
               <Calendar className="absolute -start-[1.4rem] top-0.5 size-3.5 text-muted-foreground" />
               <p className="text-xs text-muted-foreground">
-                {t("viewer.updatedDate")}
+                {tCommon("viewer.updatedDate")}
               </p>
               <p className="text-sm font-medium">{updated}</p>
             </li>
@@ -146,7 +149,7 @@ export const CourseAside = ({
             <li className="relative">
               <CircleDot className="absolute -start-[1.4rem] top-0.5 size-3.5 text-muted-foreground" />
               <p className="text-xs text-muted-foreground">
-                {t("columns.owner")}
+                {tCommon("columns.owner")}
               </p>
               <p className="text-sm font-medium">{ownerName}</p>
             </li>
@@ -162,7 +165,7 @@ export const CourseAside = ({
           onClick={() => navigate(`/curriculum/${curriculum.id}/edit`)}
         >
           <Pencil className="size-4" />
-          {t("edit")}
+          {tGlobal("edit")}
         </Button>
         <Button
           type="button"
@@ -171,7 +174,7 @@ export const CourseAside = ({
           onClick={() => navigate(`/curriculum/${curriculum.id}/versions`)}
         >
           <History className="size-4" />
-          {t("history")}
+          {tGlobal("history")}
         </Button>
       </section>
     </div>

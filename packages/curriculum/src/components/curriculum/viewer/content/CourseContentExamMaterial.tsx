@@ -16,7 +16,7 @@ export const CourseExamMaterials = ({
   exam,
   revealAnswers,
 }: CourseExamMaterialsProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const questions = exam.questions || [];
 
   return (
@@ -25,7 +25,7 @@ export const CourseExamMaterials = ({
         <div className="flex items-center gap-2 text-muted-foreground">
           <ClipboardList className="size-4" />
           <span className="text-xs font-medium uppercase tracking-wide">
-            {t("editor.exam")}
+            {tCommon("editor.exam")}
           </span>
         </div>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight">
@@ -34,13 +34,13 @@ export const CourseExamMaterials = ({
         <p className="mt-1 text-sm text-muted-foreground">
           {[
             questions.length
-              ? t("viewer.questions", { count: questions.length })
+              ? tCommon("viewer.questions", { count: questions.length })
               : null,
             exam.durationMinutes
-              ? t("viewer.duration", { minutes: exam.durationMinutes })
+              ? tCommon("viewer.duration", { minutes: exam.durationMinutes })
               : null,
             exam.passingScore != null
-              ? t("viewer.passing", { score: exam.passingScore })
+              ? tCommon("viewer.passing", { score: exam.passingScore })
               : null,
           ]
             .filter(Boolean)
@@ -50,7 +50,7 @@ export const CourseExamMaterials = ({
       </div>
       {questions.length === 0 ? (
         <p className="text-sm text-muted-foreground">
-          {t("editor.noQuestions")}
+          {tCommon("editor.noQuestions")}
         </p>
       ) : (
         <ol className="flex flex-col gap-6">

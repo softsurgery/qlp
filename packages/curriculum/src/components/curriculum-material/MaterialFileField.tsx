@@ -20,8 +20,8 @@ export function MaterialFileField({
   disabled,
   onUploaded,
 }: MaterialFileFieldProps) {
-  const { t } = useTranslation("curriculum");
-  const { t: tCommon } = useTranslation("common");
+  const { t: tMaterial } = useTranslation("curriculum-material");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const { api } = useApp();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [progress, setProgress] = React.useState<number | null>(null);
@@ -45,7 +45,7 @@ export function MaterialFileField({
         onUploaded({ storageId: upload.id, filename: file.name });
       }
     } catch {
-      toast.error(tCommon("errors.saveFailed", "Failed to upload file"));
+      toast.error(tCommon("errors.saveFailed"));
     } finally {
       setProgress(null);
     }
@@ -71,7 +71,7 @@ export function MaterialFileField({
               rel="noreferrer"
               className="text-sm font-medium text-primary hover:underline truncate"
             >
-              {storage?.filename || t("downloadFile", "Download file")}
+              {storage?.filename || tMaterial("downloadFile")}
             </a>
             {storage?.size && (
               <span className="text-xs text-muted-foreground mt-0.5">
@@ -82,7 +82,7 @@ export function MaterialFileField({
         </div>
       ) : (
         <div className="flex items-center justify-center rounded-md border border-dashed bg-muted/30 text-sm text-muted-foreground h-16">
-          {t("noFile", "No file uploaded")}
+          {tMaterial("noFile")}
         </div>
       )}
 
@@ -116,8 +116,8 @@ export function MaterialFileField({
         >
           <Upload className="size-4" />
           {remoteSrc
-            ? t("replaceFile", "Replace file")
-            : t("uploadFile", "Upload file")}
+            ? tMaterial("replaceFile")
+            : tMaterial("uploadFile")}
         </Button>
       </div>
     </div>

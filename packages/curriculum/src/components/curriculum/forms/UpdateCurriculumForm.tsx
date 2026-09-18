@@ -35,14 +35,14 @@ export function UpdateCurriculumForm({
   appType: appTypeProp,
   onSuccess,
 }: UpdateCurriculumFormProps) {
-  const { t: tCommon } = useTranslation("common");
+  const { t: tGlobal } = useTranslation("global");
   const navigate = useNavigate();
   const { api: baseApi, appType: contextAppType } = useApp();
   const appType = appTypeProp || contextAppType;
   const api =
     appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
   const uploadApi = baseApi.upload;
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const queryClient = useQueryClient();
 
   const { previewDialog, openPreviewDialog } = useCurriculumPreviewDialog({
@@ -89,12 +89,12 @@ export function UpdateCurriculumForm({
   React.useEffect(() => {
     if (setRoutes && curriculum) {
       setRoutes([
-        { title: t("title"), href: "/curriculum" },
-        { title: curriculum.title || t("updateTitle") },
+        { title: tCommon("title"), href: "/curriculum" },
+        { title: curriculum.title || tCommon("updateTitle") },
       ]);
     }
     if (setEnableMainOverflow) setEnableMainOverflow(true);
-  }, [curriculum, setEnableMainOverflow, setRoutes, t]);
+  }, [curriculum, setEnableMainOverflow, setRoutes, tCommon, tGlobal]);
 
   React.useEffect(() => {
     return () => {
@@ -116,7 +116,7 @@ export function UpdateCurriculumForm({
       return api.update(curriculum.id, dto);
     },
     onSuccess: (updated) => {
-      toast.success(t("updated"));
+      toast.success(tGlobal("updated"));
       void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
       void queryClient.invalidateQueries({
         queryKey: ["curriculum", curriculumId],
@@ -124,7 +124,7 @@ export function UpdateCurriculumForm({
       if (onSuccess) onSuccess();
     },
     onError: (error: ServerErrorResponse) => {
-      toast.error(errorMessage(error, t("saveError")));
+      toast.error(errorMessage(error, tGlobal("saveError")));
     },
   });
 
@@ -134,7 +134,7 @@ export function UpdateCurriculumForm({
         api.workflow.executeWorkflow(curriculumId, dto),
       onSuccess: () => {
         toast.success(
-          tCommon("workflowExecuted", "Action executed successfully"),
+          tGlobal("workflowExecuted"),
         );
         void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
         void queryClient.invalidateQueries({
@@ -143,7 +143,7 @@ export function UpdateCurriculumForm({
       },
       onError: (error: ServerErrorResponse) => {
         toast.error(
-          errorMessage(error, tCommon("workflowError", "Action failed")),
+          errorMessage(error, tGlobal("workflowError")),
         );
       },
     });
@@ -151,13 +151,13 @@ export function UpdateCurriculumForm({
   const handleSubmit = React.useCallback(() => {
     if (!curriculumStore.updateDto.title?.trim()) {
       curriculumStore.set("updateDtoErrors", {
-        title: [t("errors.titleRequired")],
+        title: [tCommon("errors.titleRequired")],
       });
       return;
     }
     curriculumStore.set("updateDtoErrors", {});
     updateMutation(curriculumStore.updateDto);
-  }, [updateMutation, curriculumStore, t]);
+  }, [updateMutation, curriculumStore, tCommon, tGlobal]);
 
   const mainContent = (
     <div className="flex flex-col gap-8">
@@ -176,7 +176,7 @@ export function UpdateCurriculumForm({
         }}
         extraRows={[
           {
-            label: t("versions"),
+            label: tGlobal("versions"),
             value: (
               <span
                 className="cursor-pointer text-primary hover:underline font-semibold"
@@ -191,17 +191,17 @@ export function UpdateCurriculumForm({
       />
       <div className="flex flex-col gap-2 w-full">
         <Label className="text-xs font-bold text-muted-foreground">
-          {tCommon("commands.actions")}
+          {tGlobal("commands.actions")}
         </Label>
         <ActionGrid
           actions={[
             {
-              label: tCommon("commands.preview", "Preview") as string,
+              label: tGlobal("commands.preview") as string,
               icon: <Eye />,
               onClick: openPreviewDialog,
             },
             {
-              label: tCommon("commands.save") as string,
+              label: tGlobal("commands.save") as string,
               icon: <Save />,
               onClick: handleSubmit,
               disabled:
@@ -213,7 +213,7 @@ export function UpdateCurriculumForm({
               disabled: isPending || isExecutingWorkflow,
             })) || []),
             {
-              label: tCommon("commands.reset") as string,
+              label: tGlobal("commands.reset") as string,
               icon: <Repeat2 />,
               onClick: resetStore,
               disabled: isPending,

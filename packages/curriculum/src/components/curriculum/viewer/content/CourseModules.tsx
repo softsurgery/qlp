@@ -17,7 +17,7 @@ export const CourseModules = ({
   modules,
   onSelectItem,
 }: CourseModulesProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const ordered = sortByOrder(modules);
 
   return (
@@ -25,11 +25,11 @@ export const CourseModules = ({
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t("viewer.selectModule")}
+          {tCommon("viewer.selectModule")}
         </p>
       </div>
       {ordered.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t("viewer.noModules")}</p>
+        <p className="text-sm text-muted-foreground">{tCommon("viewer.noModules")}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {ordered.map((module, index) => {
@@ -42,12 +42,12 @@ export const CourseModules = ({
             ).length;
             const meta =
               outline.length === 0
-                ? t("viewer.emptyModule")
+                ? tCommon("viewer.emptyModule")
                 : [
                     lessonCount
-                      ? t("viewer.lessons", { count: lessonCount })
+                      ? tCommon("viewer.lessons", { count: lessonCount })
                       : null,
-                    examCount ? t("viewer.exams", { count: examCount }) : null,
+                    examCount ? tCommon("viewer.exams", { count: examCount }) : null,
                   ]
                     .filter(Boolean)
                     .join(" • ");

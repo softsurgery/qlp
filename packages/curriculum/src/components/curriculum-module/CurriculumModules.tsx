@@ -38,8 +38,9 @@ export function CurriculumModules({
   className,
   curriculumId,
 }: CurriculumModulesProps) {
-  const { t: tCommon } = useTranslation("common");
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
+    const { t: tGlobal } = useTranslation("global");
+  const { t: tModule } = useTranslation("curriculum-module");
   const { api: baseApi, appType } = useApp();
   const api =
     appType === "admin"
@@ -76,7 +77,7 @@ export function CurriculumModules({
       });
     },
     onError: () => {
-      toast.error(tCommon("errors.saveFailed", "Failed to update order"));
+      toast.error(tCommon("errors.saveFailed"));
     },
   });
 
@@ -89,10 +90,10 @@ export function CurriculumModules({
         void queryClient.invalidateQueries({
           queryKey: ["curriculum-modules", curriculumId],
         });
-        toast.success(tCommon("commands.deleted", "Deleted successfully"));
+        toast.success(tGlobal("commands.deleted"));
       },
       onError: () => {
-        toast.error(tCommon("errors.deleteFailed", "Failed to delete module"));
+        toast.error(tCommon("errors.deleteFailed"));
       },
     });
 
@@ -169,9 +170,9 @@ export function CurriculumModules({
     <div className={cn("flex flex-col gap-4", className)}>
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-semibold">{t("modules", "Modules")}</h3>
+          <h3 className="text-lg font-semibold">{tModule("modules")}</h3>
           <p className="text-sm text-muted-foreground">
-            {t("modulesDescription", "Manage the modules for this curriculum.")}
+            {tModule("modulesDescription")}
           </p>
         </div>
         <Button
@@ -181,7 +182,7 @@ export function CurriculumModules({
           className="gap-2"
         >
           <Plus className="h-4 w-4" />
-          <span>{tCommon("commands.create")}</span>
+          <span>{tGlobal("commands.create")}</span>
         </Button>
       </div>
 
@@ -200,7 +201,7 @@ export function CurriculumModules({
             ))}
             {dndService.items.length === 0 && (
               <div className="text-muted-foreground text-sm py-8 text-center border rounded-lg border-dashed">
-                {t("noModules", "No modules found. Create one to get started.")}
+                {tModule("noModules")}
               </div>
             )}
           </div>

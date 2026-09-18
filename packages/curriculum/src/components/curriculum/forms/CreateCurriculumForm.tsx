@@ -34,13 +34,13 @@ export function CreateCurriculumForm({
   onSuccess,
 }: CreateCurriculumFormProps) {
   const navigate = useNavigate();
-  const { t: tCommon } = useTranslation("common");
+  const { t: tGlobal } = useTranslation("global");
   const { api: baseApi, appType: contextAppType } = useApp();
   const appType = appTypeProp || contextAppType;
   const api =
     appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
   const uploadApi = baseApi.upload;
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const queryClient = useQueryClient();
 
   const { tutorOptions: ownerOptions } = useTutors({
@@ -56,12 +56,12 @@ export function CreateCurriculumForm({
   React.useEffect(() => {
     if (setRoutes) {
       setRoutes([
-        { title: t("title"), href: "/curriculum" },
-        { title: t("createTitle") },
+        { title: tCommon("title"), href: "/curriculum" },
+        { title: tCommon("createTitle") },
       ]);
     }
     if (setEnableMainOverflow) setEnableMainOverflow(true);
-  }, [setEnableMainOverflow, setRoutes, t]);
+  }, [setEnableMainOverflow, setRoutes, tCommon, tGlobal]);
 
   React.useEffect(() => {
     return () => {
@@ -80,14 +80,14 @@ export function CreateCurriculumForm({
   const { mutate: createMutation, isPending } = useMutation({
     mutationFn: (dto: CreateCurriculumDto) => api.create(dto),
     onSuccess: (curriculum) => {
-      toast.success(t("created"));
+      toast.success(tGlobal("created"));
       void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
       curriculumStore.reset();
       if (onSuccess) onSuccess();
       else navigate(`/curriculum/${curriculum.id}/edit`);
     },
     onError: (error: ServerErrorResponse) => {
-      toast.error(errorMessage(error, t("saveError")));
+      toast.error(errorMessage(error, tGlobal("saveError")));
     },
   });
 
@@ -99,13 +99,13 @@ export function CreateCurriculumForm({
   const handleSubmit = React.useCallback(() => {
     if (!curriculumStore.createDto.title.trim()) {
       curriculumStore.set("createDtoErrors", {
-        title: [t("errors.titleRequired")],
+        title: [tCommon("errors.titleRequired")],
       });
       return;
     }
     curriculumStore.set("createDtoErrors", {});
     createMutation(curriculumStore.createDto);
-  }, [createMutation, curriculumStore, t]);
+  }, [createMutation, curriculumStore, tCommon, tGlobal]);
 
   const mainContent = (
     <div className="flex flex-col">
@@ -125,18 +125,18 @@ export function CreateCurriculumForm({
       />
       <div className="flex flex-col gap-2 w-full">
         <Label className="text-xs font-bold text-muted-foreground">
-          {tCommon("commands.actions")}
+          {tGlobal("commands.actions")}
         </Label>
         <ActionGrid
           actions={[
             {
-              label: tCommon("commands.save") as string,
+              label: tGlobal("commands.save") as string,
               icon: <Save />,
               onClick: handleSubmit,
               disabled: isPending,
             },
             {
-              label: tCommon("commands.reset") as string,
+              label: tGlobal("commands.reset") as string,
               icon: <Repeat2 />,
               onClick: handleReset,
               disabled: isPending,

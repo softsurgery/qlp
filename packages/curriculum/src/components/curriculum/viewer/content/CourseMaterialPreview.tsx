@@ -20,7 +20,7 @@ export const CourseMaterialPreview = ({
   className,
   material,
 }: CourseMaterialPreviewProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const { api: baseApi } = useApp();
   const uploadApi = baseApi.upload;
   const { data: src } = useUploadSrc(
@@ -67,7 +67,7 @@ export const CourseMaterialPreview = ({
               className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
             >
               <ExternalLink className="size-3.5" />
-              {t("viewer.openResource")}
+              {tCommon("viewer.openResource")}
             </a>
           ) : null}
           {kind === "text" ||
@@ -80,7 +80,7 @@ export const CourseMaterialPreview = ({
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
               >
                 <ExternalLink className="size-3.5" />
-                {t("viewer.openResource")}
+                {tCommon("viewer.openResource")}
               </a>
             ) : (
               <HtmlContent html={material.content} />
@@ -90,7 +90,7 @@ export const CourseMaterialPreview = ({
           !hasRichText(material.content) &&
           !hasRichText(material.description) ? (
             <p className="text-sm text-muted-foreground">
-              {t("viewer.noMaterials")}
+              {tCommon("viewer.noMaterials")}
             </p>
           ) : null}
         </div>

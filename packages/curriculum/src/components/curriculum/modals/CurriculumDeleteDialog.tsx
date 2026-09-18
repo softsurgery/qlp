@@ -15,8 +15,8 @@ export const useCurriculumDeleteDialog = ({
   deleteCurriculum,
   isDeletePending,
 }: CurriculumDeleteDialogProps) => {
-  const { t } = useTranslation("curriculum");
-  const { t: tCommon } = useTranslation("common");
+  const { t: tGlobal } = useTranslation("global");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const close = { current: () => {} };
   const {
     DialogFragment: deleteCurriculumDialog,
@@ -25,11 +25,11 @@ export const useCurriculumDeleteDialog = ({
   } = useDialog({
     title: (
       <div className="leading-normal">
-        {t("confirmDeleteTitle")}{" "}
+        {tGlobal("confirmDeleteTitle")}{" "}
         <span className="font-light">{curriculumTitle}</span>
       </div>
     ),
-    description: t("confirmDeleteCurriculum"),
+    description: tCommon("confirmDeleteCurriculum"),
     children: (
       <div className="flex justify-end gap-2">
         <Button

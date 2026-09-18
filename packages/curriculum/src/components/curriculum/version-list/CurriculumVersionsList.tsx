@@ -23,8 +23,7 @@ export function CurriculumVersionsList({
   className,
   curriculumId,
 }: CurriculumVersionsListProps) {
-  const { t } = useTranslation("curriculum");
-  const { t: tCommon } = useTranslation("common");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const navigate = useNavigate();
   const { api: baseApi, appType } = useApp();
   const api =
@@ -41,7 +40,7 @@ export function CurriculumVersionsList({
   React.useEffect(() => {
     if (setRoutes && curriculum) {
       setRoutes([
-        { title: t("title"), href: "/curriculum" },
+        { title: tCommon("title"), href: "/curriculum" },
         {
           title: curriculum.title,
           href: `/curriculum/${curriculumId}/edit`,
@@ -51,8 +50,8 @@ export function CurriculumVersionsList({
     }
     if (setIntro && curriculum) {
       setIntro(
-        `${t("versionsTitle", { defaultValue: "Curriculum Versions" })} - ${curriculum.title}`,
-        t("versionsDescription", {
+        `${tCommon("versionsTitle", { defaultValue: "Curriculum Versions" })} - ${curriculum.title}`,
+        tCommon("versionsDescription", {
           defaultValue: "History of curriculum changes",
         }),
       );
@@ -66,8 +65,8 @@ export function CurriculumVersionsList({
     clearRoutes,
     setIntro,
     clearIntro,
-    t,
-    tCommon,
+          tCommon,
+        tCommon,
     curriculum?.title,
     curriculumId,
   ]);
@@ -113,8 +112,8 @@ export function CurriculumVersionsList({
   });
 
   const context: DataTableConfig<ResponseCurriculumDto> = {
-    singularName: t("item"),
-    pluralName: t("title"),
+    singularName: tCommon("item"),
+    pluralName: tCommon("title"),
     createCallback: undefined,
     inspectCallback: (entity: any) =>
       navigate(`/curriculum/${curriculumId}/versions/${entity.version}`),

@@ -54,8 +54,7 @@ export const CurriculumLessonMaterialItem = ({
   onSave,
   onDelete,
 }: CurriculumLessonMaterialItemProps) => {
-  const { t } = useTranslation("curriculum");
-  const { t: tCommon } = useTranslation("common");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const Icon = materialIcon(material.type);
   const {
     attributes,
@@ -116,7 +115,7 @@ export const CurriculumLessonMaterialItem = ({
           value={material.title}
           disabled={disabled}
           className="h-8 flex-1"
-          placeholder={t("fields.titlePlaceholder")}
+          placeholder={tCommon("fields.titlePlaceholder")}
           onChange={(event) => onChange({ title: event.target.value })}
         />
         <Button
@@ -208,7 +207,7 @@ export const CurriculumLessonMaterialItem = ({
             field={{
               id: `material-editor-${material.id}`,
               variant: FieldVariant.EDITOR,
-              placeholder: t("fields.contentPlaceholder"),
+              placeholder: tCommon("fields.contentPlaceholder"),
               props: {
                 autoHeight: true,
                 disabled,

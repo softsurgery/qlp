@@ -18,8 +18,9 @@ export function CurriculumModuleVersionsList({
   moduleId,
   curriculumId,
 }: CurriculumModuleVersionsListProps) {
-  const { t: tCommon } = useTranslation("common");
-  const { t } = useTranslation("curriculum");
+  const { t: tGlobal } = useTranslation("global");
+  const { t: tCommon } = useTranslation("curriculum-common");
+    const { t: tModule } = useTranslation("curriculum-module");
   const { api: baseApi, appType } = useApp();
   const api =
     appType === "admin"
@@ -39,7 +40,7 @@ export function CurriculumModuleVersionsList({
   React.useEffect(() => {
     if (setRoutes && curriculumId && curriculum && module) {
       setRoutes([
-        { title: t("title", "Curriculum"), href: "/curriculum" },
+        { title: tCommon("title"), href: "/curriculum" },
         {
           title: curriculum.title,
           href: `/curriculum/${curriculumId}/edit`,
@@ -48,13 +49,13 @@ export function CurriculumModuleVersionsList({
           title: module.title,
           href: `/curriculum/${curriculumId}/modules/${moduleId}/edit`,
         },
-        { title: tCommon("commands.history", "History") },
+        { title: tGlobal("commands.history") },
       ]);
     }
     if (setIntro && curriculum && module) {
       setIntro(
-        `${t("moduleVersions", "Module Versions")} - ${module.title}`,
-        `${curriculum.title} — ${t("moduleVersionsDescription", "History of module changes")}`,
+        `${tModule("moduleVersions")} - ${module.title}`,
+        `${curriculum.title} — ${tModule("moduleVersionsDescription")}`,
       );
     }
     return () => {
@@ -66,8 +67,10 @@ export function CurriculumModuleVersionsList({
     clearRoutes,
     setIntro,
     clearIntro,
-    t,
-    tCommon,
+          tCommon,
+          tModule,
+          tGlobal,
+        tCommon,
     curriculumId,
     moduleId,
     curriculum?.title,

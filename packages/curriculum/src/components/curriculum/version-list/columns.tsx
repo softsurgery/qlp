@@ -16,7 +16,7 @@ import { capitalize } from "lodash";
 export function useCurriculumVersionColumns(
   context: DataTableConfig<ResponseCurriculumDto>,
 ): ColumnDef<ResponseCurriculumDto>[] {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
 
   return React.useMemo(
     () =>
@@ -24,7 +24,7 @@ export function useCurriculumVersionColumns(
         {
           accessorKey: "title",
           meta: {
-            title: t("columns.title"),
+            title: tCommon("columns.title"),
             filterKey: "title",
             filterField: "title",
             filterType: "string",
@@ -34,7 +34,7 @@ export function useCurriculumVersionColumns(
           header: ({ column }) => (
             <DataTableColumnHeader
               column={column}
-              title={t("columns.title")}
+              title={tCommon("columns.title")}
               attribute="title"
               context={context}
             />
@@ -56,7 +56,7 @@ export function useCurriculumVersionColumns(
         {
           accessorKey: "slug",
           meta: {
-            title: t("columns.slug"),
+            title: tCommon("columns.slug"),
             filterKey: "slug",
             filterField: "slug",
             filterType: "string",
@@ -64,7 +64,7 @@ export function useCurriculumVersionColumns(
           header: ({ column }) => (
             <DataTableColumnHeader
               column={column}
-              title={t("columns.slug")}
+              title={tCommon("columns.slug")}
               attribute="slug"
               context={context}
             />
@@ -79,12 +79,12 @@ export function useCurriculumVersionColumns(
         {
           accessorKey: "version",
           meta: {
-            title: t("columns.version"),
+            title: tCommon("columns.version"),
           },
           header: ({ column }) => (
             <DataTableColumnHeader
               column={column}
-              title={t("columns.version")}
+              title={tCommon("columns.version")}
               attribute="version"
               context={context}
             />
@@ -97,7 +97,7 @@ export function useCurriculumVersionColumns(
         {
           accessorKey: "status",
           meta: {
-            title: t("columns.status"),
+            title: tCommon("columns.status"),
             filterKey: "status",
             filterField: "status",
             filterType: "select",
@@ -106,7 +106,7 @@ export function useCurriculumVersionColumns(
           header: ({ column }) => (
             <DataTableColumnHeader
               column={column}
-              title={t("columns.status")}
+              title={tCommon("columns.status")}
               attribute="status"
               context={context}
             />
@@ -117,12 +117,12 @@ export function useCurriculumVersionColumns(
         {
           accessorKey: "owner",
           meta: {
-            title: t("columns.owner"),
+            title: tCommon("columns.owner"),
           },
           header: ({ column }) => (
             <DataTableColumnHeader
               column={column}
-              title={t("columns.owner")}
+              title={tCommon("columns.owner")}
               attribute="owner"
               context={context}
             />
@@ -133,12 +133,12 @@ export function useCurriculumVersionColumns(
         {
           accessorKey: "createdBy",
           meta: {
-            title: t("columns.createdBy"),
+            title: tCommon("columns.createdBy"),
           },
           header: ({ column }) => (
             <DataTableColumnHeader
               column={column}
-              title={t("columns.createdBy")}
+              title={tCommon("columns.createdBy")}
               attribute="createdBy"
               context={context}
             />
@@ -149,7 +149,7 @@ export function useCurriculumVersionColumns(
         {
           accessorKey: "createdAt",
           meta: {
-            title: t("columns.createdAt"),
+            title: tCommon("columns.createdAt"),
             filterKey: "createdAt",
             filterField: "createdAt",
             filterType: "date-range",
@@ -157,7 +157,7 @@ export function useCurriculumVersionColumns(
           header: ({ column }) => (
             <DataTableColumnHeader
               column={column}
-              title={t("columns.createdAt")}
+              title={tCommon("columns.createdAt")}
               attribute="createdAt"
               context={context}
             />
@@ -177,7 +177,7 @@ export function useCurriculumVersionColumns(
         {
           accessorKey: "updatedAt",
           meta: {
-            title: t("columns.updatedAt"),
+            title: tCommon("columns.updatedAt"),
             filterKey: "updatedAt",
             filterField: "updatedAt",
             filterType: "date-range",
@@ -185,7 +185,7 @@ export function useCurriculumVersionColumns(
           header: ({ column }) => (
             <DataTableColumnHeader
               column={column}
-              title={t("columns.updatedAt")}
+              title={tCommon("columns.updatedAt")}
               attribute="updatedAt"
               context={context}
             />
@@ -211,6 +211,6 @@ export function useCurriculumVersionColumns(
           ),
         },
       ] satisfies ColumnDef<ResponseCurriculumDto>[],
-    [context, t],
+    [context, tCommon],
   );
 }

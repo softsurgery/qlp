@@ -16,7 +16,7 @@ export const useCurriculumModuleDeleteDialog = ({
   isDeletionPending,
   resetModule,
 }: CurriculumModuleDeleteDialogProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tModule } = useTranslation("curriculum-module");
   const close = { current: () => {} };
   const {
     DialogFragment: deleteCurriculumModuleDialog,
@@ -25,13 +25,12 @@ export const useCurriculumModuleDeleteDialog = ({
   } = useDialog({
     title: (
       <div className="leading-normal">
-        {t("dialogs.deleteModule.title", "Delete module")}{" "}
+        {tModule("dialogs.deleteModule.title")}{" "}
         <span className="font-light">{representation}</span>?
       </div>
     ),
-    description: t(
-      "dialogs.deleteModule.description",
-      "Previous versions are kept. This removes the latest version of the module and its lessons.",
+    description: tModule(
+      "dialogs.deleteModule.description"
     ),
     children: (
       <div className="flex justify-end gap-2">
@@ -41,7 +40,7 @@ export const useCurriculumModuleDeleteDialog = ({
             close.current();
           }}
         >
-          {t("dialogs.deleteModule.confirm", "Delete")}
+          {tModule("dialogs.deleteModule.confirm")}
           <Spinner show={isDeletionPending} />
         </Button>
         <Button
@@ -51,7 +50,7 @@ export const useCurriculumModuleDeleteDialog = ({
             close.current();
           }}
         >
-          {t("dialogs.deleteModule.cancel", "Cancel")}
+          {tModule("dialogs.deleteModule.cancel")}
         </Button>
       </div>
     ),

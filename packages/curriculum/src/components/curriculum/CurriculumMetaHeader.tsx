@@ -18,8 +18,8 @@ export const CurriculumMetaHeader = ({
   extraRows = [],
   uploadApi,
 }: CurriculumMetaHeaderProps) => {
-  const { t: tCommon } = useTranslation("common");
-  const { t: tCurriculum } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
+  const { t: tCurriculum } = useTranslation(["curriculum-common", "global", "curriculum-lesson", "curriculum-module", "curriculum-material"]);
 
   const createdBy = curriculum?.createdBy;
   const owner = curriculum?.owner;
@@ -51,7 +51,7 @@ export const CurriculumMetaHeader = ({
     ...(status
       ? [
           {
-            label: tCommon("fields.status", "Status"),
+            label: tCommon("fields.status"),
             value: tCurriculum(`status.${status}` as any, status),
           },
         ]
@@ -59,7 +59,7 @@ export const CurriculumMetaHeader = ({
     ...(createdBy
       ? [
           {
-            label: tCommon("fields.createdBy", "Created By"),
+            label: tCommon("fields.createdBy"),
             value: (
               <div className="flex items-center gap-2">
                 {uploadApi && (
@@ -83,7 +83,7 @@ export const CurriculumMetaHeader = ({
     ...(owner
       ? [
           {
-            label: tCommon("fields.owner", "Owner"),
+            label: tCommon("fields.owner"),
             value: (
               <div className="flex items-center gap-2">
                 {uploadApi && (
@@ -103,7 +103,7 @@ export const CurriculumMetaHeader = ({
     ...(createdAt
       ? [
           {
-            label: tCommon("fields.createdAt", "Created At"),
+            label: tCommon("fields.createdAt"),
             value: formatDate(createdAt),
           },
         ]
@@ -111,7 +111,7 @@ export const CurriculumMetaHeader = ({
     ...(updatedAt
       ? [
           {
-            label: tCommon("fields.updatedAt", "Updated At"),
+            label: tCommon("fields.updatedAt"),
             value: formatDate(updatedAt),
           },
         ]

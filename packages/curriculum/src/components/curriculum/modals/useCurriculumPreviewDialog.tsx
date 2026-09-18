@@ -18,8 +18,7 @@ export const useCurriculumPreviewDialog = ({
   previewItem,
   previewLesson,
 }: CurriculumPreviewDialogProps) => {
-  const { t } = useTranslation("curriculum");
-  const { t: tCommon } = useTranslation("common");
+  const { t: tGlobal } = useTranslation("global");
   const [searchParams, setSearchParams] = useSearchParams();
 
   const {
@@ -32,14 +31,14 @@ export const useCurriculumPreviewDialog = ({
       <>
         <SheetTitle className="sr-only">Preview</SheetTitle>
         <div className="flex items-center justify-between px-4 pt-3 border-b shrink-0 bg-background z-10">
-          <h2 className="text-lg font-semibold">{t("preview", "Preview")}</h2>
+          <h2 className="text-lg font-semibold">{tGlobal("preview")}</h2>
           <Button
             variant="outline"
             size="sm"
             onClick={() => window.open(previewUrl, "_blank")}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
-            {tCommon("commands.openExternally", "Open Externally")}
+            {tGlobal("commands.openExternally")}
           </Button>
         </div>
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">

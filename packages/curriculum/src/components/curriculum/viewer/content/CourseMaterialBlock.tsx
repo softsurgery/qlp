@@ -20,7 +20,7 @@ export const CourseMaterialBlock = ({
   className,
   material,
 }: CourseMaterialBlockProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t } = useTranslation(["curriculum-common", "global", "curriculum-lesson", "curriculum-module", "curriculum-material"]);
   const kind = materialKind(material.type);
   const Icon =
     kind === "video"

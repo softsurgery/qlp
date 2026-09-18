@@ -38,13 +38,13 @@ export function UpdateCurriculumModuleForm({
   moduleId,
   onSuccess,
 }: UpdateCurriculumModuleFormProps) {
-  const { t: tCommon } = useTranslation("common");
+  const { t: tGlobal } = useTranslation("global");
+    const { t: tCommon } = useTranslation("curriculum-common");
   const { api: baseApi, appType } = useApp();
   const api =
     appType === "admin"
       ? baseApi.adminCurriculumModules
       : baseApi.curriculumModules;
-  const { t } = useTranslation("curriculum");
   const queryClient = useQueryClient();
 
   const { curriculum } = useCurriculum({ id: curriculumId });
@@ -82,7 +82,7 @@ export function UpdateCurriculumModuleForm({
   React.useEffect(() => {
     if (setRoutes && module && curriculum) {
       setRoutes([
-        { title: t("title", "Curriculum"), href: "/curriculum" },
+        { title: tCommon("title"), href: "/curriculum" },
         {
           title: curriculum.title,
           href: `/curriculum/${curriculumId}/edit`,
@@ -91,7 +91,7 @@ export function UpdateCurriculumModuleForm({
       ]);
     }
     if (setEnableMainOverflow) setEnableMainOverflow(true);
-  }, [curriculum, curriculumId, module, setEnableMainOverflow, setRoutes, t]);
+  }, [curriculum, curriculumId, module, setEnableMainOverflow, setRoutes, tCommon, tGlobal]);
 
   React.useEffect(() => {
     return () => {
@@ -112,7 +112,7 @@ export function UpdateCurriculumModuleForm({
       return api.update(module.id, dto);
     },
     onSuccess: () => {
-      toast.success(tCommon("commands.saved", "Saved successfully"));
+      toast.success(tGlobal("commands.saved"));
       void queryClient.invalidateQueries({
         queryKey: ["curriculum-modules", curriculumId],
       });
@@ -129,7 +129,7 @@ export function UpdateCurriculumModuleForm({
       mutationFn: (event: string) =>
         api.workflow.executeWorkflow(moduleId, { event }),
       onSuccess: () => {
-        toast.success(tCommon("commands.saved", "Saved successfully"));
+        toast.success(tGlobal("commands.saved"));
         void queryClient.invalidateQueries({
           queryKey: ["curriculum", "modules", moduleId, "workflow"],
         });
@@ -146,13 +146,13 @@ export function UpdateCurriculumModuleForm({
   const handleSubmit = React.useCallback(() => {
     if (!curriculumModuleStore.updateDto.title?.trim()) {
       curriculumModuleStore.set("updateDtoErrors", {
-        title: [t("errors.titleRequired", "Title is required")],
+        title: [tCommon("errors.titleRequired")],
       });
       return;
     }
     curriculumModuleStore.set("updateDtoErrors", {});
     updateMutation(curriculumModuleStore.updateDto);
-  }, [updateMutation, curriculumModuleStore, t]);
+  }, [updateMutation, curriculumModuleStore, tCommon, tGlobal]);
 
   const mainContent = (
     <div className="flex flex-col gap-8">
@@ -175,7 +175,7 @@ export function UpdateCurriculumModuleForm({
           }}
           extraRows={[
             {
-              label: t("versions"),
+              label: tGlobal("versions"),
               value: (
                 <span
                   className="cursor-pointer text-primary hover:underline font-semibold"
@@ -196,17 +196,17 @@ export function UpdateCurriculumModuleForm({
 
       <div className="flex flex-col gap-2 w-full">
         <Label className="text-xs font-bold text-muted-foreground">
-          {tCommon("commands.actions", "Actions")}
+          {tGlobal("commands.actions")}
         </Label>
         <ActionGrid
           actions={[
             {
-              label: tCommon("commands.preview", "Preview") as string,
+              label: tGlobal("commands.preview") as string,
               icon: <Eye />,
               onClick: openPreviewDialog,
             },
             {
-              label: tCommon("commands.save") as string,
+              label: tGlobal("commands.save") as string,
               icon: <Save />,
               onClick: handleSubmit,
               disabled: !!(
@@ -221,7 +221,7 @@ export function UpdateCurriculumModuleForm({
               disabled: isPending || isWorkflowPending,
             })) || []),
             {
-              label: tCommon("commands.reset", "Reset") as string,
+              label: tGlobal("commands.reset") as string,
               icon: <Repeat2 />,
               onClick: resetStore,
               disabled: isPending,

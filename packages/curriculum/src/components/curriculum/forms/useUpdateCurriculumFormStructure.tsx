@@ -22,16 +22,16 @@ export const useUpdateCurriculumFormStructure = ({
   appType,
   ownerOptions,
 }: UseUpdateCurriculumFormStructureProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const getError = (err?: string[]) => err?.[0];
 
   const titleField: Field<TextFieldProps> = {
     id: "title",
-    label: t("fields.title"),
+    label: tCommon("fields.title"),
     variant: FieldVariant.TEXT,
     required: true,
-    placeholder: t("fields.titlePlaceholder"),
-    description: t("fields.titleDescription"),
+    placeholder: tCommon("fields.titlePlaceholder"),
+    description: tCommon("fields.titleDescription"),
     error: getError(curriculumStore.updateDtoErrors?.title),
     props: {
       value: curriculumStore.updateDto.title || "",
@@ -45,10 +45,10 @@ export const useUpdateCurriculumFormStructure = ({
 
   const slugField: Field<TextFieldProps> = {
     id: "slug",
-    label: t("fields.slug"),
+    label: tCommon("fields.slug"),
     variant: FieldVariant.TEXT,
-    placeholder: t("fields.slugPlaceholder"),
-    description: t("fields.slugDescription"),
+    placeholder: tCommon("fields.slugPlaceholder"),
+    description: tCommon("fields.slugDescription"),
     error: getError(curriculumStore.updateDtoErrors?.slug),
     props: {
       value: curriculumStore.updateDto.slug || "",
@@ -60,10 +60,10 @@ export const useUpdateCurriculumFormStructure = ({
 
   const descriptionField: Field<EditorFieldProps> = {
     id: "description",
-    label: t("fields.description"),
+    label: tCommon("fields.description"),
     variant: FieldVariant.EDITOR,
-    placeholder: t("fields.descriptionPlaceholder"),
-    description: t("fields.descriptionHint"),
+    placeholder: tCommon("fields.descriptionPlaceholder"),
+    description: tCommon("fields.descriptionHint"),
     error: getError(curriculumStore.updateDtoErrors?.description),
     props: {
       height: 500,
@@ -76,13 +76,12 @@ export const useUpdateCurriculumFormStructure = ({
 
   const ownerField: Field<SelectFieldProps> = {
     id: "ownerId",
-    label: t("fields.owner", "Owner"),
+    label: tCommon("fields.owner"),
     variant: FieldVariant.SELECT,
     required: false,
-    placeholder: t("fields.ownerPlaceholder", "Select an owner"),
-    description: t(
-      "fields.ownerDescription",
-      "Assign an owner to this curriculum",
+    placeholder: tCommon("fields.ownerPlaceholder"),
+    description: tCommon(
+      "fields.ownerDescription"
     ),
     error: getError(
       curriculumStore.updateDtoErrors?.ownerId as string[] | undefined,

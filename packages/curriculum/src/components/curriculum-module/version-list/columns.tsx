@@ -11,14 +11,12 @@ import { capitalize } from "lodash";
 import type { ResponseCurriculumModuleDto } from "@qlp/api-client";
 
 export function useCurriculumModuleVersionColumns(): ColumnDef<ResponseCurriculumModuleDto>[] {
-  const { t: tCommon } = useTranslation("common");
-  const { t } = useTranslation("curriculum");
-
+  const { t: tCommon } = useTranslation("curriculum-common");
   return React.useMemo<ColumnDef<ResponseCurriculumModuleDto>[]>(
     () => [
       {
         accessorKey: "title",
-        header: t("fields.title", "Title"),
+        header: tCommon("fields.title"),
         cell: ({ row }) => (
           <div>
             <div className="font-semibold truncate">{row.original.title}</div>
@@ -33,7 +31,7 @@ export function useCurriculumModuleVersionColumns(): ColumnDef<ResponseCurriculu
       },
       {
         accessorKey: "version",
-        header: tCommon("fields.version", "Version"),
+        header: tCommon("fields.version"),
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
             <span className="text-sm">{row.original.version}</span>
@@ -42,14 +40,14 @@ export function useCurriculumModuleVersionColumns(): ColumnDef<ResponseCurriculu
       },
       {
         accessorKey: "status",
-        header: tCommon("fields.status", "Status"),
+        header: tCommon("fields.status"),
         cell: ({ row }) => (
           <Badge>{capitalize(row.original.status || "Draft")}</Badge>
         ),
       },
       {
         accessorKey: "createdAt",
-        header: tCommon("fields.createdAt", "Created At"),
+        header: tCommon("fields.createdAt"),
         cell: ({ row }) => (
           <DataTableCell
             variant={DataTableCellVariant.DATE_TIME}
@@ -63,7 +61,7 @@ export function useCurriculumModuleVersionColumns(): ColumnDef<ResponseCurriculu
       },
       {
         accessorKey: "updatedAt",
-        header: tCommon("fields.updatedAt", "Updated At"),
+        header: tCommon("fields.updatedAt"),
         cell: ({ row }) => (
           <DataTableCell
             variant={DataTableCellVariant.DATE_TIME}
@@ -77,12 +75,12 @@ export function useCurriculumModuleVersionColumns(): ColumnDef<ResponseCurriculu
       },
       {
         accessorKey: "createdBy",
-        header: tCommon("fields.createdBy", "Created By"),
+        header: tCommon("fields.createdBy"),
         cell: ({ row }) => (
           <UserAvatarCell user={row.original.createdBy as any} />
         ),
       },
     ],
-    [t, tCommon],
+    [tCommon, tCommon],
   );
 }

@@ -11,7 +11,7 @@ interface CurriculumModuleCreateSheetProps {
 export const useCurriculumModuleCreateSheet = ({
   curriculumId,
 }: CurriculumModuleCreateSheetProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tModule } = useTranslation("curriculum-module");
   const reset = useCurriculumModuleStore((state) => state.reset);
   const close = { current: () => {} };
   const {
@@ -22,12 +22,11 @@ export const useCurriculumModuleCreateSheet = ({
     title: (
       <div className="flex items-center gap-2">
         <Layers />
-        {t("sheet.createModule.title", "Create module")}
+        {tModule("sheet.createModule.title")}
       </div>
     ),
-    description: t(
-      "sheet.createModule.description",
-      "Give this module a title and a short description.",
+    description: tModule(
+      "sheet.createModule.description"
     ),
     children: (
       <CreateCurriculumModuleForm

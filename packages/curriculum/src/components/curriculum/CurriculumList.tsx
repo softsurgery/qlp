@@ -29,7 +29,8 @@ interface CurriculumListProps {
 }
 
 export function CurriculumList({ className }: CurriculumListProps = {}) {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
+    const { t: tGlobal } = useTranslation("global");
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -44,16 +45,16 @@ export function CurriculumList({ className }: CurriculumListProps = {}) {
 
   React.useEffect(() => {
     if (setIntro) {
-      setIntro(t("title"), t("description"));
+      setIntro(tCommon("title"), tCommon("description"));
     }
     if (setRoutes) {
-      setRoutes([{ title: t("title") }]);
+      setRoutes([{ title: tCommon("title") }]);
     }
     return () => {
       if (clearIntro) clearIntro();
       if (clearRoutes) clearRoutes();
     };
-  }, [setIntro, clearIntro, setRoutes, clearRoutes, t]);
+  }, [setIntro, clearIntro, setRoutes, clearRoutes, tCommon, tGlobal]);
 
   const {
     page,
@@ -110,11 +111,11 @@ export function CurriculumList({ className }: CurriculumListProps = {}) {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => api.remove(id),
     onSuccess: () => {
-      toast.success(t("deleted"));
+      toast.success(tGlobal("deleted"));
       void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
     },
     onError: (error: ServerErrorResponse) =>
-      toast.error(errorMessage(error, t("deleteError"))),
+      toast.error(errorMessage(error, tGlobal("deleteError"))),
   });
 
   const { deleteCurriculumDialog, openDeleteCurriculumDialog } =
@@ -131,8 +132,8 @@ export function CurriculumList({ className }: CurriculumListProps = {}) {
   const items = listQuery.data?.data ?? [];
 
   const context: DataTableConfig<ResponseCurriculumDto> = {
-    singularName: t("item"),
-    pluralName: t("title"),
+    singularName: tCommon("item"),
+    pluralName: tCommon("title"),
     createCallback: () => navigate(`/curriculum/new`),
     inspectCallback: (entity) => navigate(`/curriculum/${entity.id}`),
     updateCallback: (entity) => navigate(`/curriculum/${entity.id}/edit`),
@@ -165,10 +166,10 @@ export function CurriculumList({ className }: CurriculumListProps = {}) {
   const statusFilterOptions: DataTableColumnFilterOption[] = React.useMemo(
     () =>
       Object.values(CurriculumStatus).map((status) => ({
-        label: t(`status.${status}`),
+        label: tCommon(`status.${status}`),
         filter: `status||$eq||${status}`,
       })),
-    [t],
+    [tCommon, tGlobal],
   );
 
   const columns = useCurriculumColumns(context, statusFilterOptions);

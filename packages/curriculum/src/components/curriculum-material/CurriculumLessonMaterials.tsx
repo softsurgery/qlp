@@ -87,8 +87,8 @@ export const CurriculumLessonMaterials = ({
   moduleId,
   disabled,
 }: CurriculumLessonMaterialsProps) => {
-  const { t } = useTranslation("curriculum");
-  const { t: tCommon } = useTranslation("common");
+  const { t: tMaterial } = useTranslation("curriculum-material");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const { api: baseApi, appType } = useApp();
   const api =
     appType === "admin"
@@ -274,13 +274,13 @@ export const CurriculumLessonMaterials = ({
   });
 
   const defaultTitle = (type: MaterialType) => {
-    if (type === MaterialType.Text) return t("materialEditor", "Editor");
-    if (type === MaterialType.Video) return t("materialVideo", "Video");
+    if (type === MaterialType.Text) return tMaterial("materialEditor");
+    if (type === MaterialType.Video) return tMaterial("materialVideo");
     if (type === MaterialType.Audio)
-      return t("materialAudio", "Voice recording");
-    if (type === MaterialType.Table) return t("materialTable", "Table");
-    if (type === MaterialType.Document) return t("materialDocument", "Document");
-    return t("editor.newMaterial", "New material");
+      return tMaterial("materialAudio");
+    if (type === MaterialType.Table) return tMaterial("materialTable");
+    if (type === MaterialType.Document) return tMaterial("materialDocument");
+    return tCommon("editor.newMaterial");
   };
 
   const addMaterial = (type: MaterialType) => {
@@ -354,7 +354,7 @@ export const CurriculumLessonMaterials = ({
   if (isLoading) {
     return (
       <div className="flex h-24 items-center justify-center text-sm text-muted-foreground">
-        {t("viewer.loading", "Loading...")}
+        {tCommon("viewer.loading")}
       </div>
     );
   }
@@ -364,12 +364,11 @@ export const CurriculumLessonMaterials = ({
       <div className="flex items-center justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold">
-            {t("editor.materials", "Materials")}
+            {tCommon("editor.materials")}
           </h3>
           <p className="text-sm text-muted-foreground">
-            {t(
-              "materialsDescription",
-              "Add and reorder the content blocks for this lesson.",
+            {tMaterial(
+              "materialsDescription"
             )}
           </p>
         </div>
@@ -382,7 +381,7 @@ export const CurriculumLessonMaterials = ({
               disabled={disabled}
             >
               <Plus className="h-4 w-4" />
-              <span>{t("editor.addMaterial")}</span>
+              <span>{tCommon("editor.addMaterial")}</span>
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -395,14 +394,14 @@ export const CurriculumLessonMaterials = ({
                   onSelect={() => addMaterial(block.type)}
                 >
                   <Icon className="h-4 w-4" />
-                  {t(block.labelKey, defaultTitle(block.type))}
+                  {tMaterial(block.labelKey)}
                 </DropdownMenuItem>
               );
             })}
             {baseApi.upload && (
               <DropdownMenuItem onSelect={() => batchUploadInputRef.current?.click()}>
                 <Upload className="h-4 w-4" />
-                {t("materialBatchUpload", "Upload Files")}
+                {tMaterial("materialBatchUpload")}
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>
@@ -424,9 +423,8 @@ export const CurriculumLessonMaterials = ({
             ))}
             {dndService.items.length === 0 && (
               <div className="rounded-lg border border-dashed py-8 text-center text-sm text-muted-foreground">
-                {t(
-                  "noMaterials",
-                  "No materials yet. Add an editor, video, recording, or table.",
+                {tMaterial(
+                  "noMaterials"
                 )}
               </div>
             )}

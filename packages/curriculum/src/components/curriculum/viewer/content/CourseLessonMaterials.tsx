@@ -17,7 +17,7 @@ export const CourseLessonMaterials = ({
   lesson,
   isPending,
 }: CourseLessonMaterialsProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const materials = lessonMaterials(lesson);
 
   return (
@@ -33,11 +33,11 @@ export const CourseLessonMaterials = ({
       {isPending ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="size-8 animate-spin text-muted-foreground" />
-          <span className="sr-only">{t("viewer.loading")}</span>
+          <span className="sr-only">{tCommon("viewer.loading")}</span>
         </div>
       ) : materials.length === 0 ? (
         <p className="text-sm text-muted-foreground">
-          {t("viewer.noMaterials")}
+          {tCommon("viewer.noMaterials")}
         </p>
       ) : (
         materials.map((material) => (

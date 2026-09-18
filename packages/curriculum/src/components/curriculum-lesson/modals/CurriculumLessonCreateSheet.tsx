@@ -13,7 +13,7 @@ export const useCurriculumLessonCreateSheet = ({
   curriculumId,
   moduleId,
 }: CurriculumLessonCreateSheetProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tLesson } = useTranslation("curriculum-lesson");
   const reset = useCurriculumLessonStore((state) => state.reset);
   const close = { current: () => {} };
   const {
@@ -24,12 +24,11 @@ export const useCurriculumLessonCreateSheet = ({
     title: (
       <div className="flex items-center gap-2">
         <BookOpen />
-        {t("sheet.createLesson.title", "Create lesson")}
+        {tLesson("sheet.createLesson.title")}
       </div>
     ),
-    description: t(
-      "sheet.createLesson.description",
-      "Give this lesson a title and a short description.",
+    description: tLesson(
+      "sheet.createLesson.description"
     ),
     children: (
       <CreateCurriculumLessonForm

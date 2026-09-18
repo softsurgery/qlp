@@ -31,7 +31,7 @@ export function CurriculumModuleItem({
   className,
 }: CurriculumModuleItemProps) {
   const { api: baseApi } = useApp();
-  const { t: tCommon } = useTranslation("common");
+  const { t: tGlobal } = useTranslation("global");
 
   const createdBy = module.createdBy;
   const { data: createdByAvatarSrc } = useUploadSrc(
@@ -99,7 +99,7 @@ export function CurriculumModuleItem({
           size="sm"
           className="h-8 w-8 p-0"
           onClick={() => onEdit?.(module)}
-          title={tCommon("commands.edit", "Edit")}
+          title={tGlobal("commands.edit")}
         >
           <Edit2 className="h-4 w-4" />
           <span className="sr-only">Edit</span>
@@ -110,7 +110,7 @@ export function CurriculumModuleItem({
           size="sm"
           className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
           onClick={() => onDelete?.(module)}
-          title={tCommon("commands.delete", "Delete")}
+          title={tGlobal("commands.delete")}
         >
           <X className="h-4 w-4" />
           <span className="sr-only">Delete</span>

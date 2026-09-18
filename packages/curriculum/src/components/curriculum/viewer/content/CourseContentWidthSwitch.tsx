@@ -50,13 +50,13 @@ export const CourseContentWidthSwitch = ({
   value,
   onChange,
 }: CourseContentWidthSwitchProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
 
   return (
     <TooltipProvider delayDuration={300}>
       <div
         role="radiogroup"
-        aria-label={t("viewer.contentWidth")}
+        aria-label={tCommon("viewer.contentWidth")}
         className={cn(
           "inline-flex items-center rounded-md border bg-background p-0.5",
           className,
@@ -71,7 +71,7 @@ export const CourseContentWidthSwitch = ({
                   type="button"
                   role="radio"
                   aria-checked={selected}
-                  aria-label={t(option.labelKey)}
+                  aria-label={tCommon(option.labelKey)}
                   onClick={() => onChange(option.id)}
                   className={cn(
                     "flex size-8 items-center justify-center rounded-sm text-muted-foreground transition-colors",
@@ -90,7 +90,7 @@ export const CourseContentWidthSwitch = ({
                 </button>
               </TooltipTrigger>
               <TooltipContent hideArrow side="bottom" sideOffset={6}>
-                {t(option.labelKey)}
+                {tCommon(option.labelKey)}
               </TooltipContent>
             </Tooltip>
           );

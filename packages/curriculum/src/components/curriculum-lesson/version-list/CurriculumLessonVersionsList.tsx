@@ -20,8 +20,9 @@ export function CurriculumLessonVersionsList({
   moduleId,
   curriculumId,
 }: CurriculumLessonVersionsListProps) {
-  const { t: tCommon } = useTranslation("common");
-  const { t } = useTranslation("curriculum");
+  const { t: tGlobal } = useTranslation("global");
+  const { t: tCommon } = useTranslation("curriculum-common");
+    const { t: tLesson } = useTranslation("curriculum-lesson");
 
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setIntro, clearIntro } = useIntro();
@@ -37,7 +38,7 @@ export function CurriculumLessonVersionsList({
   React.useEffect(() => {
     if (setRoutes && curriculumId && moduleId && curriculum && module) {
       setRoutes([
-        { title: t("title", "Curriculum"), href: "/curriculum" },
+        { title: tCommon("title"), href: "/curriculum" },
         {
           title: curriculum.title,
           href: `/curriculum/${curriculumId}/edit`,
@@ -50,13 +51,13 @@ export function CurriculumLessonVersionsList({
           title: lessonTitle,
           href: `/curriculum/${curriculumId}/modules/${moduleId}/lessons/${lessonId}/edit`,
         },
-        { title: tCommon("commands.history", "History") },
+        { title: tGlobal("commands.history") },
       ]);
     }
     if (setIntro && curriculum && module) {
       setIntro(
-        `${t("lessonVersions", "Lesson Versions")} - ${lessonTitle}`,
-        `${curriculum.title} / ${module.title} — ${t("lessonVersionsDescription", "History of lesson changes")}`,
+        `${tLesson("lessonVersions")} - ${lessonTitle}`,
+        `${curriculum.title} / ${module.title} — ${tLesson("lessonVersionsDescription")}`,
       );
     }
     return () => {
@@ -68,8 +69,10 @@ export function CurriculumLessonVersionsList({
     clearRoutes,
     setIntro,
     clearIntro,
-    t,
-    tCommon,
+          tCommon,
+          tLesson,
+          tGlobal,
+        tCommon,
     curriculumId,
     moduleId,
     lessonId,

@@ -27,13 +27,13 @@ export function CreateCurriculumModuleForm({
   onSuccess,
   onCancel,
 }: CreateCurriculumModuleFormProps) {
-  const { t: tCommon } = useTranslation("common");
+  const { t: tGlobal } = useTranslation("global");
+    const { t: tCommon } = useTranslation("curriculum-common");
   const { api: baseApi, appType } = useApp();
   const api =
     appType === "admin"
       ? baseApi.adminCurriculumModules
       : baseApi.curriculumModules;
-  const { t } = useTranslation("curriculum");
   const queryClient = useQueryClient();
 
   const curriculumModuleStore = useCurriculumModuleStore();
@@ -47,7 +47,7 @@ export function CreateCurriculumModuleForm({
     mutationFn: (dto: CreateCurriculumModuleDto) =>
       api.create(curriculumId, dto),
     onSuccess: () => {
-      toast.success(tCommon("commands.created", "Created successfully"));
+      toast.success(tGlobal("commands.created"));
       void queryClient.invalidateQueries({
         queryKey: ["curriculum-modules", curriculumId],
       });
@@ -62,13 +62,13 @@ export function CreateCurriculumModuleForm({
   const handleSubmit = React.useCallback(() => {
     if (!curriculumModuleStore.createDto.title?.trim()) {
       curriculumModuleStore.set("createDtoErrors", {
-        title: [t("errors.titleRequired", "Title is required")],
+        title: [tCommon("errors.titleRequired")],
       });
       return;
     }
     curriculumModuleStore.set("createDtoErrors", {});
     createMutation(curriculumModuleStore.createDto);
-  }, [createMutation, curriculumModuleStore, t]);
+  }, [createMutation, curriculumModuleStore, tCommon, tGlobal]);
 
   return (
     <div
@@ -81,11 +81,11 @@ export function CreateCurriculumModuleForm({
       <div className="flex justify-end gap-2 border-t px-4 py-3">
         <Button onClick={handleSubmit} disabled={isPending}>
           <Save />
-          {tCommon("commands.save")}
+          {tGlobal("commands.save")}
         </Button>
         {onCancel && (
           <Button variant="secondary" onClick={onCancel} disabled={isPending}>
-            {tCommon("commands.cancel")}
+            {tGlobal("commands.cancel")}
           </Button>
         )}
       </div>

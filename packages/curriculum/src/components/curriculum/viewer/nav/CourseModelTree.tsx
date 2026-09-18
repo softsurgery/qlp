@@ -31,7 +31,7 @@ export const ModuleTree = ({
   openAccordionId,
   onSelectItem,
 }: ModuleTreeProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const outline = moduleOutline(module);
   const moduleSelected = selectedItemId === moduleItemId(module.id);
   const selectedInModule =
@@ -90,7 +90,7 @@ export const ModuleTree = ({
           <button
             type="button"
             aria-label={
-              open ? t("viewer.collapseModule") : t("viewer.expandModule")
+              open ? tCommon("viewer.collapseModule") : tCommon("viewer.expandModule")
             }
             className={cn(
               "flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground",
@@ -108,7 +108,7 @@ export const ModuleTree = ({
       <CollapsibleContent>
         {outline.length === 0 ? (
           <p className="py-2 ps-9 text-xs text-muted-foreground">
-            {t("viewer.emptyModule")}
+            {tCommon("viewer.emptyModule")}
           </p>
         ) : (
           <ul className="ms-3 flex flex-col border-s border-border/70">

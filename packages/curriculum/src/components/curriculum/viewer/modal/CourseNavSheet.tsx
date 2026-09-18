@@ -26,14 +26,15 @@ export const useCourseNavSheet = ({
   openAccordionId,
   onSelectItem,
 }: CourseNavSheetProps) => {
-  const { t, i18n } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
+    const { i18n } = useTranslation();
   const close = { current: () => {} };
   const {
     SheetFragment: courseNavSheet,
     openSheet: openCourseNavSheet,
     closeSheet: closeCourseNavSheet,
   } = useSheet({
-    title: t("viewer.courseMaterial"),
+    title: tCommon("viewer.courseMaterial"),
     headerClassName: "sr-only",
     showCloseButton: false,
     side: i18n.dir() === "rtl" ? "right" : "left",

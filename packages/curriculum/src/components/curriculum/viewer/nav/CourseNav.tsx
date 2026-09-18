@@ -31,7 +31,7 @@ export const CourseNav = ({
   onSelectItem,
   onClose,
 }: CourseNavProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const ordered = sortByOrder(modules);
 
   return (
@@ -47,7 +47,7 @@ export const CourseNav = ({
             )}
           >
             <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              {t("viewer.title")}
+              {tCommon("viewer.title")}
             </p>
             <h2 className="mt-1 text-lg font-semibold leading-snug">{title}</h2>
           </button>
@@ -63,7 +63,7 @@ export const CourseNav = ({
             size="icon-sm"
             className="shrink-0"
             onClick={onClose}
-            aria-label={t("viewer.close")}
+            aria-label={tCommon("viewer.close")}
           >
             <PanelLeft className="size-4" />
           </Button>
@@ -72,16 +72,16 @@ export const CourseNav = ({
 
       <div className="min-h-0 flex-1 overflow-y-auto px-2 py-3">
         <p className="px-2 pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          {t("viewer.courseMaterial")}
+          {tCommon("viewer.courseMaterial")}
         </p>
         {ordered.length === 0 ? (
           <p className="px-2 py-3 text-sm text-muted-foreground">
-            {t("viewer.noModules")}
+            {tCommon("viewer.noModules")}
           </p>
         ) : (
           <nav
             className="flex flex-col gap-1"
-            aria-label={t("viewer.courseMaterial")}
+            aria-label={tCommon("viewer.courseMaterial")}
           >
             {ordered.map((module, index) => (
               <ModuleTree

@@ -43,7 +43,8 @@ export const CurriculumViewer = ({
   version,
   revealAnswers,
 }: CurriculumViewerProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
+    const { t: tGlobal } = useTranslation("global");
   const { setShowSidebar, clearShowSidebar } = useUI();
 
   const { curriculum, isCurriculumPending, isCurriculumError } = useCurriculum({
@@ -78,7 +79,7 @@ export const CurriculumViewer = ({
         )}
       >
         <Loader2 className="size-8 animate-spin text-muted-foreground" />
-        <span className="sr-only">{t("viewer.loading")}</span>
+        <span className="sr-only">{tCommon("viewer.loading")}</span>
       </div>
     );
   }
@@ -91,7 +92,7 @@ export const CurriculumViewer = ({
           className,
         )}
       >
-        <p className="text-destructive">{t("loadError")}</p>
+        <p className="text-destructive">{tGlobal("loadError")}</p>
       </div>
     );
   }
@@ -122,7 +123,8 @@ const CourseViewer = ({
   modules,
   revealAnswers,
 }: CourseViewerProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
+    const { t: tGlobal } = useTranslation("global");
   const { appType } = useApp();
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -240,14 +242,14 @@ const CourseViewer = ({
   React.useEffect(() => {
     if (!setRoutes) return;
     const routes: BreadcrumbRoute[] = [
-      { title: t("title"), href: "/curriculum" },
+      { title: tCommon("title"), href: "/curriculum" },
       ...viewerCrumbs,
     ];
     setRoutes(routes);
     return () => {
       clearRoutes?.();
     };
-  }, [clearRoutes, setRoutes, t, viewerCrumbs]);
+  }, [clearRoutes, setRoutes, tCommon, tGlobal, viewerCrumbs]);
 
   const showNavTrigger = isCompact || !showNav;
   const showAsideTrigger = isNarrow || !showAside;
@@ -271,7 +273,7 @@ const CourseViewer = ({
               }
             >
               <PanelLeft className="size-4" />
-              {t("viewer.courseMaterial")}
+              {tCommon("viewer.courseMaterial")}
             </Button>
           ) : null}
           {isCompact ? (
@@ -289,10 +291,10 @@ const CourseViewer = ({
               onClick={() =>
                 isNarrow ? openCourseAsideSheet() : setShowAside(true)
               }
-              aria-label={t("viewer.overview")}
+              aria-label={tCommon("viewer.overview")}
             >
               <PanelRight className="size-4" />
-              {!isCompact ? t("viewer.overview") : null}
+              {!isCompact ? tCommon("viewer.overview") : null}
             </Button>
           ) : null}
         </div>
@@ -325,15 +327,15 @@ const CourseViewer = ({
           <main className="min-w-0 flex-1 overflow-y-auto bg-background">
             {modules.length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center">
-                <p className="font-medium">{t("viewer.noModules")}</p>
+                <p className="font-medium">{tCommon("viewer.noModules")}</p>
                 <p className="text-sm text-muted-foreground">
-                  {t("viewer.noModulesHint")}
+                  {tCommon("viewer.noModulesHint")}
                 </p>
                 {appType ? (
                   <Button asChild className="mt-2">
                     <Link to={`/curriculum/${curriculumId}/edit`}>
                       <Pencil className="size-4" />
-                      {t("edit")}
+                      {tGlobal("edit")}
                     </Link>
                   </Button>
                 ) : null}

@@ -17,7 +17,7 @@ export const CourseModuleLessons = ({
   module,
   onSelectItem,
 }: CourseModuleLessonsProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const outline = moduleOutline(module);
 
   return (
@@ -30,13 +30,13 @@ export const CourseModuleLessons = ({
           <HtmlContent html={module.description} className="mt-3" />
         ) : (
           <p className="mt-1 text-sm text-muted-foreground">
-            {t("viewer.selectLesson")}
+            {tCommon("viewer.selectLesson")}
           </p>
         )}
       </div>
       {outline.length === 0 ? (
         <p className="text-sm text-muted-foreground">
-          {t("viewer.emptyModule")}
+          {tCommon("viewer.emptyModule")}
         </p>
       ) : (
         <ul className="flex flex-col gap-2">
@@ -47,7 +47,7 @@ export const CourseModuleLessons = ({
                 <li key={itemId}>
                   <CourseOutlineRow
                     title={entry.exam.title}
-                    meta={t("editor.exam")}
+                    meta={tCommon("editor.exam")}
                     icon={<ClipboardList className="size-4" />}
                     onClick={() => onSelectItem(itemId)}
                   />
@@ -58,7 +58,7 @@ export const CourseModuleLessons = ({
               <li key={itemId}>
                 <CourseOutlineRow
                   title={entry.lesson.title}
-                  meta={t("editor.lesson")}
+                  meta={tCommon("editor.lesson")}
                   onClick={() => onSelectItem(itemId)}
                 />
               </li>

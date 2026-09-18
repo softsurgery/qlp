@@ -29,8 +29,8 @@ export function MaterialMediaField({
   disabled,
   onUploaded,
 }: MaterialMediaFieldProps) {
-  const { t } = useTranslation("curriculum");
-  const { t: tCommon } = useTranslation("common");
+  const { t: tMaterial } = useTranslation("curriculum-material");
+  const { t: tCommon } = useTranslation("curriculum-common");
   const { api } = useApp();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const recorderRef = React.useRef<MediaRecorder | null>(null);
@@ -78,7 +78,7 @@ export function MaterialMediaField({
         onUploaded({ storageId: upload.id, filename: file.name });
       }
     } catch {
-      toast.error(tCommon("errors.saveFailed", "Failed to upload file"));
+      toast.error(tCommon("errors.saveFailed"));
     } finally {
       setProgress(null);
     }
@@ -91,7 +91,7 @@ export function MaterialMediaField({
 
   const startRecording = async () => {
     if (disabled || !navigator.mediaDevices?.getUserMedia) {
-      toast.error(t("recordingError", "Could not access the microphone"));
+      toast.error(tMaterial("recordingError"));
       return;
     }
     try {
@@ -121,7 +121,7 @@ export function MaterialMediaField({
       recorder.start();
       setRecording(true);
     } catch {
-      toast.error(t("recordingError", "Could not access the microphone"));
+      toast.error(tMaterial("recordingError"));
     }
   };
 
@@ -141,8 +141,8 @@ export function MaterialMediaField({
           )}
         >
           {kind === "video"
-            ? t("noVideo", "No video uploaded")
-            : t("noAudio", "No recording yet")}
+            ? tMaterial("noVideo")
+            : tMaterial("noAudio")}
         </div>
       )}
 
@@ -178,11 +178,11 @@ export function MaterialMediaField({
           <Upload className="size-4" />
           {kind === "video"
             ? previewSrc
-              ? t("replaceVideo", "Replace video")
-              : t("uploadVideo", "Upload video")
+              ? tMaterial("replaceVideo")
+              : tMaterial("uploadVideo")
             : previewSrc
-              ? t("replaceAudio", "Replace audio")
-              : t("uploadAudio", "Upload audio")}
+              ? tMaterial("replaceAudio")
+              : tMaterial("uploadAudio")}
         </Button>
         {kind === "audio" ? (
           <Button
@@ -194,8 +194,8 @@ export function MaterialMediaField({
           >
             {recording ? <Square className="size-4" /> : <Mic className="size-4" />}
             {recording
-              ? t("stopRecording", "Stop recording")
-              : t("startRecording", "Start recording")}
+              ? tMaterial("stopRecording")
+              : tMaterial("startRecording")}
           </Button>
         ) : null}
       </div>

@@ -15,11 +15,11 @@ export const CourseExamQuestionBlock = ({
   index,
   revealAnswers,
 }: CourseExamQuestionBlockProps) => {
-  const { t } = useTranslation("curriculum");
+  const { t: tCommon } = useTranslation("curriculum-common");
   return (
     <li className={cn("text-sm", className)}>
       <p className="font-medium">
-        {t("editor.questionN", { n: index + 1 })} · {question.prompt}
+        {tCommon("editor.questionN", { n: index + 1 })} · {question.prompt}
       </p>
       {question.options?.length ? (
         <ul className="mt-2 space-y-1 ps-4 text-muted-foreground">
@@ -30,7 +30,7 @@ export const CourseExamQuestionBlock = ({
       ) : null}
       {revealAnswers && question.answer ? (
         <p className="mt-2 text-xs font-medium text-primary">
-          {t("viewer.correctAnswer", { answer: question.answer })}
+          {tCommon("viewer.correctAnswer", { answer: question.answer })}
         </p>
       ) : null}
     </li>
