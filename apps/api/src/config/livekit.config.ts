@@ -9,4 +9,6 @@ export default registerAs('livekit', () => ({
   emptyTimeout: process.env.LIVEKIT_EMPTY_TIMEOUT
     ? Number(process.env.LIVEKIT_EMPTY_TIMEOUT)
     : 300,
+  webhookApiKey: process.env.LIVEKIT_WEBHOOK_API_KEY || process.env.LIVEKIT_API_KEY,
+  webhookApiSecret: process.env.LIVEKIT_WEBHOOK_API_SECRET || process.env.LIVEKIT_API_SECRET,
 }));

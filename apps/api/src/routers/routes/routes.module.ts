@@ -13,6 +13,7 @@ import { ClientCurriculumLessonMaterialController } from 'src/modules/curriculum
 import { ClientCurriculumExamController } from 'src/modules/curriculum/controllers/client-curriculum-exam.controller';
 import { MediaModule } from 'src/modules/media/media.module';
 import { ClientMediaController } from 'src/modules/media/controllers/client-media.controller';
+import { MediaWebhookController } from 'src/modules/media/controllers/media-webhook.controller';
 
 @Module({
   controllers: [
@@ -24,6 +25,7 @@ import { ClientMediaController } from 'src/modules/media/controllers/client-medi
     ClientCurriculumLessonMaterialController,
     ClientCurriculumExamController,
     ClientMediaController,
+    MediaWebhookController,
   ],
   providers: [],
   exports: [],

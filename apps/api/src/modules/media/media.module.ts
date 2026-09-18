@@ -11,6 +11,7 @@ import { MediaWebhookEventRepository } from './repositories/media-webhook-event.
 import { MediaTokenService } from './services/media-token.service';
 import { MediaRoomService } from './services/media-room.service';
 import { MediaRoomParticipantService } from './services/media-room-participant.service';
+import { MediaWebhookService } from './services/media-webhook.service';
 import { MediaService } from './services/media.service';
 
 @Module({
@@ -21,12 +22,14 @@ import { MediaService } from './services/media.service';
     MediaTokenService,
     MediaRoomParticipantService,
     MediaRoomService,
+    MediaWebhookService,
     MediaService,
   ],
   exports: [
     MediaService,
     MediaRoomService,
     MediaRoomParticipantService,
+    MediaWebhookService,
     MediaTokenService,
   ],
   imports: [

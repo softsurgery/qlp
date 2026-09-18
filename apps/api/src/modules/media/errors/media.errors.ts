@@ -50,3 +50,15 @@ export class MediaParticipantConflictException extends HttpException {
     super('This user is already enrolled in the session', HttpStatus.CONFLICT);
   }
 }
+
+export class MediaWebhookSignatureException extends HttpException {
+  constructor() {
+    super('Invalid webhook signature', HttpStatus.UNAUTHORIZED);
+  }
+}
+
+export class MediaWebhookBodyException extends HttpException {
+  constructor() {
+    super('Webhook raw body unavailable', HttpStatus.BAD_REQUEST);
+  }
+}
