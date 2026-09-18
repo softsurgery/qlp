@@ -1,3 +1,4 @@
+export { ActionGrid, type ActionGridItem } from "./ActionGrid";
 export { BreadcrumbCommon } from "./BreadcrumbCommon";
 export { LanguageSwitcher } from "./LanguageSwitcher";
 export { Spinner } from "./Spinner";

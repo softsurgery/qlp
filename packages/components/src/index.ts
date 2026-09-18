@@ -15,6 +15,7 @@ export type {
 } from "./auth";
 
 export {
+  ActionGrid,
   BreadcrumbCommon,
   LanguageSwitcher,
   Spinner,
