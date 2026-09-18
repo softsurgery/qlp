@@ -11,6 +11,11 @@ redis:
 keys:
   devkey: qlp_local_dev_secret_do_not_use_in_prod_01
 
+webhook:
+  api_key: devkey
+  urls:
+    - http://host.docker.internal:8080/api/media/webhooks
+
 logging:
   level: info
   json: false
