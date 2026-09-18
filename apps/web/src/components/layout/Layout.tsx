@@ -32,6 +32,7 @@ function LayoutShell() {
         <SiteHeader />
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
           <div
+            id="main-layout"
             className={cn(
               "flex min-h-0 flex-1 flex-col gap-4 p-2 md:p-4",
               enableMainOverflow ? "overflow-auto" : "overflow-hidden",
