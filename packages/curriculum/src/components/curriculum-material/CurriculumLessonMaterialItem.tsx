@@ -194,7 +194,7 @@ export const CurriculumLessonMaterialItem = ({
               variant: FieldVariant.EDITOR,
               placeholder: t("fields.contentPlaceholder"),
               props: {
-                height: 220,
+                autoHeight: true,
                 disabled,
                 value: material.content || "",
                 onChange: (value: string) => onChange({ content: value }),

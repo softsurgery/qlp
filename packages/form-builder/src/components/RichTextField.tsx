@@ -1,4 +1,5 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -17,7 +18,8 @@ interface RichTextFieldProps {
 }
 
 export const RichTextField = ({ field }: RichTextFieldProps) => {
-  const { value, onChange, disabled, maxLength, height } = field.props || {};
+  const { value, onChange, disabled, maxLength, height, autoHeight } =
+    field.props || {};
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const onChangeRef = React.useRef(onChange);
   onChangeRef.current = onChange;
@@ -67,13 +69,13 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
     };
   }, [isFullscreen]);
 
-  return (
+  const content = (
     <div
       className={cn(
         "w-full rounded-md shadow-sm mt-1 transition-all duration-200",
         field.error && "border-destructive focus-within:ring-destructive",
         isFullscreen &&
-          "fixed inset-0 z-50 bg-background m-0 p-1 sm:p-3 w-full h-full overflow-hidden flex flex-col rounded-none border-none",
+          "fixed inset-0 z-[9999] bg-background m-0 p-1 sm:p-3 w-full h-full overflow-hidden flex flex-col rounded-none border-none",
         !isFullscreen && field.className,
       )}
     >
@@ -132,7 +134,8 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
         <RichTextEditor.Content
           className={cn(
             "overflow-y-auto",
-            !height && !isFullscreen && "min-h-[150px] max-h-[400px]",
+            !height && !autoHeight && !isFullscreen && "min-h-37.5 max-h-100",
+            autoHeight && !isFullscreen && "min-h-37.5",
             isFullscreen && "flex-1 min-h-0 max-h-none",
           )}
           style={
@@ -142,4 +145,18 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
       </RichTextEditor>
     </div>
   );
+
+  if (isFullscreen && typeof document !== "undefined") {
+    return (
+      <>
+        <div
+          className={cn("w-full rounded-md mt-1", field.className)}
+          style={{ height: height || "150px" }}
+        />
+        {createPortal(content, document.body)}
+      </>
+    );
+  }
+
+  return content;
 };
