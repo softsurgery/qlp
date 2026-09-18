@@ -29,9 +29,10 @@ export class CurriculumLessonMaterialService extends AbstractVersioningCrudServi
   }
 
   async findLatestByLesson(lessonId: string) {
-    return this.findAll({
-      filter: `lessonId||$eq||${lessonId}`,
-      sort: 'sortOrder',
+    return this.repository.findAllLatest({
+      where: { lessonId },
+      order: { sortOrder: 'ASC' },
+      relations: ['storage'],
     });
   }
 

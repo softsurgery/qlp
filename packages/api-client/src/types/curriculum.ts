@@ -1,6 +1,7 @@
 import type { VersionedEntity } from "./utils/database-entity.js";
 import type { ResponseUserDto } from "./user-managemnt.js";
 import type { ResponseWorkflowDto } from "./utils/workflow.js";
+import { Upload } from "./upload.js";
 
 export enum CurriculumStatus {
   Draft = "draft",
@@ -67,6 +68,7 @@ export interface ResponseCurriculumLessonMaterialDto extends VersionedEntity {
   type: MaterialType | string;
   content?: string;
   storageId?: number;
+  storage?: Upload;
   sortOrder: number;
 }
 
