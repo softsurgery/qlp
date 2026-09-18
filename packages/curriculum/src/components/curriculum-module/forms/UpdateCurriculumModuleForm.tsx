@@ -6,6 +6,7 @@ import { Save, Repeat2, Eye } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useApp, useBreadcrumb, useUI } from "@qlp/contexts";
 import { Button, Label, Separator } from "@qlp/ui";
+import { ActionGrid } from "@qlp/components";
 import {
   useCurriculum,
   useCurriculumModules,
@@ -197,52 +198,36 @@ export function UpdateCurriculumModuleForm({
         <Label className="text-xs font-bold text-muted-foreground">
           {tCommon("commands.actions", "Actions")}
         </Label>
-        <Button
-          type="button"
-          size="sm"
-          variant="secondary"
-          onClick={openPreviewDialog}
-        >
-          <Eye className="h-4 w-4" />
-          <span>{tCommon("commands.preview", "Preview")}</span>
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          onClick={handleSubmit}
-          disabled={
-            !!(
-              isPending ||
-              isLoading ||
-              (workflowData && !workflowData.isUpdatable)
-            )
-          }
-        >
-          <Save className="h-4 w-4" />
-          <span>{tCommon("commands.save")}</span>
-        </Button>
-        {workflowData?.nextSteps?.map((step) => (
-          <Button
-            key={step.label}
-            type="button"
-            size="sm"
-            variant="secondary"
-            onClick={() => executeWorkflow(step.label)}
-            disabled={isPending || isWorkflowPending}
-          >
-            {step.label}
-          </Button>
-        ))}
-        <Button
-          type="button"
-          size="sm"
-          variant={"ghost"}
-          onClick={resetStore}
-          disabled={isPending}
-        >
-          <Repeat2 className="mr-2 h-4 w-4" />
-          <span>{tCommon("commands.reset", "Reset")}</span>
-        </Button>
+        <ActionGrid
+          actions={[
+            {
+              label: tCommon("commands.preview", "Preview") as string,
+              icon: <Eye />,
+              onClick: openPreviewDialog,
+            },
+            {
+              label: tCommon("commands.save") as string,
+              icon: <Save />,
+              onClick: handleSubmit,
+              disabled: !!(
+                isPending ||
+                isLoading ||
+                (workflowData && !workflowData.isUpdatable)
+              ),
+            },
+            ...(workflowData?.nextSteps?.map((step) => ({
+              label: step.label,
+              onClick: () => executeWorkflow(step.label),
+              disabled: isPending || isWorkflowPending,
+            })) || []),
+            {
+              label: tCommon("commands.reset", "Reset") as string,
+              icon: <Repeat2 />,
+              onClick: resetStore,
+              disabled: isPending,
+            },
+          ]}
+        />
       </div>
 
       {previewDialog}
@@ -262,7 +247,6 @@ export function UpdateCurriculumModuleForm({
       className={className}
       main={mainContent}
       sidebar={sidebarContent}
-      sidebarTitle={tCommon("commands.actions", "Actions")}
     />
   );
 }

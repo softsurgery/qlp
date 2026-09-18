@@ -6,8 +6,9 @@ import { toast } from "sonner";
 import { Repeat2, Save } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useBreadcrumb, useUI, useApp } from "@qlp/contexts";
-import { Button, Label } from "@qlp/ui";
+import { Label } from "@qlp/ui";
 import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
+import { ActionGrid } from "@qlp/components";
 import {
   type CreateCurriculumDto,
   type ServerErrorResponse,
@@ -126,25 +127,22 @@ export function CreateCurriculumForm({
         <Label className="text-xs font-bold text-muted-foreground">
           {tCommon("commands.actions")}
         </Label>
-        <Button
-          type="button"
-          size="sm"
-          onClick={handleSubmit}
-          disabled={isPending}
-        >
-          <Save className="h-4 w-4" />
-          <span>{tCommon("commands.save")}</span>
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant={"ghost"}
-          onClick={handleReset}
-          disabled={isPending}
-        >
-          <Repeat2 className="h-4 w-4" />
-          <span>{tCommon("commands.reset")}</span>
-        </Button>
+        <ActionGrid
+          actions={[
+            {
+              label: tCommon("commands.save") as string,
+              icon: <Save />,
+              onClick: handleSubmit,
+              disabled: isPending,
+            },
+            {
+              label: tCommon("commands.reset") as string,
+              icon: <Repeat2 />,
+              onClick: handleReset,
+              disabled: isPending,
+            },
+          ]}
+        />
       </div>
     </>
   );
@@ -154,7 +152,6 @@ export function CreateCurriculumForm({
       className={className}
       main={mainContent}
       sidebar={sidebarContent}
-      sidebarTitle={tCommon("commands.actions", "Actions")}
     />
   );
 }
