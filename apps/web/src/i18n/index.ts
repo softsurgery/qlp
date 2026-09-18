@@ -6,6 +6,7 @@ import { datatableResources } from "@qlp/datatable-builder/i18n";
 import { formBuilderResources } from "@qlp/form-builder/i18n";
 import { uiResources } from "@qlp/ui/i18n";
 import { curriculumResources } from "@qlp/curriculum/i18n";
+import { meetingsResources } from "@qlp/meetings/i18n";
 import { i18nConfig } from "./config";
 import translationAr from "./locales/ar/translation.json";
 import translationEn from "./locales/en/translation.json";
@@ -24,6 +25,7 @@ i18n
         "form-builder": formBuilderResources.en,
         components: componentsResources.en,
         curriculum: curriculumResources.en,
+        meetings: meetingsResources.en,
       },
       ar: {
         translation: translationAr,
@@ -32,6 +34,7 @@ i18n
         "form-builder": formBuilderResources.ar,
         components: componentsResources.ar,
         curriculum: curriculumResources.ar,
+        meetings: meetingsResources.ar,
       },
     },
   });

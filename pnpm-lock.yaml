@@ -408,6 +408,9 @@ importers:
       '@qlp/lib':
         specifier: workspace:*
         version: link:../../packages/lib
+      '@qlp/meetings':
+        specifier: workspace:*
+        version: link:../../packages/meetings
       '@qlp/ui':
         specifier: workspace:*
         version: link:../../packages/ui

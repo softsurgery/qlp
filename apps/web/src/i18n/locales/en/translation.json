@@ -11,7 +11,8 @@
     "achievements": "Achievements",
     "admin": "Admin",
     "children": "My Children",
-    "logout": "Logout"
+    "logout": "Logout",
+    "meetings": "Meetings"
   },
   "auth": {
     "login": "Login",

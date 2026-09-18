@@ -7,6 +7,7 @@ import CurriculumPage from "./pages/CurriculumPage";
 import CurriculumEditPage from "./pages/CurriculumEditPage";
 import CurriculumViewPage from "./pages/CurriculumViewPage";
 import VideoCallPage from "./pages/VideoCallPage";
+import MeetingsPage from "./pages/MeetingsPage";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, user } = useAuthSession();
@@ -64,6 +65,7 @@ export default function App() {
         <Route path="curriculum/:id/edit" element={<CurriculumEditPage />} />
         <Route path="lessons/:id" element={<div>Lesson</div>} />
         <Route path="tutors" element={<div>Tutors</div>} />
+        <Route path="meetings" element={<MeetingsPage />} />
         <Route path="bookings" element={<div>Bookings</div>} />
         <Route path="chat" element={<div>Chat</div>} />
         <Route path="chat/:conversationId" element={<div>Chat</div>} />
