@@ -12,6 +12,31 @@ export enum MediaRoomStatus {
   FINISHED = "finished",
 }
 
+export interface CreateMediaTokenDto {
+  roomId: string;
+  participantId?: string;
+  participantName?: string;
+  role?: ParticipantRole;
+  metadata?: Record<string, unknown>;
+}
+
+export interface MediaTokenResponseDto {
+  token: string;
+  roomName: string;
+  livekitUrl: string;
+  expiresInSeconds?: number;
+  role: ParticipantRole;
+}
+
+export interface MediaRoomSummaryDto {
+  roomId: string;
+  roomName: string;
+  status: MediaRoomStatus;
+  numParticipants: number;
+  createdAt: string;
+  isRecording: boolean;
+}
+
 export interface ResponseMediaRoomDto extends DatabaseEntity {
   id: string;
   roomName: string;
