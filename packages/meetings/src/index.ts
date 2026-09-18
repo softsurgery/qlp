@@ -1,4 +1,5 @@
 export { MeetingsWeekGrid } from "./components/MeetingsWeekGrid";
+export { MeetingDetailPanel } from "./components/MeetingDetailPanel";
 export { MeetingForm } from "./components/MeetingFormDialog";
 export { MeetingStatusBadge, MeetingStatusDot } from "./components/MeetingStatusBadge";
 export {
