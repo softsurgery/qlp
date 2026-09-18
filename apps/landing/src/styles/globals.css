@@ -28,7 +28,7 @@
 
 @theme inline {
   --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Manrope", ui-sans-serif, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -98,7 +98,7 @@
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.97 0.01 89);
   --border: oklch(0.86 0.02 87);
-  --input: oklch(0.86 0.02 87);
+  --input: oklch(0.982 0.009 88);
   --ring: oklch(0.55 0.08 157);
   --brand-deep: oklch(0.235 0.055 158);
   --brand-ink: oklch(0.155 0.025 155);
@@ -141,7 +141,7 @@
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.97 0.01 89);
   --border: oklch(0.975 0.012 88 / 12%);
-  --input: oklch(0.975 0.012 88 / 16%);
+  --input: oklch(0.155 0.025 155);
   --ring: oklch(0.75 0.115 82);
   --brand-deep: oklch(0.2 0.04 158);
   --brand-ink: oklch(0.14 0.025 155);
@@ -263,8 +263,8 @@
 
 [dir="rtl"] {
   --font-display: "Amiri", "Cormorant Garamond", Georgia, serif;
-  --font-sans: "IBM Plex Sans Arabic", "Manrope", ui-sans-serif, sans-serif;
-  font-family: "IBM Plex Sans Arabic", "Manrope", ui-sans-serif, sans-serif;
+  --font-sans: "IBM Plex Sans Arabic", "Inter", ui-sans-serif, sans-serif;
+  font-family: "IBM Plex Sans Arabic", "Inter", ui-sans-serif, sans-serif;
 }
 
 [dir="rtl"] .font-display,
