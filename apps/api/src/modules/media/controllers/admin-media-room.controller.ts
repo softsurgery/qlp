@@ -22,9 +22,12 @@ import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EventType } from 'src/app/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
 import { MediaRoomService } from '../services/media-room.service';
+import { MediaRoomParticipantService } from '../services/media-room-participant.service';
 import { CreateMediaRoomDto } from '../dtos/create-media-room.dto';
 import { UpdateMediaRoomDto } from '../dtos/update-media-room.dto';
+import { CreateMediaRoomParticipantDto } from '../dtos/create-media-room-participant.dto';
 import { ResponseMediaRoomDto } from '../dtos/response-media-room.dto';
+import { ResponseMediaRoomParticipantDto } from '../dtos/response-media-room-participant.dto';
 
 @ApiTags('media')
 @ApiBearerAuth('access_token')
@@ -34,6 +37,7 @@ import { ResponseMediaRoomDto } from '../dtos/response-media-room.dto';
 export class AdminMediaRoomController {
   constructor(
     private readonly mediaRoomService: MediaRoomService,
+    private readonly participantService: MediaRoomParticipantService,
   ) {}
 
   private async assertManageable(id: string, req: AdvancedRequest) {
@@ -52,6 +56,14 @@ export class AdminMediaRoomController {
   @Get('/all')
   async findAll(@Query() query: IQueryObject): Promise<ResponseMediaRoomDto[]> {
     return toDtoArray(ResponseMediaRoomDto, await this.mediaRoomService.findAll(query));
+  }
+
+  @Get('/:id/participants')
+  async findParticipants(@Param('id') id: string): Promise<ResponseMediaRoomParticipantDto[]> {
+    return toDtoArray(
+      ResponseMediaRoomParticipantDto,
+      await this.participantService.findByRoom(id),
+    );
   }
 
   @Get('/:id')
@@ -84,6 +96,34 @@ export class AdminMediaRoomController {
     await this.assertManageable(id, req);
     req.logInfo = { id };
     return toDto(ResponseMediaRoomDto, await this.mediaRoomService.updateRoom(id, dto));
+  }
+
+  @Post('/:id/participants')
+  @LogEvent(EventType.MEDIA_PARTICIPANT_ADDED)
+  async addParticipant(
+    @Param('id') id: string,
+    @Body() dto: CreateMediaRoomParticipantDto,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseMediaRoomParticipantDto> {
+    await this.assertManageable(id, req);
+    req.logInfo = { roomId: id, userId: dto.userId, role: dto.role };
+
+    return toDto(
+      ResponseMediaRoomParticipantDto,
+      await this.mediaRoomService.inviteParticipant(id, dto.userId, dto.role),
+    );
+  }
+
+  @Delete('/:id/participants/:userId')
+  @LogEvent(EventType.MEDIA_PARTICIPANT_REMOVED)
+  async removeParticipant(
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+    @Request() req: AdvancedRequest,
+  ): Promise<void> {
+    await this.assertManageable(id, req);
+    req.logInfo = { roomId: id, userId };
+    await this.participantService.removeFromRoom(id, userId);
   }
 
   @Delete('/:id')
