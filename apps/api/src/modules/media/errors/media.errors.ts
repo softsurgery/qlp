@@ -27,6 +27,18 @@ export class MediaRoleEscalationException extends HttpException {
   }
 }
 
+export class MediaRoomManagementDeniedException extends HttpException {
+  constructor(message = 'You can only manage sessions you host') {
+    super(message, HttpStatus.FORBIDDEN);
+  }
+}
+
+export class MediaHostAssignmentDeniedException extends HttpException {
+  constructor() {
+    super('Only administrators can assign another user as host', HttpStatus.FORBIDDEN);
+  }
+}
+
 export class MediaNotConfiguredException extends HttpException {
   constructor() {
     super('Media service is not configured', HttpStatus.SERVICE_UNAVAILABLE);
