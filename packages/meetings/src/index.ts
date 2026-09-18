@@ -1,3 +1,4 @@
+export { MeetingsManager } from "./components/MeetingsManager";
 export { MeetingsWeekGrid } from "./components/MeetingsWeekGrid";
 export { MeetingDetailPanel } from "./components/MeetingDetailPanel";
 export { MeetingForm } from "./components/MeetingFormDialog";
