@@ -6,6 +6,7 @@ import SignUpPage from "./pages/SignUpPage";
 import CurriculumPage from "./pages/CurriculumPage";
 import CurriculumEditPage from "./pages/CurriculumEditPage";
 import CurriculumViewPage from "./pages/CurriculumViewPage";
+import VideoCallPage from "./pages/VideoCallPage";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, user } = useAuthSession();
@@ -69,7 +70,7 @@ export default function App() {
         <Route path="profile" element={<div>Chat</div>} />
         <Route path="achievements" element={<div>Achievements</div>} />
         <Route path="children" element={<div>Children</div>} />
-        <Route path="video/:bookingId" element={<div>Video</div>} />
+        <Route path="video/:roomId" element={<VideoCallPage />} />
       </Route>
     </Routes>
   );

@@ -127,5 +127,43 @@
     "curriculum": "Curriculum",
     "verify": "Verify",
     "reject": "Reject"
+  },
+  "video": {
+    "lobbyTitle": "Join session",
+    "lobbyHint": "Check your camera and microphone before joining. Your browser will ask for permission.",
+    "join": "Join now",
+    "back": "Back to dashboard",
+    "connecting": "Connecting to the session…",
+    "camera": "Camera",
+    "microphone": "Microphone",
+    "displayName": "Display name",
+    "observerNotice": "You are in this session as an observer. You can watch and listen, but not speak or share video.",
+    "status": {
+      "idle": "Not started",
+      "active": "Live",
+      "finished": "Ended"
+    },
+    "errors": {
+      "forbidden": {
+        "title": "You cannot join this session",
+        "body": "Your account is not on the participant list for this session. Ask the host to add you."
+      },
+      "notFound": {
+        "title": "Session not found",
+        "body": "This session does not exist, or the link is no longer valid."
+      },
+      "ended": {
+        "title": "This session has ended",
+        "body": "The host closed the session. It cannot be rejoined."
+      },
+      "unavailable": {
+        "title": "Video is unavailable",
+        "body": "The video service is not available right now. Please try again shortly."
+      },
+      "unknown": {
+        "title": "Could not join the session",
+        "body": "Something went wrong while connecting. Please try again."
+      }
+    }
   }
 }
