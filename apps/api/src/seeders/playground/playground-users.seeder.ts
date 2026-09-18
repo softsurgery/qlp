@@ -40,8 +40,6 @@ export class PlaygroundUsersSeedCommand {
           return;
         }
 
-        // Resolve by the seed entry's own role rather than an Admin/other binary, so
-        // adding a role to BasicRoles does not silently downgrade its seeded users.
         const mappedRoleId = mappedRoles[existsInSeedData.roleId] ?? mappedRoles[BasicRoles.User];
 
         await this.userService.save({
