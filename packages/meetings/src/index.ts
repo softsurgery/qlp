@@ -1,3 +1,4 @@
+export { MeetingsWeekGrid } from "./components/MeetingsWeekGrid";
 export { MeetingStatusBadge, MeetingStatusDot } from "./components/MeetingStatusBadge";
 export {
   useMeetingsCalendar,
