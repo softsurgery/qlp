@@ -2,6 +2,7 @@ import type { AxiosInstance } from "axios";
 import type {
   CreateMediaRoomDto,
   CreateMediaRoomParticipantDto,
+  MediaRoomSummaryDto,
   Paginated,
   QueryParams,
   ResponseMediaRoomDto,
@@ -58,6 +59,13 @@ export function createAdminMediaResource(
     return response.data;
   };
 
+  const end = async (id: string): Promise<MediaRoomSummaryDto> => {
+    const response = await http.post<MediaRoomSummaryDto>(
+      `${basePath}/${id}/end`,
+    );
+    return response.data;
+  };
+
   const remove = async (id: string): Promise<ResponseMediaRoomDto | null> => {
     const response = await http.delete<ResponseMediaRoomDto>(
       `${basePath}/${id}`,
@@ -100,6 +108,7 @@ export function createAdminMediaResource(
     findById,
     create,
     update,
+    end,
     remove,
     findParticipants,
     addParticipant,
