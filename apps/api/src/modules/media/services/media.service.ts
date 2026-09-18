@@ -96,6 +96,22 @@ export class MediaService {
     return this.toSummary(room, liveRoom);
   }
 
+  async endRoom(roomId: string): Promise<MediaRoomSummary> {
+    const room = await this.mediaRoomService.findRoomOrFail(roomId);
+    const finished = (await this.mediaRoomService.markFinished(roomId)) ?? room;
+
+    const client = this.getRoomClient();
+    if (client) {
+      try {
+        await client.deleteRoom(room.roomName);
+      } catch (error) {
+        this.logger.warn(`Could not delete LiveKit room ${room.roomName}: ${this.describe(error)}`);
+      }
+    }
+
+    return this.toSummary(finished, undefined);
+  }
+
   private async ensureLiveKitRoom(room: MediaRoomEntity): Promise<void> {
     const client = this.getRoomClient();
     if (!client) return;

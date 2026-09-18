@@ -21,6 +21,7 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EventType } from 'src/app/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
+import { MediaService } from '../services/media.service';
 import { MediaRoomService } from '../services/media-room.service';
 import { MediaRoomParticipantService } from '../services/media-room-participant.service';
 import { CreateMediaRoomDto } from '../dtos/create-media-room.dto';
@@ -28,6 +29,7 @@ import { UpdateMediaRoomDto } from '../dtos/update-media-room.dto';
 import { CreateMediaRoomParticipantDto } from '../dtos/create-media-room-participant.dto';
 import { ResponseMediaRoomDto } from '../dtos/response-media-room.dto';
 import { ResponseMediaRoomParticipantDto } from '../dtos/response-media-room-participant.dto';
+import { ResponseMediaRoomSummaryDto } from '../dtos/response-media-room-summary.dto';
 
 @ApiTags('media')
 @ApiBearerAuth('access_token')
@@ -36,6 +38,7 @@ import { ResponseMediaRoomParticipantDto } from '../dtos/response-media-room-par
 @Controller({ version: '1', path: '/media/rooms' })
 export class AdminMediaRoomController {
   constructor(
+    private readonly mediaService: MediaService,
     private readonly mediaRoomService: MediaRoomService,
     private readonly participantService: MediaRoomParticipantService,
   ) {}
@@ -96,6 +99,18 @@ export class AdminMediaRoomController {
     await this.assertManageable(id, req);
     req.logInfo = { id };
     return toDto(ResponseMediaRoomDto, await this.mediaRoomService.updateRoom(id, dto));
+  }
+
+  @Post('/:id/end')
+  @ApiOperation({ summary: 'Close the session and tear the room down on the SFU' })
+  @LogEvent(EventType.MEDIA_ROOM_ENDED)
+  async end(
+    @Param('id') id: string,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseMediaRoomSummaryDto> {
+    await this.assertManageable(id, req);
+    req.logInfo = { id };
+    return toDto(ResponseMediaRoomSummaryDto, await this.mediaService.endRoom(id));
   }
 
   @Post('/:id/participants')

@@ -192,6 +192,19 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
   }
 
   @Transactional()
+  async markFinished(roomId: string, endedAt?: Date): Promise<MediaRoomEntity | null> {
+    const room = await this.findRoomOrFail(roomId);
+    if (room.status === MediaRoomStatus.FINISHED && room.endedAt) {
+      return room;
+    }
+
+    return this.mediaRoomRepository.update(roomId, {
+      status: MediaRoomStatus.FINISHED,
+      endedAt: room.endedAt ?? endedAt ?? new Date(),
+    });
+  }
+
+  @Transactional()
   async deleteRoom(roomId: string): Promise<MediaRoomEntity | null> {
     await this.findRoomOrFail(roomId);
     return this.mediaRoomRepository.softDelete(roomId);
