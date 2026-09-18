@@ -24,6 +24,7 @@ import {
 import { Button, Input, cn } from "@qlp/ui";
 import { useTranslation } from "react-i18next";
 import { MaterialMediaField } from "./MaterialMediaField";
+import { MaterialFileField } from "./MaterialFileField";
 
 export interface CurriculumLessonMaterialItemProps {
   className?: string;
@@ -87,6 +88,7 @@ export const CurriculumLessonMaterialItem = ({
 
   return (
     <div
+      id={`material-${material.id}`}
       ref={setNodeRef}
       style={style}
       className={cn(
@@ -186,6 +188,20 @@ export const CurriculumLessonMaterialItem = ({
             disabled={disabled}
             onChange={(content) => onChange({ content })}
             enableFragmentation
+          />
+        ) : material.type === MaterialType.Document ? (
+          <MaterialFileField
+            storageId={material.storageId}
+            storage={material.storage}
+            disabled={disabled}
+            onUploaded={({ storageId, filename }) => {
+              onChange({ storageId, title: material.title || filename });
+              onSave({
+                storageId,
+                title: material.title || filename,
+                content: material.content,
+              });
+            }}
           />
         ) : (
           <FieldBuilder

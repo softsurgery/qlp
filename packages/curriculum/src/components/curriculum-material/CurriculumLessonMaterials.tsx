@@ -18,10 +18,12 @@ import {
 import {
   ChevronDown,
   Clapperboard,
+  File,
   FileText,
   Mic,
   Plus,
   Table2,
+  Upload,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -72,6 +74,11 @@ const MATERIAL_BLOCKS = [
     icon: Table2,
     labelKey: "materialTable" as const,
   },
+  {
+    type: MaterialType.Document,
+    icon: File,
+    labelKey: "materialDocument" as const,
+  },
 ];
 
 export const CurriculumLessonMaterials = ({
@@ -97,6 +104,7 @@ export const CurriculumLessonMaterials = ({
   const [materialToDelete, setMaterialToDelete] =
     React.useState<ResponseCurriculumLessonMaterialDto | null>(null);
   const [savingId, setSavingId] = React.useState<string | null>(null);
+  const [addedMaterialId, setAddedMaterialId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const sorted = [...loadedMaterials].sort(
@@ -121,6 +129,18 @@ export const CurriculumLessonMaterials = ({
     );
   }, [loadedMaterials]);
 
+  React.useEffect(() => {
+    if (addedMaterialId && materials.some((m) => m.id === addedMaterialId)) {
+      setTimeout(() => {
+        const element = document.getElementById(`material-${addedMaterialId}`);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 50);
+      setAddedMaterialId(null);
+    }
+  }, [addedMaterialId, materials]);
+
   const invalidate = React.useCallback(() => {
     void queryClient.invalidateQueries({
       queryKey: ["curriculum-lesson-materials", lessonId],
@@ -130,16 +150,68 @@ export const CurriculumLessonMaterials = ({
     });
   }, [lessonId, moduleId, queryClient]);
 
-  const { mutate: createMaterial } = useMutation({
+  const { mutate: createMaterial, mutateAsync: createMaterialAsync } = useMutation({
     mutationFn: (dto: CreateCurriculumMaterialDto) =>
       api.createMaterial(lessonId, dto),
-    onSuccess: () => {
+    onSuccess: (data) => {
       invalidate();
+      setAddedMaterialId(data.id);
     },
     onError: (error: ServerErrorResponse) => {
       toast.error(errorMessage(error, tCommon("errors.saveFailed")));
     },
   });
+
+  const batchUploadInputRef = React.useRef<HTMLInputElement>(null);
+  const [isBatchUploading, setIsBatchUploading] = React.useState(false);
+
+  const handleBatchUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0 || !baseApi.upload) return;
+    
+    setIsBatchUploading(true);
+    const filesArray = Array.from(files);
+    
+    // Clear input
+    event.target.value = "";
+
+    try {
+      const uploads = await baseApi.upload.uploadFiles(
+        filesArray,
+        undefined,
+        false
+      );
+
+      const promises = uploads.map((upload: any, index: number) => {
+        if (!upload) return Promise.resolve();
+        const file = filesArray[index];
+        let type = MaterialType.Document;
+        if (file.type.startsWith("video/")) type = MaterialType.Video;
+        else if (file.type.startsWith("audio/")) type = MaterialType.Audio;
+        
+        return createMaterialAsync({
+          title: file.name,
+          type,
+          storageId: upload.id,
+          sortOrder: materials.length + index,
+        });
+      });
+
+      const results = await Promise.all(promises);
+      const validResults = results.filter(Boolean);
+      const lastCreated = validResults[validResults.length - 1];
+      if (lastCreated) {
+        setAddedMaterialId(lastCreated.id);
+      }
+      
+      toast.success(tCommon("commands.saved", "Saved successfully"));
+      invalidate();
+    } catch (error) {
+      toast.error(tCommon("errors.saveFailed", "Failed to upload file"));
+    } finally {
+      setIsBatchUploading(false);
+    }
+  };
 
   const { mutate: updateMaterial } = useMutation({
     mutationFn: ({
@@ -207,6 +279,7 @@ export const CurriculumLessonMaterials = ({
     if (type === MaterialType.Audio)
       return t("materialAudio", "Voice recording");
     if (type === MaterialType.Table) return t("materialTable", "Table");
+    if (type === MaterialType.Document) return t("materialDocument", "Document");
     return t("editor.newMaterial", "New material");
   };
 
@@ -326,6 +399,12 @@ export const CurriculumLessonMaterials = ({
                 </DropdownMenuItem>
               );
             })}
+            {baseApi.upload && (
+              <DropdownMenuItem onSelect={() => batchUploadInputRef.current?.click()}>
+                <Upload className="h-4 w-4" />
+                {t("materialBatchUpload", "Upload Files")}
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -354,6 +433,15 @@ export const CurriculumLessonMaterials = ({
           </div>
         </SortableContext>
       </DndContext>
+
+      <input
+        ref={batchUploadInputRef}
+        type="file"
+        multiple
+        className="hidden"
+        disabled={disabled || isBatchUploading}
+        onChange={handleBatchUpload}
+      />
 
       {deleteCurriculumLessonMaterialDialog}
     </div>
