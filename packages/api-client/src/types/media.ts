@@ -88,3 +88,12 @@ export interface UpdateMediaRoomDto {
   isRecordingEnabled?: boolean;
   curriculumLessonId?: string;
 }
+
+export interface LiveSubtitlePacket {
+  speakerId: string;
+  speakerName: string;
+  text: string;
+  timestamp: number;
+  isFinal: boolean;
+  language?: string;
+}
