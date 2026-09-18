@@ -40,8 +40,9 @@ export class PlaygroundUsersSeedCommand {
           return;
         }
 
-        const mappedRoleId =
-          existsInSeedData.roleId === BasicRoles.Admin ? mappedRoles.admin : mappedRoles.user;
+        // Resolve by the seed entry's own role rather than an Admin/other binary, so
+        // adding a role to BasicRoles does not silently downgrade its seeded users.
+        const mappedRoleId = mappedRoles[existsInSeedData.roleId] ?? mappedRoles[BasicRoles.User];
 
         await this.userService.save({
           ...existsInSeedData,
@@ -53,15 +54,17 @@ export class PlaygroundUsersSeedCommand {
       }
     };
 
-    const adminRole = await this.roleService.findOneByLabel(BasicRoles.Admin);
-    const userRole = await this.roleService.findOneByLabel(BasicRoles.User);
-
-    if (!adminRole || !userRole) {
-      console.log('⚠️ Roles not found! Please run the roles seeder first.');
-      return;
+    const mappedRoles: Record<string, string> = {};
+    for (const basicRole of Object.values(BasicRoles)) {
+      const role = await this.roleService.findOneByLabel(basicRole);
+      if (role) mappedRoles[basicRole] = role.id;
     }
 
-    const mappedRoles = { admin: adminRole.id, user: userRole.id };
+    const missing = Object.values(BasicRoles).filter((role) => !mappedRoles[role]);
+    if (missing.length) {
+      console.log(`⚠️ Roles not found (${missing.join(', ')})! Please run the roles seeder first.`);
+      return;
+    }
 
     if (!userId) {
       for (const user of mockUsersSeed) {
