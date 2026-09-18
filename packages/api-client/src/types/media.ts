@@ -55,6 +55,7 @@ export interface ResponseMediaRoomDto extends DatabaseEntity {
   description?: string;
   status: MediaRoomStatus;
   hostId: string;
+  hostName?: string;
   scheduledStartAt?: string;
   scheduledEndAt?: string;
   startedAt?: string;
@@ -88,6 +89,12 @@ export interface CreateMediaRoomDto {
   isRecordingEnabled?: boolean;
   curriculumLessonId?: string;
   participants?: CreateMediaRoomParticipantDto[];
+}
+
+export interface MediaCalendarQuery {
+  from: string;
+  to: string;
+  hostId?: string;
 }
 
 export interface UpdateMediaRoomDto {
