@@ -31,7 +31,7 @@ export const useCurriculumPreviewDialog = ({
     children: (isOpen) => (
       <>
         <SheetTitle className="sr-only">Preview</SheetTitle>
-        <div className="flex items-center justify-between px-4 py-3 border-b shrink-0 bg-background z-10">
+        <div className="flex items-center justify-between px-4 pt-3 border-b shrink-0 bg-background z-10">
           <h2 className="text-lg font-semibold">{t("preview", "Preview")}</h2>
           <Button
             variant="outline"
@@ -42,12 +42,13 @@ export const useCurriculumPreviewDialog = ({
             {tCommon("commands.openExternally", "Open Externally")}
           </Button>
         </div>
-        <div className="flex-1 overflow-hidden relative">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
           {isOpen && <CurriculumViewer curriculumId={curriculumId} />}
         </div>
       </>
     ),
-    className: "w-full max-w-[95vw] sm:max-w-[95vw] h-full p-0 flex flex-col overflow-hidden",
+    className:
+      "w-full max-w-[95vw] sm:max-w-[95vw] h-full p-0 flex flex-col overflow-hidden",
   });
 
   const openPreviewDialog = () => {
@@ -57,13 +58,13 @@ export const useCurriculumPreviewDialog = ({
           const next = new URLSearchParams(prev);
           if (previewItem) next.set("item", previewItem);
           else next.delete("item");
-          
+
           if (previewLesson) next.set("lesson", previewLesson);
           else next.delete("lesson");
-          
+
           return next;
         },
-        { replace: true }
+        { replace: true },
       );
     }
     baseOpenPreviewDialog();

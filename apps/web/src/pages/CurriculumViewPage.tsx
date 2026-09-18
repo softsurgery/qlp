@@ -9,6 +9,7 @@ export default function CurriculumViewPage() {
   if (!id) return null;
   return (
     <CurriculumViewer
+      className={"rounded-lg border"}
       curriculumId={id}
       version={Number.isFinite(version) ? version : undefined}
     />

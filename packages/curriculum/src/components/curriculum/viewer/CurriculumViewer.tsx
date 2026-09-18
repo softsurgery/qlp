@@ -8,11 +8,7 @@ import {
   useUI,
   type BreadcrumbRoute,
 } from "@qlp/contexts";
-import {
-  Button,
-  cn,
-  useMediaQuery,
-} from "@qlp/ui";
+import { Button, cn, useMediaQuery } from "@qlp/ui";
 import {
   type ResponseCurriculumDto,
   type ResponseCurriculumModuleDto,
@@ -259,7 +255,7 @@ const CourseViewer = ({
   return (
     <div
       className={cn(
-        "flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border bg-background",
+        "flex min-h-0 flex-1 flex-col overflow-hidden bg-background",
         className,
       )}
     >
