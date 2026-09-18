@@ -8,6 +8,7 @@ import { MediaWebhookEventRepository } from '../repositories/media-webhook-event
 import { MediaRoomService } from './media-room.service';
 import { MediaRoomParticipantService } from './media-room-participant.service';
 import { MediaAttendanceService } from './media-attendance.service';
+import { MediaRecordingService } from './media-recording.service';
 import { fromSeconds } from '../utils/livekit-time.util';
 import {
   MediaNotConfiguredException,
@@ -31,6 +32,7 @@ export class MediaWebhookService {
     private readonly mediaRoomService: MediaRoomService,
     private readonly participantService: MediaRoomParticipantService,
     private readonly attendanceService: MediaAttendanceService,
+    private readonly recordingService: MediaRecordingService,
   ) {}
 
   private getReceiver(): WebhookReceiver {
@@ -154,6 +156,11 @@ export class MediaWebhookService {
       case LiveKitEventType.PARTICIPANT_CONNECTION_ABORTED:
         return this.onParticipantLeft(event, room);
 
+      case LiveKitEventType.EGRESS_STARTED:
+      case LiveKitEventType.EGRESS_UPDATED:
+      case LiveKitEventType.EGRESS_ENDED:
+        return this.onEgress(event, room);
+
       default:
         this.logger.debug(`No handler for webhook event ${event.event}`);
         return false;
@@ -213,6 +220,19 @@ export class MediaWebhookService {
       room.id,
       event.participant.sid,
       fromSeconds(event.createdAt) ?? new Date(),
+    );
+    return true;
+  }
+
+  private async onEgress(event: WebhookEvent, room: MediaRoomEntity | null) {
+    if (!event.egressInfo) return false;
+
+    const target =
+      room ?? (await this.mediaRoomService.findByRoomName(event.egressInfo.roomName));
+
+    const recording = await this.recordingService.applyEgressInfo(event.egressInfo, target?.id);
+    this.logger.log(
+      `Egress ${event.egressInfo.egressId} -> ${recording?.status} for room ${target?.id ?? event.egressInfo.roomName}`,
     );
     return true;
   }
