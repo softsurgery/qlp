@@ -1,3 +1,4 @@
+export { MeetingStatusBadge, MeetingStatusDot } from "./components/MeetingStatusBadge";
 export {
   useMeetingsCalendar,
   useMeetingParticipants,
