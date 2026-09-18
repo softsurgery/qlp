@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Room as LiveKitRoom, RoomServiceClient } from 'livekit-server-sdk';
 import { MediaRoomEntity } from '../entities/media-room.entity';
+import { MediaRoomStatus } from '../enums/media-room-status.enum';
 import { ParticipantRole } from '../enums/participant-role.enum';
 import { CreateMediaTokenDto } from '../dtos/create-media-token.dto';
 import { MediaRoomService } from './media-room.service';
@@ -14,6 +15,15 @@ export interface IssuedMediaToken {
   livekitUrl: string;
   expiresInSeconds: number;
   role: ParticipantRole;
+}
+
+export interface MediaRoomSummary {
+  roomId: string;
+  roomName: string;
+  status: MediaRoomStatus;
+  numParticipants: number;
+  createdAt: string;
+  isRecording: boolean;
 }
 
 @Injectable()
@@ -78,6 +88,14 @@ export class MediaService {
     };
   }
 
+  async getRoomSummary(roomId: string, userId: string): Promise<MediaRoomSummary> {
+    const room = await this.mediaRoomService.findRoomOrFail(roomId);
+    await this.mediaRoomService.resolveParticipantRole(room, userId);
+
+    const liveRoom = await this.fetchLiveRoom(room.roomName);
+    return this.toSummary(room, liveRoom);
+  }
+
   private async ensureLiveKitRoom(room: MediaRoomEntity): Promise<void> {
     const client = this.getRoomClient();
     if (!client) return;
@@ -92,6 +110,36 @@ export class MediaService {
     } catch (error) {
       this.logger.warn(`Could not pre-create LiveKit room ${room.roomName}: ${this.describe(error)}`);
     }
+  }
+
+  private async fetchLiveRoom(roomName: string): Promise<LiveKitRoom | undefined> {
+    const client = this.getRoomClient();
+    if (!client) return undefined;
+
+    try {
+      const rooms = await client.listRooms([roomName]);
+      return rooms[0];
+    } catch (error) {
+      this.logger.warn(`Could not read LiveKit room ${roomName}: ${this.describe(error)}`);
+      return undefined;
+    }
+  }
+
+  private toSummary(room: MediaRoomEntity, liveRoom?: LiveKitRoom): MediaRoomSummary {
+    const isFinished = room.status === MediaRoomStatus.FINISHED || Boolean(room.endedAt);
+
+    return {
+      roomId: room.id,
+      roomName: room.roomName,
+      status: isFinished
+        ? MediaRoomStatus.FINISHED
+        : liveRoom
+          ? MediaRoomStatus.ACTIVE
+          : room.status,
+      numParticipants: liveRoom?.numParticipants ?? 0,
+      createdAt: (room.createdAt ?? new Date()).toISOString(),
+      isRecording: liveRoom?.activeRecording ?? false,
+    };
   }
 
   private describe(error: unknown): string {

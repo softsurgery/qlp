@@ -2,6 +2,8 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
+  Param,
   Post,
   Request,
   UnauthorizedException,
@@ -16,6 +18,7 @@ import { AdvancedRequest } from 'src/types';
 import { MediaService } from '../services/media.service';
 import { CreateMediaTokenDto } from '../dtos/create-media-token.dto';
 import { ResponseMediaTokenDto } from '../dtos/response-media-token.dto';
+import { ResponseMediaRoomSummaryDto } from '../dtos/response-media-room-summary.dto';
 
 @ApiTags('media')
 @ApiBearerAuth('access_token')
@@ -43,5 +46,19 @@ export class ClientMediaController {
     req.logInfo = { roomId: dto.roomId, roomName: issued.roomName, role: issued.role };
 
     return toDto(ResponseMediaTokenDto, issued);
+  }
+
+  @Get('/rooms/:roomId')
+  @ApiOperation({ summary: 'Read live state for a session the caller may join' })
+  async getRoom(
+    @Param('roomId') roomId: string,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseMediaRoomSummaryDto> {
+    if (!req.user?.sub) throw new UnauthorizedException();
+
+    return toDto(
+      ResponseMediaRoomSummaryDto,
+      await this.mediaService.getRoomSummary(roomId, req.user.sub),
+    );
   }
 }
