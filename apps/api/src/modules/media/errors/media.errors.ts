@@ -5,3 +5,9 @@ export class MediaNotConfiguredException extends HttpException {
     super('Media service is not configured', HttpStatus.SERVICE_UNAVAILABLE);
   }
 }
+
+export class MediaParticipantConflictException extends HttpException {
+  constructor() {
+    super('This user is already enrolled in the session', HttpStatus.CONFLICT);
+  }
+}
