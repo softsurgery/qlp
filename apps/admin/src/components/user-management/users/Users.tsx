@@ -38,7 +38,7 @@ export const Users = ({ className }: UsersProps) => {
   const { setIntro, clearIntro } = useIntro();
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
-  const { t, ready } = useTranslation("user-management");
+  const { t, ready } = useTranslation("admin-user-management");
 
   React.useEffect(() => {
     setIntro?.(

@@ -31,7 +31,7 @@ export const UserUpdateForm = ({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { t: tCommon } = useTranslation("common");
-  const { t: tUser } = useTranslation("user-management");
+  const { t: tUser } = useTranslation("admin-user-management");
   const userStore = useUserStore();
   const resetUser = useUserStore((state) => state.reset);
   const setUser = useUserStore((state) => state.set);

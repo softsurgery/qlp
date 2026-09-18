@@ -25,7 +25,7 @@ interface UserCreateFormProps {
 export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) => {
   const navigate = useNavigate();
   const { t: tCommon } = useTranslation("common");
-  const { t: tUser } = useTranslation("user-management");
+  const { t: tUser } = useTranslation("admin-user-management");
   const userStore = useUserStore();
   const resetUser = useUserStore((state) => state.reset);
   const { roles, isFetchRolesPending } = useRoles();

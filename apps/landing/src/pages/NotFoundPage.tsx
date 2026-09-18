@@ -4,7 +4,7 @@ import { Button } from "@qlp/ui";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function NotFoundPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("landing");
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

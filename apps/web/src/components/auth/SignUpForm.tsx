@@ -41,7 +41,7 @@ interface SignUpFormProps {
 const TOTAL_STEPS = 3;
 
 export function SignUpForm({ className, onLogin }: SignUpFormProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
   const signUp = useSignUp();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({

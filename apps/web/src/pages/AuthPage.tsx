@@ -13,7 +13,7 @@ import { AuthenticationForm } from "../components/auth/AuthenticationForm";
 import { authApi } from "../lib/api";
 
 export default function AuthPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
   const navigate = useNavigate();
   const { screen, token, goTo } = useAuthScreen();
 

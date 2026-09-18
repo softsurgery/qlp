@@ -17,7 +17,7 @@ const TITLES: { prefix: string; key: string }[] = [
 ];
 
 export function SiteHeader() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
   const { pathname } = useLocation();
   const { showSidebar = true } = useUI();
   const titleKey =

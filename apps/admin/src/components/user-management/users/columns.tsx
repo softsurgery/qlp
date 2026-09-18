@@ -20,7 +20,7 @@ export const useUserColumns = (
   context: DataTableConfig<ResponseUserDto>,
   roleFilterOptions?: DataTableColumnFilterOption[],
 ): ColumnDef<ResponseUserDto>[] => {
-  const { t } = useTranslation("user-management");
+  const { t } = useTranslation("admin-user-management");
   const { t: tCommon } = useTranslation("common");
 
   return React.useMemo(

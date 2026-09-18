@@ -16,7 +16,7 @@ export const useDisapproveUserDialog = ({
   isDisapprovalPending,
   resetUser,
 }: UserDisapproveDialogProps) => {
-  const { t } = useTranslation("user-management");
+  const { t } = useTranslation("admin-user-management");
   const { t: tCommon } = useTranslation("common");
   const close = { current: () => {} };
   const {

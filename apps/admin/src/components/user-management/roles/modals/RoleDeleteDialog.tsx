@@ -16,7 +16,7 @@ export const useRoleDeleteDialog = ({
   isDeletionPending,
   resetRole,
 }: RoleDeleteDialogProps) => {
-  const { t } = useTranslation("role");
+  const { t } = useTranslation("admin-role");
   const close = { current: () => {} };
   const {
     DialogFragment: deleteRoleDialog,

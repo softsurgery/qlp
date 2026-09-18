@@ -25,7 +25,7 @@ import React from "react";
 import { identifyUser, identifyUserAvatar } from "@qlp/lib";
 
 export function NavUser() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
   const { data: user } = useAuthUser();
   const logout = useLogout();
   const navigate = useNavigate();

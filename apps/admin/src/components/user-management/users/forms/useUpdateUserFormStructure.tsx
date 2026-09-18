@@ -31,7 +31,7 @@ export const useUpdateUserFormStructure = ({
   uploadProfilePicture,
   isProfilePictureUploadPending,
 }: UseUpdateUserFormStructureProps) => {
-  const { t } = useTranslation("user-management");
+  const { t } = useTranslation("admin-user-management");
   const getError = (err?: string[]) => err?.[0];
 
   const photoField: Field<AvatarFieldProps> = {

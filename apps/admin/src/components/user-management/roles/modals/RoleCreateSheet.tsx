@@ -14,7 +14,7 @@ export const useRoleCreateSheet = ({
   isCreatePending,
   resetRole,
 }: RoleCreateSheet) => {
-  const { t } = useTranslation("role");
+  const { t } = useTranslation("admin-role");
   const close = { current: () => {} };
   const {
     SheetFragment: createRoleSheet,

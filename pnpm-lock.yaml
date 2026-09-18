@@ -45,6 +45,9 @@ importers:
       '@qlp/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@qlp/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@qlp/lib':
         specifier: workspace:*
         version: link:../../packages/lib
@@ -323,6 +326,9 @@ importers:
       '@qlp/form-builder':
         specifier: workspace:*
         version: link:../../packages/form-builder
+      '@qlp/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@qlp/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -408,6 +414,9 @@ importers:
       '@qlp/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@qlp/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@qlp/lib':
         specifier: workspace:*
         version: link:../../packages/lib
@@ -548,6 +557,9 @@ importers:
       '@qlp/form-builder':
         specifier: workspace:*
         version: link:../form-builder
+      '@qlp/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@qlp/ui':
         specifier: workspace:*
         version: link:../ui
@@ -847,6 +859,12 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+
+  packages/i18n:
+    devDependencies:
       typescript:
         specifier: ^5.5.3
         version: 5.9.3

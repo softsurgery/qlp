@@ -25,7 +25,7 @@ import { NavMain } from "@/components/layout/sidebar/NavMain";
 import { NavUser } from "@/components/layout/sidebar/NavUser";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const { t } = useTranslation("user-management");
+  const { t } = useTranslation("admin-user-management");
 
   const items = [
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },

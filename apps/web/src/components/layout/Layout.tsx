@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { resolveSupportedLng } from "@qlp/components/i18n";
+import { resolveSupportedLng } from "@qlp/i18n";
 import { SidebarInset, SidebarProvider } from "@qlp/ui/components/sidebar";
 import { UIProvider, useUI } from "@qlp/contexts";
 import { AppSidebar } from "./sidebar/AppSidebar";
@@ -9,7 +9,7 @@ import { SiteHeader } from "./sidebar/SiteHeader";
 import { cn } from "@qlp/ui";
 
 function LayoutShell() {
-  const { i18n } = useTranslation();
+  const { i18n } = useTranslation("web");
   const { enableMainOverflow, showSidebar = true } = useUI();
 
   return (

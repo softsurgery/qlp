@@ -20,7 +20,7 @@ export function AuthenticationForm({
   onForgotPassword,
   onSignUp,
 }: AuthenticationFormProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
   const navigate = useNavigate();
   const signIn = useSignIn();
   const [email, setEmail] = useState("");

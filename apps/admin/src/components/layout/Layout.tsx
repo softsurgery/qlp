@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { resolveSupportedLng } from "@qlp/components/i18n";
+import { resolveSupportedLng } from "@qlp/i18n";
 import { SidebarInset, SidebarProvider } from "@qlp/ui/components/sidebar";
 import { useFooter, useIntro, useUI } from "@qlp/contexts";
 import { AppSidebar } from "@/components/layout/sidebar/AppSidebar";

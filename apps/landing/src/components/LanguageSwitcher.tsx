@@ -7,7 +7,7 @@ type LanguageSwitcherProps = {
 };
 
 export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
-  const { i18n, t } = useTranslation();
+  const { i18n, t } = useTranslation("landing");
   const currentLanguage = resolveSupportedLng(
     i18n.resolvedLanguage ?? i18n.language,
   );

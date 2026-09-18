@@ -7,7 +7,6 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./i18n": "./src/i18n/index.ts",
     "./*": [
       "./src/*.ts",
       "./src/*.tsx",
@@ -24,6 +23,7 @@
     "@qlp/api-client": "workspace:*",
     "@qlp/contexts": "workspace:*",
     "@qlp/form-builder": "workspace:*",
+    "@qlp/i18n": "workspace:*",
     "@qlp/ui": "workspace:*",
     "@univerjs/engine-render": "^0.25.1",
     "@univerjs/preset-sheets-core": "^0.25.1",

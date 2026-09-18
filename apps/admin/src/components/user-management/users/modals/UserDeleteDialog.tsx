@@ -14,7 +14,7 @@ export const useUserDeleteDialog = ({
   deleteUser,
   isDeletePending,
 }: UserDeleteDialogProps) => {
-  const { t } = useTranslation("user-management");
+  const { t } = useTranslation("admin-user-management");
   const { t: tCommon } = useTranslation("common");
   const close = { current: () => {} };
   const {

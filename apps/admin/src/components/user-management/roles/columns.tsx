@@ -21,7 +21,7 @@ import React from "react";
 export const useRoleColumns = (
   context: DataTableConfig<ResponseRoleDto>,
 ): ColumnDef<ResponseRoleDto>[] => {
-  const { t } = useTranslation("role");
+  const { t } = useTranslation("admin-role");
   const { t: tCommon } = useTranslation("common");
 
   return React.useMemo(

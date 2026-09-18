@@ -1,3 +1,4 @@
+/// <reference path="../css.d.ts" />
 import "@videojs/react/i18n/locales/ar/register";
 import skinCss from "@videojs/react/video/skin.css?raw";
 import "./video.css";
