@@ -12,10 +12,12 @@ import "@livekit/components-styles";
 import { ParticipantRole, type MediaTokenResponseDto } from "@qlp/api-client";
 import { Spinner } from "@qlp/components";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@qlp/ui";
-import { Eye, Loader2 } from "lucide-react";
+import { AlertTriangle, Eye, Loader2 } from "lucide-react";
 import {
+  classifyMediaError,
   useMediaRoom,
   useMediaToken,
+  type MediaErrorKind,
 } from "@/hooks/useMedia";
 import { useAuthUser } from "@/hooks/useAuth";
 
@@ -67,6 +69,12 @@ export default function VideoCallPage() {
   const publishVideo = Boolean(choices?.videoEnabled) && !isObserver;
   const publishAudio = Boolean(choices?.audioEnabled) && !isObserver;
 
+  const errorKind: MediaErrorKind | null = useMemo(() => {
+    if (room.isError) return classifyMediaError(room.error);
+    if (tokenMutation.isError) return classifyMediaError(tokenMutation.error);
+    return null;
+  }, [room.isError, room.error, tokenMutation.isError, tokenMutation.error]);
+
   if (!roomId) return null;
 
   if (room.isLoading) {
@@ -77,6 +85,9 @@ export default function VideoCallPage() {
     );
   }
 
+  if (room.isError && errorKind) {
+    return <SessionUnavailable kind={errorKind} onBack={leave} />;
+  }
 
   if (stage !== "lobby" && grant) {
     return (
@@ -143,9 +154,54 @@ export default function VideoCallPage() {
             </div>
           )}
 
+          {tokenMutation.isError && errorKind && (
+            <InlineError kind={errorKind} />
+          )}
+
           <Button variant="ghost" onClick={leave}>
             {t("video.back")}
           </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function InlineError({ kind }: { kind: MediaErrorKind }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm">
+      <AlertTriangle className="mt-0.5 h-4 w-4 text-destructive" />
+      <div>
+        <p className="font-medium">{t(`video.errors.${kind}.title`)}</p>
+        <p className="text-muted-foreground">{t(`video.errors.${kind}.body`)}</p>
+      </div>
+    </div>
+  );
+}
+
+function SessionUnavailable({
+  kind,
+  onBack,
+}: {
+  kind: MediaErrorKind;
+  onBack: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className="mx-auto w-full max-w-lg">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            {t(`video.errors.${kind}.title`)}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            {t(`video.errors.${kind}.body`)}
+          </p>
+          <Button onClick={onBack}>{t("video.back")}</Button>
         </CardContent>
       </Card>
     </div>
