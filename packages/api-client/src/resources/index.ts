@@ -2,6 +2,7 @@ import type { AxiosInstance } from "axios";
 import { createAdminAuthResource } from "./admin-auth.js";
 import { createAuthResource } from "./auth.js";
 import {
+  createCurriculumExamsResource,
   createCurriculumLessonsResource,
   createCurriculumModulesResource,
   createCurriculumResource,
@@ -22,6 +23,7 @@ export function createResources(http: AxiosInstance) {
     curriculum: createCurriculumResource(http, "/curriculum"),
     curriculumModules: createCurriculumModulesResource(http, "/curriculum"),
     curriculumLessons: createCurriculumLessonsResource(http, "/curriculum"),
+    curriculumExams: createCurriculumExamsResource(http, "/curriculum"),
     adminCurriculum: createCurriculumResource(http, "/admin/curriculum"),
     adminCurriculumModules: createCurriculumModulesResource(
       http,
@@ -31,7 +33,12 @@ export function createResources(http: AxiosInstance) {
       http,
       "/admin/curriculum",
     ),
+    adminCurriculumExams: createCurriculumExamsResource(
+      http,
+      "/admin/curriculum",
+    ),
   };
 }
+
 
 export type ApiResources = ReturnType<typeof createResources>;

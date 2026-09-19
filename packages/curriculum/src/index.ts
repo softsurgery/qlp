@@ -7,4 +7,9 @@ export { UpdateCurriculumModuleForm } from "./components/curriculum-module/forms
 export * from "./components/curriculum-module/version-list/CurriculumModuleVersionsList";
 export { UpdateCurriculumLessonForm } from "./components/curriculum-lesson/forms/UpdateCurriculumLessonForm";
 export * from "./components/curriculum-lesson/version-list/CurriculumLessonVersionsList";
+export { CurriculumExams } from "./components/curriculum-exam/CurriculumExams";
+export { CreateCurriculumExamForm } from "./components/curriculum-exam/forms/CreateCurriculumExamForm";
+export { UpdateCurriculumExamForm } from "./components/curriculum-exam/forms/UpdateCurriculumExamForm";
+export * from "./components/curriculum-exam/version-list/CurriculumExamVersionsList";
+export * from "./components/curriculum-exam-question";
 export * from "./hooks";

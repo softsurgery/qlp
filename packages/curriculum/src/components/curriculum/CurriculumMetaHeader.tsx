@@ -52,7 +52,7 @@ export const CurriculumMetaHeader = ({
       ? [
           {
             label: tCommon("fields.status"),
-            value: tCurriculum(`status.${status}` as any, status),
+            value: tCurriculum(`status.${String(status).toLowerCase()}` as any, status),
           },
         ]
       : []),

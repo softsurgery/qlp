@@ -9,3 +9,7 @@ export * from "./useCurriculumLessonWorkflow";
 export * from "./useCurriculumLessonVersions";
 export * from "./useCurriculumLessonMaterials";
 export * from "./useCurriculumModuleLessonMaterials";
+export * from "./useCurriculumExams";
+export * from "./useCurriculumExam";
+export * from "./useCurriculumExamWorkflow";
+export * from "./useCurriculumExamVersions";

@@ -8,6 +8,12 @@
     "saveFailed": "Failed to update order",
     "deleteFailed": "Failed to delete module"
   },
+  "dialogs": {
+    "deleteQuestion": {
+      "title": "Delete Question Q{{n}}",
+      "description": "Are you sure you want to delete this question? This action cannot be undone."
+    }
+  },
   "answer": {
     "true": "True",
     "false": "False"
@@ -56,18 +62,37 @@
     "passingScore": "Passing score",
     "passingScoreDescription": "Minimum score required to pass.",
     "prompt": "Question",
+    "promptPlaceholder": "Enter question prompt...",
+    "promptDescription": "Enter the main prompt or question text for learners.",
+    "questionTypePlaceholder": "Select question type...",
+    "questionTypeDescription": "Select the format of the question (Choice, Textarea, or Slider).",
     "options": "Options",
     "optionsHint": "One option per line.",
     "answer": "Answer",
     "answerPlaceholder": "Correct answer",
     "points": "Points",
+    "pointsPlaceholder": "1",
+    "pointsDescription": "Points value awarded for this question.",
     "createdBy": "Created By",
     "createdAt": "Created At",
     "updatedAt": "Updated At",
     "version": "Version"
   },
   "createTitle": "Create curriculum",
+  "updateTitle": "Update curriculum",
   "createDescription": "Give it a name. You can add modules, lessons, and exams next.",
+  "commands": {
+    "save": "Save",
+    "delete": "Delete",
+    "saved": "Saved successfully",
+    "deleted": "Deleted successfully",
+    "history": "History",
+    "actions": "Actions",
+    "reset": "Reset",
+    "preview": "Preview",
+    "create": "Create",
+    "cancel": "Cancel"
+  },
   "editor": {
     "title": "Edit curriculum",
     "subtitle": "Build the outline, then edit each item in the form.",
@@ -104,7 +129,21 @@
     "newLesson": "New lesson",
     "newExam": "New exam",
     "newMaterial": "New material",
-    "newQuestion": "New question"
+    "newQuestion": "New question",
+    "optionsSingleChoice": "Options (Select correct option)",
+    "optionsMultiChoice": "Options (Check correct option(s))",
+    "addOption": "Add Option",
+    "optionPlaceholder": "Option {{index}}",
+    "deleteOption": "Delete Option",
+    "deleteQuestion": "Delete Question",
+    "modelAnswer": "Model / Correct Reference Answer (Optional)",
+    "modelAnswerPlaceholder": "Enter expected or model answer for grading reference...",
+    "sliderSettings": "Slider Settings & Target Answer",
+    "minVal": "Min Value",
+    "maxVal": "Max Value",
+    "stepSize": "Step Size",
+    "targetValue": "Target Value Answer",
+    "dragToReorder": "Drag to reorder"
   },
   "viewer": {
     "title": "Curriculum",
@@ -155,7 +194,8 @@
   },
   "questionType": {
     "multiple_choice": "Multiple choice",
-    "true_false": "True / false",
-    "short_answer": "Short answer"
+    "single_choice": "Single choice",
+    "textarea": "Textarea (Open answer)",
+    "slider": "Slider range"
   }
 }

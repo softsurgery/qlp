@@ -10,8 +10,10 @@
     "confirm": "Confirm",
     "apply": "Apply",
     "hide": "Hide",
+    "show": "Show",
     "display": "Display"
   },
+  "scrollToTop": "Scroll to top",
   "common": {
     "buttons": {
       "delete": "Delete",
@@ -42,7 +44,10 @@
     "paletteDescription": "Search for a command to run..."
   },
   "sidebar": {
-    "toggle": "Toggle Sidebar"
+    "toggle": "Toggle Sidebar",
+    "hide": "Hide Sidebar",
+    "show": "Show Sidebar",
+    "sidebar": "Sidebar"
   },
   "calendar": {
     "months": {

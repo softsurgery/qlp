@@ -6,6 +6,12 @@
   "errors": {
     "titleRequired": "العنوان مطلوب"
   },
+  "dialogs": {
+    "deleteQuestion": {
+      "title": "حذف السؤال Q{{n}}",
+      "description": "هل أنت متأكد من أنك تريد حذف هذا السؤال؟ لا يمكن التراجع عن هذا الإجراء."
+    }
+  },
   "answer": {
     "true": "صح",
     "false": "خطأ"
@@ -54,14 +60,37 @@
     "passingScore": "درجة النجاح",
     "passingScoreDescription": "الحد الأدنى للنجاح.",
     "prompt": "السؤال",
+    "promptPlaceholder": "أدخل نص السؤال...",
+    "promptDescription": "أدخل النص الرئيسي للسؤال المعروض للمتعلمين.",
+    "questionTypePlaceholder": "اختر نوع السؤال...",
+    "questionTypeDescription": "اختر صيغة السؤال (اختيارات، نص مفتوح، أو منزلق).",
     "options": "الخيارات",
     "optionsHint": "خيار واحد في كل سطر.",
     "answer": "الإجابة",
     "answerPlaceholder": "الإجابة الصحيحة",
-    "points": "النقاط"
+    "points": "النقاط",
+    "pointsPlaceholder": "1",
+    "pointsDescription": "عدد النقاط الممنوحة لهذا السؤال.",
+    "createdBy": "تم الإنشاء بواسطة",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "آخر تحديث",
+    "version": "الإصدار"
   },
   "createTitle": "إنشاء منهج",
+  "updateTitle": "تحديث المنهج",
   "createDescription": "سمِّ المنهج. يمكنك إضافة الوحدات والدروس والاختبارات بعد ذلك.",
+  "commands": {
+    "save": "حفظ",
+    "delete": "حذف",
+    "saved": "تم الحفظ بنجاح",
+    "deleted": "تم الحذف بنجاح",
+    "history": "السجل",
+    "actions": "إجراءات",
+    "reset": "إعادة تعيين",
+    "preview": "معاينة",
+    "create": "إنشاء",
+    "cancel": "إلغاء"
+  },
   "editor": {
     "title": "تعديل المنهج",
     "subtitle": "ابنِ الهيكل ثم عدّل كل عنصر من النموذج.",
@@ -98,7 +127,21 @@
     "newLesson": "درس جديد",
     "newExam": "اختبار جديد",
     "newMaterial": "مادة جديدة",
-    "newQuestion": "سؤال جديد"
+    "newQuestion": "سؤال جديد",
+    "optionsSingleChoice": "الخيارات (اختر الخيار الصحيح)",
+    "optionsMultiChoice": "الخيارات (حدد الخيار / الخيارات الصحيحة)",
+    "addOption": "إضافة خيار",
+    "optionPlaceholder": "الخيار {{index}}",
+    "deleteOption": "حذف الخيار",
+    "deleteQuestion": "حذف السؤال",
+    "modelAnswer": "الإجابة النموذجية / المرجعية (اختياري)",
+    "modelAnswerPlaceholder": "أدخل الإجابة المتوقعة أو النموذجية للمرجعية عند التقييم...",
+    "sliderSettings": "إعدادات المنزلق والإجابة المستهدفة",
+    "minVal": "القيمة الأدنى",
+    "maxVal": "القيمة الأقصى",
+    "stepSize": "مقدار الخطوة",
+    "targetValue": "إجابة القيمة المستهدفة",
+    "dragToReorder": "اسحب لإعادة الترتيب"
   },
   "viewer": {
     "title": "المنهج",
@@ -149,7 +192,8 @@
   },
   "questionType": {
     "multiple_choice": "اختيار من متعدد",
-    "true_false": "صح / خطأ",
-    "short_answer": "إجابة قصيرة"
+    "single_choice": "خيار واحد",
+    "textarea": "مربع نصي (إجابة مفتوحة)",
+    "slider": "نطاق منزلق"
   }
 }

@@ -10,91 +10,102 @@ import { ActionGrid } from "@qlp/components";
 import {
   useCurriculum,
   useCurriculumModules,
-  useCurriculumModuleWorkflow,
+  useCurriculumExam,
+  useCurriculumExamWorkflow,
 } from "../../../hooks";
 import {
-  type UpdateCurriculumModuleDto,
+  type UpdateCurriculumExamDto,
   type ServerErrorResponse,
 } from "@qlp/api-client";
-import { useCurriculumModuleStore } from "../../../hooks/stores/useCurriculumModuleStore";
-import { useUpdateCurriculumModuleFormStructure } from "./useUpdateCurriculumModuleFormStructure";
+import { useCurriculumExamStore } from "../../../hooks/stores/useCurriculumExamStore";
+import { useUpdateCurriculumExamFormStructure } from "./useUpdateCurriculumExamFormStructure";
+import { CurriculumExamQuestionEditor } from "../../curriculum-exam-question/CurriculumExamQuestionEditor";
 import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../../curriculum/CurriculumMetaHeader";
-import { CurriculumLessons } from "../../curriculum-lesson/CurriculumLessons";
-import { CurriculumExams } from "../../curriculum-exam/CurriculumExams";
 import { useCurriculumPreviewDialog } from "../../curriculum/modals/useCurriculumPreviewDialog";
 import { useNavigate } from "react-router-dom";
 
-export interface UpdateCurriculumModuleFormProps {
+export interface UpdateCurriculumExamFormProps {
   className?: string;
   curriculumId: string;
   moduleId: string;
+  examId: string;
   onSuccess?: () => void;
 }
 
-export function UpdateCurriculumModuleForm({
+export function UpdateCurriculumExamForm({
   className,
   curriculumId,
   moduleId,
+  examId,
   onSuccess,
-}: UpdateCurriculumModuleFormProps) {
+}: UpdateCurriculumExamFormProps) {
   const { t: tGlobal } = useTranslation("global");
   const { t: tCommon } = useTranslation("curriculum-common");
   const { api: baseApi, appType } = useApp();
   const api =
     appType === "admin"
-      ? baseApi.adminCurriculumModules
-      : baseApi.curriculumModules;
+      ? baseApi.adminCurriculumExams
+      : baseApi.curriculumExams;
   const queryClient = useQueryClient();
 
   const { curriculum } = useCurriculum({ id: curriculumId });
-  const { modules, isModulesPending } = useCurriculumModules({
-    id: curriculumId,
-    join: "owner,createdBy",
+  const { modules } = useCurriculumModules({ id: curriculumId });
+  const { exam, isExamPending } = useCurriculumExam({
+    moduleId,
+    examId,
+    join: "createdBy",
   });
   const { workflow: workflowData, isWorkflowPending: isWorkflowLoading } =
-    useCurriculumModuleWorkflow({ moduleId });
-  const curriculumModuleStore = useCurriculumModuleStore();
-  const resetStore = useCurriculumModuleStore((state) => state.reset);
+    useCurriculumExamWorkflow({ examId });
+  const curriculumExamStore = useCurriculumExamStore();
+  const resetStore = useCurriculumExamStore((state) => state.reset);
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
   const navigate = useNavigate();
 
   const { previewDialog, openPreviewDialog } = useCurriculumPreviewDialog({
     curriculumId,
-    previewItem: `module:${moduleId}`,
-    previewUrl: `/curriculum/${curriculumId}?item=module:${moduleId}`,
+    previewItem: `exam:${examId}`,
+    previewUrl: `/curriculum/${curriculumId}?item=exam:${examId}`,
   });
 
-  const isLoading = isModulesPending || isWorkflowLoading;
-
-  const module = modules.find((m) => m.id === moduleId);
+  const isLoading = isExamPending || isWorkflowLoading;
+  const module = modules.find((item) => item.id === moduleId);
 
   React.useEffect(() => {
-    if (module) {
-      curriculumModuleStore.set("updateDto", {
-        title: module.title,
-        description: module.description,
+    if (exam) {
+      curriculumExamStore.set("updateDto", {
+        title: exam.title,
+        description: exam.description,
+        durationMinutes: exam.durationMinutes,
+        passingScore: exam.passingScore,
+        questions: exam.questions || [],
       });
     }
-  }, [module]);
+  }, [exam]);
 
   React.useEffect(() => {
-    if (setRoutes && module && curriculum) {
+    if (setRoutes && exam && module && curriculum) {
       setRoutes([
         { title: tCommon("title"), href: "/curriculum" },
         {
           title: curriculum.title,
           href: `/curriculum/${curriculumId}/edit`,
         },
-        { title: module.title },
+        {
+          title: module.title,
+          href: `/curriculum/${curriculumId}/modules/${moduleId}/edit`,
+        },
+        { title: exam.title },
       ]);
     }
     if (setEnableMainOverflow) setEnableMainOverflow(true);
   }, [
     curriculum,
     curriculumId,
+    exam,
     module,
     setEnableMainOverflow,
     setRoutes,
@@ -110,22 +121,21 @@ export function UpdateCurriculumModuleForm({
     };
   }, [clearEnableMainOverflow, clearRoutes, resetStore]);
 
-  const { updateCurriculumModuleFormStructure } =
-    useUpdateCurriculumModuleFormStructure({
-      curriculumModuleStore,
+  const { updateCurriculumExamFormStructure } =
+    useUpdateCurriculumExamFormStructure({
+      curriculumExamStore,
     });
 
   const { mutate: updateMutation, isPending } = useMutation({
-    mutationFn: (dto: UpdateCurriculumModuleDto) => {
-      if (!module) throw new Error("Module not found");
-      return api.update(module.id, dto);
+    mutationFn: (dto: UpdateCurriculumExamDto) => {
+      if (!exam) throw new Error("Exam not found");
+      return api.update(exam.id, dto);
     },
     onSuccess: () => {
       toast.success(tGlobal("commands.saved"));
       void queryClient.invalidateQueries({
-        queryKey: ["curriculum-modules", curriculumId],
+        queryKey: ["curriculum-exams", moduleId],
       });
-      resetStore();
       if (onSuccess) onSuccess();
     },
     onError: (error: ServerErrorResponse) => {
@@ -136,14 +146,14 @@ export function UpdateCurriculumModuleForm({
   const { mutate: executeWorkflow, isPending: isWorkflowPending } = useMutation(
     {
       mutationFn: (event: string) =>
-        api.workflow.executeWorkflow(moduleId, { event }),
+        api.workflow.executeWorkflow(examId, { event }),
       onSuccess: () => {
         toast.success(tGlobal("commands.saved"));
         void queryClient.invalidateQueries({
-          queryKey: ["curriculum", "modules", moduleId, "workflow"],
+          queryKey: ["curriculum", "exams", examId, "workflow"],
         });
         void queryClient.invalidateQueries({
-          queryKey: ["curriculum-modules", curriculumId],
+          queryKey: ["curriculum-exams", moduleId],
         });
       },
       onError: (error: ServerErrorResponse) => {
@@ -153,36 +163,40 @@ export function UpdateCurriculumModuleForm({
   );
 
   const handleSubmit = React.useCallback(() => {
-    if (!curriculumModuleStore.updateDto.title?.trim()) {
-      curriculumModuleStore.set("updateDtoErrors", {
+    if (!curriculumExamStore.updateDto.title?.trim()) {
+      curriculumExamStore.set("updateDtoErrors", {
         title: [tCommon("errors.titleRequired")],
       });
       return;
     }
-    curriculumModuleStore.set("updateDtoErrors", {});
-    updateMutation(curriculumModuleStore.updateDto);
-  }, [updateMutation, curriculumModuleStore, tCommon, tGlobal]);
+    curriculumExamStore.set("updateDtoErrors", {});
+    updateMutation(curriculumExamStore.updateDto);
+  }, [updateMutation, curriculumExamStore, tCommon, tGlobal]);
 
   const mainContent = (
     <div className="flex flex-col gap-8">
-      <FormBuilder structure={updateCurriculumModuleFormStructure} />
+      <FormBuilder structure={updateCurriculumExamFormStructure} />
       <Separator />
-      <CurriculumLessons curriculumId={curriculumId} moduleId={moduleId} />
-      <Separator />
-      <CurriculumExams curriculumId={curriculumId} moduleId={moduleId} />
+      <CurriculumExamQuestionEditor
+        questions={curriculumExamStore.updateDto.questions || []}
+        onChange={(questions) =>
+          curriculumExamStore.setNested("updateDto.questions", questions)
+        }
+        disabled={!!(isPending || (workflowData && !workflowData.isUpdatable))}
+      />
     </div>
   );
 
   const sidebarContent = (
     <>
-      {module && (
+      {exam && (
         <CurriculumMetaHeader
           curriculum={{
-            ...module,
-            status: module.status || workflowData?.status,
-            owner: appType === "admin" ? undefined : module.owner,
-            createdAt: appType !== "admin" ? undefined : module.createdAt,
-            createdBy: module.createdBy,
+            ...exam,
+            status: exam.status || workflowData?.status,
+            owner: undefined,
+            createdAt: appType !== "admin" ? undefined : exam.createdAt,
+            createdBy: exam.createdBy,
           }}
           extraRows={[
             {
@@ -192,11 +206,11 @@ export function UpdateCurriculumModuleForm({
                   className="cursor-pointer text-primary hover:underline font-semibold"
                   onClick={() =>
                     navigate(
-                      `/curriculum/${curriculumId}/modules/${moduleId}/versions`,
+                      `/curriculum/${curriculumId}/modules/${moduleId}/exams/${examId}/versions`,
                     )
                   }
                 >
-                  {module?.version != null ? module?.version : "-"}
+                  {exam?.version != null ? exam?.version : "-"}
                 </span>
               ),
             },
@@ -234,7 +248,17 @@ export function UpdateCurriculumModuleForm({
             {
               label: tGlobal("commands.reset") as string,
               icon: <Repeat2 />,
-              onClick: resetStore,
+              onClick: () => {
+                if (exam) {
+                  curriculumExamStore.set("updateDto", {
+                    title: exam.title,
+                    description: exam.description,
+                    durationMinutes: exam.durationMinutes,
+                    passingScore: exam.passingScore,
+                    questions: exam.questions || [],
+                  });
+                }
+              },
               disabled: isPending,
             },
           ]}
@@ -246,11 +270,11 @@ export function UpdateCurriculumModuleForm({
   );
 
   if (isLoading) {
-    return <div className="p-4">Loading...</div>;
+    return <div className="p-4">Loading exam...</div>;
   }
 
-  if (!module) {
-    return <div className="p-4 text-destructive">Module not found</div>;
+  if (!exam) {
+    return <div className="p-4 text-destructive">Exam not found</div>;
   }
 
   return (

@@ -10,8 +10,10 @@
     "confirm": "تأكيد",
     "apply": "تطبيق",
     "hide": "إخفاء",
+    "show": "إظهار",
     "display": "عرض"
   },
+  "scrollToTop": "التمرير للأعلى",
   "common": {
     "buttons": {
       "delete": "حذف",
@@ -42,7 +44,10 @@
     "paletteDescription": "ابحث عن أمر لتنفيذه..."
   },
   "sidebar": {
-    "toggle": "طي الشريط الجانبي"
+    "toggle": "طي الشريط الجانبي",
+    "hide": "إخفاء الشريط الجانبي",
+    "show": "إظهار الشريط الجانبي",
+    "sidebar": "الشريط الجانبي"
   },
   "calendar": {
     "months": {

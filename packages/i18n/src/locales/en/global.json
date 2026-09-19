@@ -37,7 +37,9 @@
     "saved": "Saved successfully",
     "actions": "Actions",
     "reset": "Reset",
-    "save": "Save"
+    "save": "Save",
+    "create": "Create",
+    "cancel": "Cancel"
   },
   "preview": "Preview"
 }

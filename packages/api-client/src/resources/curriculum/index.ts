@@ -10,3 +10,8 @@ export {
   createCurriculumLessonsResource,
   type CurriculumLessonsResource,
 } from "./curriculum-lessons.js";
+export {
+  createCurriculumExamsResource,
+  type CurriculumExamsResource,
+} from "./curriculum-exams.js";
+

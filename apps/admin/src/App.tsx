@@ -17,6 +17,8 @@ import CurriculumModuleEditPage from "./pages/CurriculumModuleEditPage";
 import CurriculumModuleVersionsPage from "./pages/CurriculumModuleVersionsPage";
 import CurriculumLessonEditPage from "./pages/CurriculumLessonEditPage";
 import CurriculumLessonVersionsPage from "./pages/CurriculumLessonVersionsPage";
+import CurriculumExamEditPage from "./pages/CurriculumExamEditPage";
+import CurriculumExamVersionsPage from "./pages/CurriculumExamVersionsPage";
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, isAdmin } = useIsAdminSession();
@@ -65,13 +67,39 @@ export default function App() {
           <Route path="curriculum" element={<CurriculumPage />} />
           <Route path="curriculum/new" element={<CurriculumCreatePage />} />
           <Route path="curriculum/:id" element={<CurriculumViewPage />} />
-          <Route path="curriculum/:id/versions" element={<CurriculumVersionsPage />} />
-          <Route path="curriculum/:id/versions/:version" element={<CurriculumViewPage />} />
+          <Route
+            path="curriculum/:id/versions"
+            element={<CurriculumVersionsPage />}
+          />
+          <Route
+            path="curriculum/:id/versions/:version"
+            element={<CurriculumViewPage />}
+          />
           <Route path="curriculum/:id/edit" element={<CurriculumEditPage />} />
-          <Route path="curriculum/:id/modules/:moduleId/edit" element={<CurriculumModuleEditPage />} />
-          <Route path="curriculum/:curriculumId/modules/:moduleId/versions" element={<CurriculumModuleVersionsPage />} />
-          <Route path="curriculum/:id/modules/:moduleId/lessons/:lessonId/edit" element={<CurriculumLessonEditPage />} />
-          <Route path="curriculum/:curriculumId/modules/:moduleId/lessons/:lessonId/versions" element={<CurriculumLessonVersionsPage />} />
+          <Route
+            path="curriculum/:id/modules/:moduleId/edit"
+            element={<CurriculumModuleEditPage />}
+          />
+          <Route
+            path="curriculum/:curriculumId/modules/:moduleId/versions"
+            element={<CurriculumModuleVersionsPage />}
+          />
+          <Route
+            path="curriculum/:id/modules/:moduleId/lessons/:lessonId/edit"
+            element={<CurriculumLessonEditPage />}
+          />
+          <Route
+            path="curriculum/:curriculumId/modules/:moduleId/lessons/:lessonId/versions"
+            element={<CurriculumLessonVersionsPage />}
+          />
+          <Route
+            path="curriculum/:id/modules/:moduleId/exams/:examId/edit"
+            element={<CurriculumExamEditPage />}
+          />
+          <Route
+            path="curriculum/:curriculumId/modules/:moduleId/exams/:examId/versions"
+            element={<CurriculumExamVersionsPage />}
+          />
         </Route>
       </Routes>
     </AppProvider>
