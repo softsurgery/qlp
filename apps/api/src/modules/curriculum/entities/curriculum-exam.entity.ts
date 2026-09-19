@@ -1,17 +1,9 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { VersionedEntityHelper } from 'src/shared/database/entities/versioned-entity.helper';
 import { AbstractUserEntity } from 'src/shared/abstract-user-management/entities/abstract-user.entity';
-import { ExamQuestionType } from '../enums/exam-question-type.enum';
+import { CurriculumStatus } from '../enums/curriculum-status.enum';
 import { CurriculumModuleEntity } from './curriculum-module.entity';
-
-export interface ExamQuestion {
-  id: string;
-  prompt: string;
-  type: ExamQuestionType;
-  options?: string[];
-  answer?: string;
-  points: number;
-}
+import { ExamQuestion } from '../interfaces/exam-question.interface';
 
 @Entity('curriculum_exams')
 export class CurriculumExamEntity extends VersionedEntityHelper {
@@ -31,6 +23,13 @@ export class CurriculumExamEntity extends VersionedEntityHelper {
 
   @Column({ type: 'text', nullable: true })
   description?: string;
+
+  @Column({
+    type: 'enum',
+    enum: CurriculumStatus,
+    default: CurriculumStatus.Draft,
+  })
+  status: CurriculumStatus;
 
   @Column({ type: 'int', nullable: true })
   durationMinutes?: number;

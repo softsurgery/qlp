@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UnauthorizedException,
   UseInterceptors,
@@ -30,9 +31,23 @@ import { ResponseCurriculumExamDto } from '../../dtos/exam/response-curriculum-e
 export class AdminCurriculumExamController {
   constructor(private readonly examService: CurriculumExamService) {}
 
+  @Get('/modules/:moduleId/exams')
+  async findByModule(
+    @Param('moduleId') moduleId: string,
+    @Query('join') join?: string,
+  ): Promise<ResponseCurriculumExamDto[]> {
+    return toDtoArray(
+      ResponseCurriculumExamDto,
+      await this.examService.findLatestByModule(moduleId, join),
+    );
+  }
+
   @Get('/exams/:examId/versions')
-  async findVersions(@Param('examId') examId: string): Promise<ResponseCurriculumExamDto[]> {
-    return toDtoArray(ResponseCurriculumExamDto, await this.examService.findAllVersions(examId));
+  async findVersions(
+    @Param('examId') examId: string,
+    @Query('join') join?: string,
+  ): Promise<ResponseCurriculumExamDto[]> {
+    return toDtoArray(ResponseCurriculumExamDto, await this.examService.findVersions(examId, join));
   }
 
   @Post('/modules/:moduleId/exams')
@@ -48,6 +63,11 @@ export class AdminCurriculumExamController {
     const exam = await this.examService.createForModule(moduleId, dto, req.user.sub);
     req.logInfo = { id: exam.id, moduleId };
     return toDto(ResponseCurriculumExamDto, exam);
+  }
+
+  @Put('/exams/reorder')
+  async reorder(@Body() dto: { updates: { id: string; sortOrder: number }[] }) {
+    return this.examService.reorderExams(dto.updates);
   }
 
   @Put('/exams/:examId')

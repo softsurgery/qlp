@@ -1,5 +1,6 @@
 export enum ExamQuestionType {
   MultipleChoice = 'multiple_choice',
-  TrueFalse = 'true_false',
-  ShortAnswer = 'short_answer',
+  SingleChoice = 'single_choice',
+  Textarea = 'textarea',
+  Slider = 'slider',
 }

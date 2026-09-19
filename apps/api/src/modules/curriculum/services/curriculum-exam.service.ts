@@ -1,7 +1,9 @@
 import { randomUUID } from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { AbstractVersioningCrudService } from 'src/shared/database/services/abstract-versioning-crud.service';
-import { CurriculumExamEntity, ExamQuestion } from '../entities/curriculum-exam.entity';
+import { CurriculumExamEntity } from '../entities/curriculum-exam.entity';
+import { ExamQuestion } from '../interfaces/exam-question.interface';
+
 import { CurriculumExamRepository } from '../repositories/curriculum-exam.repository';
 import { CreateCurriculumExamDto } from '../dtos/exam/create-curriculum-exam.dto';
 import { UpdateCurriculumExamDto } from '../dtos/exam/update-curriculum-exam.dto';
@@ -21,6 +23,9 @@ export class CurriculumExamService extends AbstractVersioningCrudService<Curricu
       options: question.options,
       answer: question.answer,
       points: question.points ?? 1,
+      min: question.min,
+      max: question.max,
+      step: question.step,
     }));
   }
 
@@ -49,10 +54,22 @@ export class CurriculumExamService extends AbstractVersioningCrudService<Curricu
     });
   }
 
-  async findLatestByModule(moduleId: string) {
+  async findLatestByModule(moduleId: string, join?: string) {
     return this.findAll({
       filter: `moduleId||$eq||${moduleId}`,
       sort: 'sortOrder',
+      join,
     });
+  }
+
+  async reorderExams(updates: { id: string; sortOrder: number }[]) {
+    await Promise.all(
+      updates.map((update) => this.updateExam(update.id, { sortOrder: update.sortOrder })),
+    );
+    return { success: true };
+  }
+
+  async findVersions(examId: string, join?: string) {
+    return super.findAllVersions(examId, { join });
   }
 }

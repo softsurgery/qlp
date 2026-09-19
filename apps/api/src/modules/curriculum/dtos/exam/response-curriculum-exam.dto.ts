@@ -17,6 +17,10 @@ export class ResponseCurriculumExamDto extends ResponseVersionedDtoHelper {
   @Expose()
   description?: string;
 
+  @ApiProperty()
+  @Expose()
+  status: string;
+
   @ApiProperty({ required: false })
   @Expose()
   durationMinutes?: number;

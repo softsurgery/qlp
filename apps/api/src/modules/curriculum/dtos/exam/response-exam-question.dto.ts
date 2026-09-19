@@ -25,4 +25,16 @@ export class ResponseExamQuestionDto {
   @ApiProperty()
   @Expose()
   points: number;
+
+  @ApiProperty({ required: false })
+  @Expose()
+  min?: number;
+
+  @ApiProperty({ required: false })
+  @Expose()
+  max?: number;
+
+  @ApiProperty({ required: false })
+  @Expose()
+  step?: number;
 }
