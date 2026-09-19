@@ -1,7 +1,9 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { PanelRightClose, PanelRightOpen, ArrowUp } from "lucide-react";
 import { Button, cn, useSheet, useMediaQuery } from "@qlp/ui";
+import { useRTL } from "@qlp/ui/hooks/useRTL";
 
 interface CurriculumFormLayoutProps {
   className?: string;
@@ -16,6 +18,8 @@ export const CurriculumFormLayout = ({
   sidebar,
   sidebarDescription,
 }: CurriculumFormLayoutProps) => {
+  const { t: tUI } = useTranslation("ui");
+  const isRTL = useRTL();
   const [searchParams] = useSearchParams();
   const isEmbed =
     searchParams.get("embed") === "true" || searchParams.get("embed") === "1";
@@ -28,7 +32,7 @@ export const CurriculumFormLayout = ({
   const sidebarContent = <div className="flex flex-col gap-4">{sidebar}</div>;
 
   const { SheetFragment, openSheet, closeSheet, isOpen } = useSheet({
-    title: <span className="sr-only">Sidebar</span>,
+    title: <span className="sr-only">{tUI("sidebar.sidebar", "Sidebar")}</span>,
     description: sidebarDescription,
     children: <div className="flex flex-col gap-4">{sidebar}</div>,
     className: "w-full sm:max-w-md p-4 sm:p-6",
@@ -85,7 +89,7 @@ export const CurriculumFormLayout = ({
             variant="outline"
             size="icon"
             onClick={openSheet}
-            aria-label="Toggle Sidebar"
+            aria-label={tUI("sidebar.toggle", "Toggle Sidebar")}
           >
             {isDesktopSidebarOpen ? (
               <PanelRightClose className="size-4" />
@@ -112,7 +116,9 @@ export const CurriculumFormLayout = ({
                 onClick={() => setIsDesktopSidebarOpen((prev) => !prev)}
                 className="gap-2"
                 aria-label={
-                  isDesktopSidebarOpen ? "Hide Sidebar" : "Show Sidebar"
+                  isDesktopSidebarOpen
+                    ? tUI("sidebar.hide", "Hide Sidebar")
+                    : tUI("sidebar.show", "Show Sidebar")
                 }
               >
                 {isDesktopSidebarOpen ? (
@@ -120,7 +126,11 @@ export const CurriculumFormLayout = ({
                 ) : (
                   <PanelRightOpen className="size-4" />
                 )}
-                <span>{isDesktopSidebarOpen ? "Hide" : "Show"}</span>
+                <span>
+                  {isDesktopSidebarOpen
+                    ? tUI("commands.hide", "Hide")
+                    : tUI("commands.show", "Show")}
+                </span>
               </Button>
             </div>
           )}
@@ -141,7 +151,8 @@ export const CurriculumFormLayout = ({
 
       <div
         className={cn(
-          "fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50 flex items-center gap-2 transition-all duration-300",
+          "fixed bottom-4 sm:bottom-8 z-50 flex items-center gap-2 transition-all duration-300",
+          isRTL ? "left-4 sm:left-8" : "right-4 sm:right-8",
           showScrollTop
             ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
             : "opacity-0 scale-95 translate-y-4 pointer-events-none",
@@ -154,7 +165,11 @@ export const CurriculumFormLayout = ({
             size="sm"
             onClick={() => setIsDesktopSidebarOpen((prev) => !prev)}
             className="gap-2 rounded-full shadow-lg h-10 px-4"
-            aria-label={isDesktopSidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
+            aria-label={
+              isDesktopSidebarOpen
+                ? tUI("sidebar.hide", "Hide Sidebar")
+                : tUI("sidebar.show", "Show Sidebar")
+            }
           >
             {isDesktopSidebarOpen ? (
               <PanelRightClose className="size-4" />
@@ -162,7 +177,9 @@ export const CurriculumFormLayout = ({
               <PanelRightOpen className="size-4" />
             )}
             <span className="hidden sm:inline">
-              {isDesktopSidebarOpen ? "Hide" : "Show"}
+              {isDesktopSidebarOpen
+                ? tUI("commands.hide", "Hide")
+                : tUI("commands.show", "Show")}
             </span>
           </Button>
         )}
@@ -172,7 +189,7 @@ export const CurriculumFormLayout = ({
           variant="outline"
           className="rounded-full shadow-lg h-10 w-10"
           onClick={scrollToTop}
-          aria-label="Scroll to top"
+          aria-label={tUI("scrollToTop", "Scroll to top")}
         >
           <ArrowUp className="size-5" />
         </Button>
