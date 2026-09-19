@@ -4,7 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Button, Card, cn, useDialog } from "@qlp/ui";
 import { FormBuilder } from "@qlp/form-builder";
 import { ExamQuestionType, type ExamQuestion } from "@qlp/api-client";
-import { GripVertical, X } from "lucide-react";
+import { GripVertical, X, ChevronUp, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ChoiceQuestionEditor } from "./ChoiceQuestionEditor";
 import { TextareaQuestionEditor } from "./TextareaQuestionEditor";
@@ -22,12 +22,15 @@ export interface SortableQuestionCardProps {
   onUpdateOption: (optionIndex: number, value: string) => void;
   onRemoveOption: (optionIndex: number) => void;
   onToggleMultiChoiceAnswer: (optionValue: string) => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
   className?: string;
 }
 
 export const SortableQuestionCard: React.FC<SortableQuestionCardProps> = ({
   question,
   index,
+  totalQuestions,
   disabled,
   onUpdate,
   onRemove,
@@ -35,6 +38,8 @@ export const SortableQuestionCard: React.FC<SortableQuestionCardProps> = ({
   onUpdateOption,
   onRemoveOption,
   onToggleMultiChoiceAnswer,
+  onMoveUp,
+  onMoveDown,
   className,
 }) => {
   const { t: tCommon } = useTranslation("curriculum-common");
@@ -116,22 +121,52 @@ export const SortableQuestionCard: React.FC<SortableQuestionCardProps> = ({
         ref={setNodeRef}
         style={style}
         className={cn(
-          "p-4 flex flex-col gap-4 relative bg-background border hover:border-primary/50 transition-colors",
-          isDragging && "shadow-lg border-primary",
+          "p-4 flex flex-col gap-4 relative bg-background border hover:border-primary/50 transition-all duration-300 ease-in-out",
+          isDragging && "shadow-lg border-primary z-20 scale-[1.01]",
           className,
         )}
       >
         <div className="flex items-center justify-between border-b pb-2">
           <div className="flex items-center gap-2">
-            <div
-              className="cursor-grab active:cursor-grabbing text-muted-foreground p-1 rounded hover:bg-muted transition-colors"
-              {...attributes}
-              {...listeners}
-              title={tCommon("editor.dragToReorder", {
-                defaultValue: "Drag to reorder",
-              })}
-            >
-              <GripVertical className="h-4 w-4" />
+            <div className="flex items-center gap-1">
+              <div
+                className="cursor-grab active:cursor-grabbing text-muted-foreground p-1 rounded hover:bg-muted transition-colors"
+                {...attributes}
+                {...listeners}
+                title={tCommon("editor.dragToReorder", {
+                  defaultValue: "Drag to reorder",
+                })}
+              >
+                <GripVertical className="h-4 w-4" />
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-20 transition-all active:scale-75"
+                  disabled={index === 0 || disabled}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMoveUp?.();
+                  }}
+                >
+                  <ChevronUp className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-20 transition-all active:scale-75"
+                  disabled={index === totalQuestions - 1 || disabled}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMoveDown?.();
+                  }}
+                >
+                  <ChevronDown className="h-3.5 w-3.5" />
+                </Button>
+              </div>
             </div>
             <p className="font-semibold">
               {tCommon("editor.questionN", {

@@ -8,6 +8,8 @@ import {
   Save,
   Table2,
   X,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { Spinner } from "@qlp/components";
 import { FieldBuilder, FieldVariant } from "@qlp/form-builder";
@@ -35,6 +37,10 @@ export interface CurriculumLessonMaterialItemProps {
   onChange: (patch: Partial<ResponseCurriculumLessonMaterialDto>) => void;
   onSave: (dto: UpdateCurriculumMaterialDto) => void;
   onDelete: () => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  isFirst?: boolean;
+  isLast?: boolean;
 }
 
 function materialIcon(type?: string) {
@@ -53,6 +59,10 @@ export const CurriculumLessonMaterialItem = ({
   onChange,
   onSave,
   onDelete,
+  onMoveUp,
+  onMoveDown,
+  isFirst,
+  isLast,
 }: CurriculumLessonMaterialItemProps) => {
   const { t: tCommon } = useTranslation("curriculum-common");
   const Icon = materialIcon(material.type);
@@ -91,23 +101,53 @@ export const CurriculumLessonMaterialItem = ({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex flex-col gap-3 p-3 bg-background border hover:border-primary/50 transition-colors",
-        isDragging && "shadow-lg border-primary",
+        "flex flex-col gap-3 p-3 bg-background border hover:border-primary/50 transition-all duration-300 ease-in-out",
+        isDragging && "shadow-lg border-primary z-20 scale-[1.01]",
         className,
       )}
     >
       <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className={cn(
-            "cursor-grab rounded p-1 text-muted-foreground hover:bg-muted active:cursor-grabbing",
-            disabled && "pointer-events-none opacity-50",
-          )}
-          {...attributes}
-          {...listeners}
-        >
-          <GripVertical className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            className={cn(
+              "cursor-grab rounded p-1 text-muted-foreground hover:bg-muted active:cursor-grabbing",
+              disabled && "pointer-events-none opacity-50",
+            )}
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical className="h-5 w-5" />
+          </button>
+          <div className="flex flex-col gap-0.5">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-20 transition-all active:scale-75"
+              disabled={isFirst || disabled}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveUp?.();
+              }}
+            >
+              <ChevronUp className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-20 transition-all active:scale-75"
+              disabled={isLast || disabled}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveDown?.();
+              }}
+            >
+              <ChevronDown className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
         <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
           <Icon className="size-4" />
         </span>

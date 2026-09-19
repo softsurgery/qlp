@@ -112,13 +112,31 @@ export function CurriculumLessons({
       resetLesson: () => curriculumLessonStore.set("response", undefined),
     });
 
+  const moveLesson = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= lessons.length) return;
+    const newLessons = arrayMove(lessons, index, targetIndex);
+    setLessons(newLessons);
+    const updates = newLessons.map((l, i) => ({
+      id: l.id,
+      sortOrder: i,
+    }));
+    if (updates.length > 0) {
+      updateLessonOrder(updates);
+    }
+  };
+
   const dndService = useDnDService<ResponseCurriculumLessonDto>({
     items: lessons,
     setItems: setLessons,
     getId: (item) => item.id,
-    renderChild: (item) => (
+    renderChild: (item, index) => (
       <CurriculumLessonItem
         lesson={item}
+        isFirst={index === 0}
+        isLast={index === lessons.length - 1}
+        onMoveUp={() => moveLesson(index, "up")}
+        onMoveDown={() => moveLesson(index, "down")}
         onEdit={() =>
           navigate(
             `/curriculum/${curriculumId}/modules/${moduleId}/lessons/${item.id}/edit`,

@@ -84,6 +84,12 @@ export const CurriculumExamQuestionEditor = ({
     }
   };
 
+  const handleMoveQuestion = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= items.length) return;
+    onChange(arrayMove(items, index, targetIndex));
+  };
+
   const handleAddQuestion = () => {
     const newId =
       typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
@@ -306,6 +312,8 @@ export const CurriculumExamQuestionEditor = ({
                   onToggleMultiChoiceAnswer={(optVal) =>
                     handleToggleMultiChoiceAnswer(index, optVal)
                   }
+                  onMoveUp={() => handleMoveQuestion(index, "up")}
+                  onMoveDown={() => handleMoveQuestion(index, "down")}
                 />
               ))}
             </div>

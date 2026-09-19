@@ -1,26 +1,18 @@
-import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, X, Edit2 } from "lucide-react";
-import {
-  Card,
-  Button,
-  Badge,
-  cn,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@qlp/ui";
+import { GripVertical, X, Edit2, ChevronUp, ChevronDown } from "lucide-react";
+import { Card, Button, Badge, cn } from "@qlp/ui";
 import { type ResponseCurriculumModuleDto } from "@qlp/api-client";
 import { useTranslation } from "react-i18next";
-import { identifyUser, identifyUserAvatar } from "@qlp/lib";
-import { useUploadSrc } from "@qlp/hooks";
-import { useApp } from "@qlp/contexts";
 
 export interface CurriculumModuleItemProps {
   module: ResponseCurriculumModuleDto;
   onEdit?: (module: ResponseCurriculumModuleDto) => void;
   onDelete?: (module: ResponseCurriculumModuleDto) => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  isFirst?: boolean;
+  isLast?: boolean;
   className?: string;
 }
 
@@ -28,19 +20,14 @@ export function CurriculumModuleItem({
   module,
   onEdit,
   onDelete,
+  onMoveUp,
+  onMoveDown,
+  isFirst,
+  isLast,
   className,
 }: CurriculumModuleItemProps) {
-  const { api: baseApi } = useApp();
   const { t: tGlobal } = useTranslation("global");
 
-  const createdBy = module.createdBy;
-  const { data: createdByAvatarSrc } = useUploadSrc(
-    baseApi.upload
-      ? (createdBy?.picture ??
-          (createdBy?.pictureId ? { id: createdBy?.pictureId } : null))
-      : null,
-    baseApi.upload,
-  );
   const {
     attributes,
     listeners,
@@ -62,17 +49,47 @@ export function CurriculumModuleItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex flex-row items-center p-3 mb-2 gap-3 group bg-background border hover:border-primary/50 transition-colors",
-        isDragging && "shadow-lg border-primary",
+        "flex flex-row items-center p-3 mb-2 gap-3 group bg-background border hover:border-primary/50 transition-all duration-300 ease-in-out",
+        isDragging && "shadow-lg border-primary z-20 scale-[1.01]",
         className,
       )}
     >
-      <div
-        className="cursor-grab active:cursor-grabbing text-muted-foreground p-1 rounded hover:bg-muted"
-        {...attributes}
-        {...listeners}
-      >
-        <GripVertical className="h-5 w-5" />
+      <div className="flex items-center gap-1">
+        <div
+          className="cursor-grab active:cursor-grabbing text-muted-foreground p-1 rounded hover:bg-muted transition-colors"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical className="h-5 w-5" />
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-20 transition-all active:scale-75"
+            disabled={isFirst}
+            onClick={(e) => {
+              e.stopPropagation();
+              onMoveUp?.();
+            }}
+          >
+            <ChevronUp className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-5 w-5 p-0 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-20 transition-all active:scale-75"
+            disabled={isLast}
+            onClick={(e) => {
+              e.stopPropagation();
+              onMoveDown?.();
+            }}
+          >
+            <ChevronDown className="h-3.5 w-3.5" />
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-col flex-1 gap-2">

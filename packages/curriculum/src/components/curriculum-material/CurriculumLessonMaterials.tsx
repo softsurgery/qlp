@@ -296,14 +296,32 @@ export const CurriculumLessonMaterials = ({
     });
   };
 
+  const moveMaterial = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= materials.length) return;
+    const next = arrayMove(materials, index, targetIndex);
+    setMaterials(next);
+    const updates = next.map((m, i) => ({
+      id: m.id,
+      sortOrder: i,
+    }));
+    if (updates.length > 0) {
+      updateMaterialOrder(updates);
+    }
+  };
+
   const dndService = useDnDService<ResponseCurriculumLessonMaterialDto>({
     items: materials,
     setItems: setMaterials,
     getId: (item) => item.id,
-    renderChild: (item) => (
+    renderChild: (item, index) => (
       <CurriculumLessonMaterialItem
         className="rounded-xl mb-2"
         material={item}
+        isFirst={index === 0}
+        isLast={index === materials.length - 1}
+        onMoveUp={() => moveMaterial(index, "up")}
+        onMoveDown={() => moveMaterial(index, "down")}
         original={loadedMaterials.find((loaded) => loaded.id === item.id)}
         disabled={disabled}
         isSaving={savingId === item.id}

@@ -110,13 +110,31 @@ export function CurriculumModules({
       resetModule: () => curriculumModuleStore.set("response", undefined),
     });
 
+  const moveModule = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= modules.length) return;
+    const newModules = arrayMove(modules, index, targetIndex);
+    setModules(newModules);
+    const updates = newModules.map((mod, i) => ({
+      id: mod.id,
+      sortOrder: i,
+    }));
+    if (updates.length > 0) {
+      updateModuleOrder(updates);
+    }
+  };
+
   const dndService = useDnDService<ResponseCurriculumModuleDto>({
     items: modules,
     setItems: setModules,
     getId: (item) => item.id,
-    renderChild: (item) => (
+    renderChild: (item, index) => (
       <CurriculumModuleItem
         module={item}
+        isFirst={index === 0}
+        isLast={index === modules.length - 1}
+        onMoveUp={() => moveModule(index, "up")}
+        onMoveDown={() => moveModule(index, "down")}
         onEdit={() =>
           navigate(`/curriculum/${curriculumId}/modules/${item.id}/edit`)
         }

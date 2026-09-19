@@ -111,13 +111,31 @@ export function CurriculumExams({
       resetExam: () => curriculumExamStore.set("response", undefined),
     });
 
+  const moveExam = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= exams.length) return;
+    const newExams = arrayMove(exams, index, targetIndex);
+    setExams(newExams);
+    const updates = newExams.map((ex, i) => ({
+      id: ex.id,
+      sortOrder: i,
+    }));
+    if (updates.length > 0) {
+      updateExamOrder(updates);
+    }
+  };
+
   const dndService = useDnDService<ResponseCurriculumExamDto>({
     items: exams,
     setItems: setExams,
     getId: (item) => item.id,
-    renderChild: (item) => (
+    renderChild: (item, index) => (
       <CurriculumExamItem
         exam={item}
+        isFirst={index === 0}
+        isLast={index === exams.length - 1}
+        onMoveUp={() => moveExam(index, "up")}
+        onMoveDown={() => moveExam(index, "down")}
         onEdit={() =>
           navigate(
             `/curriculum/${curriculumId}/modules/${moduleId}/exams/${item.id}/edit`,
