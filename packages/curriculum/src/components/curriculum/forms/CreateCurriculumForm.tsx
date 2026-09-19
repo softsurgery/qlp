@@ -8,7 +8,7 @@ import { FormBuilder } from "@qlp/form-builder";
 import { useBreadcrumb, useUI, useApp } from "@qlp/contexts";
 import { Label } from "@qlp/ui";
 import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
-import { ActionGrid } from "@qlp/components";
+import { ActionGrid, Spinner } from "@qlp/components";
 import {
   type CreateCurriculumDto,
   type ServerErrorResponse,
@@ -131,7 +131,7 @@ export function CreateCurriculumForm({
           actions={[
             {
               label: tGlobal("commands.save") as string,
-              icon: <Save />,
+              icon: isPending ? <Spinner size="small" /> : <Save />,
               onClick: handleSubmit,
               disabled: isPending,
             },

@@ -4,7 +4,7 @@ import { useApp } from "@qlp/contexts";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Save, Repeat2, Loader2, Eye } from "lucide-react";
+import { Save, Repeat2, Eye } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useBreadcrumb, useUI } from "@qlp/contexts";
 import { Label } from "@qlp/ui";
@@ -17,7 +17,7 @@ import { useUpdateCurriculumFormStructure } from "./useUpdateCurriculumFormStruc
 import { errorMessage } from "../../../utils";
 import { CurriculumFormLayout } from "../../CurriculumFormLayout";
 import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
-import { ActionGrid } from "@qlp/components";
+import { ActionGrid, Spinner } from "@qlp/components";
 import { useCurriculumPreviewDialog } from "../modals/useCurriculumPreviewDialog";
 import { CurriculumModules } from "../../curriculum-module/CurriculumModules";
 import { useTutors } from "@qlp/hooks";
@@ -202,13 +202,14 @@ export function UpdateCurriculumForm({
             },
             {
               label: tGlobal("commands.save") as string,
-              icon: <Save />,
+              icon: isPending ? <Spinner size="small" /> : <Save />,
               onClick: handleSubmit,
               disabled:
                 isPending || (workflowData && !workflowData.isUpdatable),
             },
             ...(workflowData?.nextSteps?.map((step) => ({
               label: step.label,
+              icon: isExecutingWorkflow ? <Spinner size="small" /> : undefined,
               onClick: () => executeWorkflowMutation({ event: step.label }),
               disabled: isPending || isExecutingWorkflow,
             })) || []),
@@ -228,7 +229,7 @@ export function UpdateCurriculumForm({
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center p-6">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Spinner size="medium" />
       </div>
     );
   }

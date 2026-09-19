@@ -6,7 +6,7 @@ import { Save, Repeat2, Eye } from "lucide-react";
 import { FormBuilder } from "@qlp/form-builder";
 import { useApp, useBreadcrumb, useUI } from "@qlp/contexts";
 import { Button, Label, Separator } from "@qlp/ui";
-import { ActionGrid } from "@qlp/components";
+import { ActionGrid, Spinner } from "@qlp/components";
 import {
   useCurriculum,
   useCurriculumModules,
@@ -230,7 +230,7 @@ export function UpdateCurriculumLessonForm({
             },
             {
               label: tGlobal("commands.save") as string,
-              icon: <Save />,
+              icon: isPending ? <Spinner size="small" /> : <Save />,
               onClick: handleSubmit,
               disabled: !!(
                 isPending ||
@@ -240,6 +240,7 @@ export function UpdateCurriculumLessonForm({
             },
             ...(workflowData?.nextSteps?.map((step) => ({
               label: step.label,
+              icon: isWorkflowPending ? <Spinner size="small" /> : undefined,
               onClick: () => executeWorkflow(step.label),
               disabled: isPending || isWorkflowPending,
             })) || []),
@@ -258,7 +259,11 @@ export function UpdateCurriculumLessonForm({
   );
 
   if (isLoading) {
-    return <div className="p-4">Loading...</div>;
+    return (
+      <div className="flex h-full items-center justify-center p-6">
+        <Spinner size="medium" />
+      </div>
+    );
   }
 
   if (!lesson) {

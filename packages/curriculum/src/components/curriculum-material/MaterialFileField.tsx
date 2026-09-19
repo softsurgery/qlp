@@ -3,6 +3,7 @@ import { File, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useApp } from "@qlp/contexts";
+import { Spinner } from "@qlp/components";
 import { useUploadSrc } from "@qlp/hooks";
 import { Button, Progress, cn } from "@qlp/ui";
 import type { Upload as UploadModel } from "@qlp/api-client";
@@ -114,7 +115,11 @@ export function MaterialFileField({
           disabled={disabled || progress !== null}
           onClick={() => inputRef.current?.click()}
         >
-          <Upload className="size-4" />
+          {progress !== null ? (
+            <Spinner size="small" />
+          ) : (
+            <Upload className="size-4" />
+          )}
           {remoteSrc
             ? tMaterial("replaceFile")
             : tMaterial("uploadFile")}

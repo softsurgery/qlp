@@ -1,13 +1,14 @@
 import React from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Loader2, PanelLeft, PanelRight, Pencil } from "lucide-react";
+import { PanelLeft, PanelRight, Pencil } from "lucide-react";
 import {
   useApp,
   useBreadcrumb,
   useUI,
   type BreadcrumbRoute,
 } from "@qlp/contexts";
+import { Spinner } from "@qlp/components";
 import { Button, cn, useMediaQuery } from "@qlp/ui";
 import {
   type ResponseCurriculumDto,
@@ -78,8 +79,7 @@ export const CurriculumViewer = ({
           className,
         )}
       >
-        <Loader2 className="size-8 animate-spin text-muted-foreground" />
-        <span className="sr-only">{tCommon("viewer.loading")}</span>
+        <Spinner size="medium" />
       </div>
     );
   }

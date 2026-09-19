@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { Loader2 } from "lucide-react";
 import { type ResponseCurriculumLessonDto } from "@qlp/api-client";
-import { HtmlContent } from "@qlp/components";
+import { HtmlContent, Spinner } from "@qlp/components";
 import { cn } from "@qlp/ui";
 import { hasRichText, lessonMaterials } from "../utils";
 import { CourseMaterialBlock } from "./CourseMaterialBlock";
@@ -32,8 +31,7 @@ export const CourseLessonMaterials = ({
       </div>
       {isPending ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="size-8 animate-spin text-muted-foreground" />
-          <span className="sr-only">{tCommon("viewer.loading")}</span>
+          <Spinner size="medium" />
         </div>
       ) : materials.length === 0 ? (
         <p className="text-sm text-muted-foreground">

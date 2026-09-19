@@ -1,10 +1,10 @@
-import { Loader2 } from "lucide-react";
 import {
   type ResponseCurriculumExamDto,
   type ResponseCurriculumLessonDto,
   type ResponseCurriculumLessonMaterialDto,
   type ResponseCurriculumModuleDto,
 } from "@qlp/api-client";
+import { Spinner } from "@qlp/components";
 import { useLocalStorage } from "@qlp/hooks";
 import { cn } from "@qlp/ui";
 import { CourseExamMaterials } from "./CourseContentExamMaterial";
@@ -73,7 +73,7 @@ export const CourseContent = ({
       >
         {isMaterialsPending && !material && !lesson ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="size-8 animate-spin text-muted-foreground" />
+            <Spinner size="medium" />
           </div>
         ) : material ? (
           <CourseMaterialBlock material={material} />

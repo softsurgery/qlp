@@ -11,7 +11,7 @@ import {
 import { useDebounce } from "@qlp/hooks";
 import { ResponseCurriculumDto } from "@qlp/api-client";
 import { useCurriculumVersionColumns } from "./columns";
-import { Loader2 } from "lucide-react";
+import { Spinner } from "@qlp/components";
 import { cn } from "@qlp/ui";
 
 interface CurriculumVersionsListProps {
@@ -151,7 +151,7 @@ export function CurriculumVersionsList({
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center p-6">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Spinner size="medium" />
       </div>
     );
   }

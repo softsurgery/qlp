@@ -1,4 +1,5 @@
 import React from "react";
+import { Spinner } from "@qlp/components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   DndContext,
@@ -354,7 +355,7 @@ export const CurriculumLessonMaterials = ({
   if (isLoading) {
     return (
       <div className="flex h-24 items-center justify-center text-sm text-muted-foreground">
-        {tCommon("viewer.loading")}
+        <Spinner />
       </div>
     );
   }

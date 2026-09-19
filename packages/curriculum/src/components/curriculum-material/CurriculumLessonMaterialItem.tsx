@@ -4,12 +4,12 @@ import {
   Clapperboard,
   FileText,
   GripVertical,
-  Loader2,
   Mic,
   Save,
   Table2,
   X,
 } from "lucide-react";
+import { Spinner } from "@qlp/components";
 import { FieldBuilder, FieldVariant } from "@qlp/form-builder";
 import {
   MaterialType,
@@ -127,7 +127,7 @@ export const CurriculumLessonMaterialItem = ({
           onClick={save}
         >
           {isSaving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Spinner size="small" />
           ) : (
             <Save className="h-4 w-4" />
           )}

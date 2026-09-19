@@ -1,4 +1,5 @@
 import React from "react";
+import { Spinner } from "@qlp/components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
@@ -161,7 +162,7 @@ export function CurriculumModules({
   if (isLoading) {
     return (
       <div className="flex h-32 items-center justify-center p-6 text-sm text-muted-foreground">
-        Loading modules...
+        <Spinner />
       </div>
     );
   }

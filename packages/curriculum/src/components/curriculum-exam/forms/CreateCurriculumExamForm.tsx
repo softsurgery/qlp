@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Save } from "lucide-react";
+import { Spinner } from "@qlp/components";
 import { FormBuilder } from "@qlp/form-builder";
 import { useApp } from "@qlp/contexts";
 import { Button, Separator, cn } from "@qlp/ui";
@@ -80,7 +81,7 @@ export function CreateCurriculumExamForm({
       </div>
       <div className="flex justify-end gap-2 border-t px-4 py-3 bg-background">
         <Button onClick={handleSubmit} disabled={isPending}>
-          <Save />
+          {isPending ? <Spinner size="small" /> : <Save />}
           {tGlobal("commands.save")}
         </Button>
         {onCancel && (
