@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import { Command } from 'nestjs-command';
 import { Injectable } from '@nestjs/common';
 import { CurriculumRepository } from 'src/modules/curriculum/repositories/curriculum.repository';
@@ -7,9 +6,9 @@ import { CurriculumLessonRepository } from 'src/modules/curriculum/repositories/
 import { CurriculumExamRepository } from 'src/modules/curriculum/repositories/curriculum-exam.repository';
 import { CurriculumLessonMaterialRepository } from 'src/modules/curriculum/repositories/curriculum-lesson-material.repository';
 import { CurriculumStatus } from 'src/modules/curriculum/enums/curriculum-status.enum';
-import { ExamQuestionType } from 'src/modules/curriculum/enums/exam-question-type.enum';
 import { MaterialType } from 'src/modules/curriculum/enums/material-type.enum';
 import { CURRICULUMS, MODULE_NAMES, LESSON_NAMES } from '../data/curriculum.data';
+import { generateRealExamQuestions } from '../data/exam-questions.data';
 import { UserRepository } from 'src/modules/user-management/repositories/user.repository';
 import { ExtendedRoles } from 'src/modules/user-management/enums/extended-roles.enum';
 import { adminSeed } from '../data/admin.data';
@@ -97,39 +96,18 @@ export class PlaygroundCurriculumSeedCommand {
           });
         }
 
+        const questions = generateRealExamQuestions(curData.title, moduleName, j);
+
         await this.examRepository.save({
           moduleId: module.id,
-          title: `${moduleName} Assessment`,
-          description: `Check your understanding of ${moduleName.toLowerCase()}.`,
-          durationMinutes: 30,
-          passingScore: 70,
+          title: `${moduleName} Certification Exam`,
+          description: `Comprehensive evaluation test for ${moduleName.toLowerCase()} covering key domain concepts, practical scenarios, and quantitative benchmarks.`,
+          durationMinutes: 45,
+          passingScore: 75,
           sortOrder: 0,
+          status: CurriculumStatus.Published,
           createdById: superAdmin.id,
-          questions: [
-            {
-              id: randomUUID(),
-              prompt: `What is the main focus of ${moduleName}?`,
-              type: ExamQuestionType.ShortAnswer,
-              answer: moduleName,
-              points: 10,
-            },
-            {
-              id: randomUUID(),
-              prompt: `${moduleName} is an essential part of ${curData.title}.`,
-              type: ExamQuestionType.TrueFalse,
-              options: ['True', 'False'],
-              answer: 'True',
-              points: 5,
-            },
-            {
-              id: randomUUID(),
-              prompt: `Which topic belongs to ${moduleName}?`,
-              type: ExamQuestionType.MultipleChoice,
-              options: [moduleName, 'Unrelated topic', 'None of the above'],
-              answer: moduleName,
-              points: 10,
-            },
-          ],
+          questions,
         });
       }
       console.log(
