@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import {
   DndContext,
   closestCenter,
-  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -15,10 +14,9 @@ import {
   SortableContext,
   verticalListSortingStrategy,
   sortableKeyboardCoordinates,
-  arrayMove,
 } from "@dnd-kit/sortable";
 import { useApp } from "@qlp/contexts";
-import { useDnDService } from "@qlp/hooks";
+import { useDnDService, useQueryReorder } from "@qlp/hooks";
 import { Button, cn } from "@qlp/ui";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -68,18 +66,10 @@ export function CurriculumModules({
     setModules(sorted);
   }, [loadedModules]);
 
-  const { mutate: updateModuleOrder } = useMutation({
-    mutationFn: async (updates: { id: string; sortOrder: number }[]) => {
-      return api.reorder(updates);
-    },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: ["curriculum-modules", curriculumId],
-      });
-    },
-    onError: () => {
-      toast.error(tCommon("errors.saveFailed"));
-    },
+  const { handleReorder } = useQueryReorder<ResponseCurriculumModuleDto>({
+    queryKey: ["curriculum-modules", curriculumId],
+    reorderFn: (updates) => api.reorder(updates),
+    errorMessage: tCommon("errors.saveFailed"),
   });
 
   const { mutate: deleteModuleMutation, isPending: isDeletionPending } =
@@ -110,31 +100,18 @@ export function CurriculumModules({
       resetModule: () => curriculumModuleStore.set("response", undefined),
     });
 
-  const moveModule = (index: number, direction: "up" | "down") => {
-    const targetIndex = direction === "up" ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= modules.length) return;
-    const newModules = arrayMove(modules, index, targetIndex);
-    setModules(newModules);
-    const updates = newModules.map((mod, i) => ({
-      id: mod.id,
-      sortOrder: i,
-    }));
-    if (updates.length > 0) {
-      updateModuleOrder(updates);
-    }
-  };
-
   const dndService = useDnDService<ResponseCurriculumModuleDto>({
     items: modules,
     setItems: setModules,
     getId: (item) => item.id,
-    renderChild: (item, index) => (
+    onReorder: handleReorder,
+    renderChild: (item, _, { isFirst, isLast, moveUp, moveDown }) => (
       <CurriculumModuleItem
         module={item}
-        isFirst={index === 0}
-        isLast={index === modules.length - 1}
-        onMoveUp={() => moveModule(index, "up")}
-        onMoveDown={() => moveModule(index, "down")}
+        isFirst={isFirst}
+        isLast={isLast}
+        onMoveUp={moveUp}
+        onMoveDown={moveDown}
         onEdit={() =>
           navigate(`/curriculum/${curriculumId}/modules/${item.id}/edit`)
         }
@@ -155,27 +132,6 @@ export function CurriculumModules({
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
-
-  const handleDragEndWrapper = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = modules.findIndex((m) => m.id === active.id);
-      const newIndex = modules.findIndex((m) => m.id === over.id);
-
-      dndService.handleDragEnd(event);
-
-      const newModules = arrayMove(modules, oldIndex, newIndex);
-
-      const updates = newModules.map((mod, index) => ({
-        id: mod.id,
-        sortOrder: index,
-      }));
-
-      if (updates.length > 0) {
-        updateModuleOrder(updates);
-      }
-    }
-  };
 
   if (isLoading) {
     return (
@@ -208,7 +164,7 @@ export function CurriculumModules({
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
-        onDragEnd={handleDragEndWrapper}
+        onDragEnd={dndService.handleDragEnd}
       >
         <SortableContext
           items={modules.map((m) => m.id)}

@@ -2,7 +2,6 @@ import React from "react";
 import {
   DndContext,
   closestCenter,
-  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -12,12 +11,12 @@ import {
   SortableContext,
   verticalListSortingStrategy,
   sortableKeyboardCoordinates,
-  arrayMove,
 } from "@dnd-kit/sortable";
 import { Button } from "@qlp/ui";
 import { ExamQuestionType, type ExamQuestion } from "@qlp/api-client";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useDnDService } from "@qlp/hooks";
 import { SortableQuestionCard } from "./SortableQuestionCard";
 
 export interface CurriculumExamQuestionEditorProps {
@@ -72,23 +71,31 @@ export const CurriculumExamQuestionEditor = ({
     }),
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-
-    const oldIndex = items.findIndex((item) => item.id === active.id);
-    const newIndex = items.findIndex((item) => item.id === over.id);
-
-    if (oldIndex !== -1 && newIndex !== -1) {
-      onChange(arrayMove(items, oldIndex, newIndex));
-    }
-  };
-
-  const handleMoveQuestion = (index: number, direction: "up" | "down") => {
-    const targetIndex = direction === "up" ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= items.length) return;
-    onChange(arrayMove(items, index, targetIndex));
-  };
+  const dndService = useDnDService<ExamQuestion>({
+    items,
+    setItems: onChange,
+    getId: (item) => item.id || "",
+    onReorder: onChange,
+    renderChild: (question, index, { moveUp, moveDown }) => (
+      <SortableQuestionCard
+        key={question.id || index}
+        question={question}
+        index={index}
+        totalQuestions={items.length}
+        disabled={disabled}
+        onMoveUp={moveUp}
+        onMoveDown={moveDown}
+        onUpdate={(patch) => handleUpdateQuestion(index, patch)}
+        onRemove={() => handleRemoveQuestion(index)}
+        onAddOption={() => handleAddOption(index)}
+        onUpdateOption={(optIdx, val) => handleUpdateOption(index, optIdx, val)}
+        onRemoveOption={(optIdx) => handleRemoveOption(index, optIdx)}
+        onToggleMultiChoiceAnswer={(optVal) =>
+          handleToggleMultiChoiceAnswer(index, optVal)
+        }
+      />
+    ),
+  });
 
   const handleAddQuestion = () => {
     const newId =
@@ -288,33 +295,15 @@ export const CurriculumExamQuestionEditor = ({
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
+          onDragEnd={dndService.handleDragEnd}
         >
           <SortableContext
             items={items.map((q) => q.id as string)}
             strategy={verticalListSortingStrategy}
           >
             <div className="flex flex-col gap-4">
-              {items.map((question, index) => (
-                <SortableQuestionCard
-                  key={question.id}
-                  question={question}
-                  index={index}
-                  totalQuestions={items.length}
-                  disabled={disabled}
-                  onUpdate={(patch) => handleUpdateQuestion(index, patch)}
-                  onRemove={() => handleRemoveQuestion(index)}
-                  onAddOption={() => handleAddOption(index)}
-                  onUpdateOption={(optIdx, val) =>
-                    handleUpdateOption(index, optIdx, val)
-                  }
-                  onRemoveOption={(optIdx) => handleRemoveOption(index, optIdx)}
-                  onToggleMultiChoiceAnswer={(optVal) =>
-                    handleToggleMultiChoiceAnswer(index, optVal)
-                  }
-                  onMoveUp={() => handleMoveQuestion(index, "up")}
-                  onMoveDown={() => handleMoveQuestion(index, "down")}
-                />
+              {dndService.items.map((item) => (
+                <React.Fragment key={item.id}>{item.child}</React.Fragment>
               ))}
             </div>
           </SortableContext>

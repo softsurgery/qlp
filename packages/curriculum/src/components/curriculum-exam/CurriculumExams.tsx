@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import {
   DndContext,
   closestCenter,
-  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -15,10 +14,9 @@ import {
   SortableContext,
   verticalListSortingStrategy,
   sortableKeyboardCoordinates,
-  arrayMove,
 } from "@dnd-kit/sortable";
 import { useApp } from "@qlp/contexts";
-import { useDnDService } from "@qlp/hooks";
+import { useDnDService, useQueryReorder } from "@qlp/hooks";
 import { Button, cn } from "@qlp/ui";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -69,18 +67,10 @@ export function CurriculumExams({
     setExams(sorted);
   }, [loadedExams]);
 
-  const { mutate: updateExamOrder } = useMutation({
-    mutationFn: async (updates: { id: string; sortOrder: number }[]) => {
-      return api.reorder(updates);
-    },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: ["curriculum-exams", moduleId],
-      });
-    },
-    onError: () => {
-      toast.error(tCommon("errors.saveFailed"));
-    },
+  const { handleReorder } = useQueryReorder<ResponseCurriculumExamDto>({
+    queryKey: ["curriculum-exams", moduleId],
+    reorderFn: (updates) => api.reorder(updates),
+    errorMessage: tCommon("errors.saveFailed"),
   });
 
   const { mutate: deleteExamMutation, isPending: isDeletionPending } =
@@ -111,31 +101,18 @@ export function CurriculumExams({
       resetExam: () => curriculumExamStore.set("response", undefined),
     });
 
-  const moveExam = (index: number, direction: "up" | "down") => {
-    const targetIndex = direction === "up" ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= exams.length) return;
-    const newExams = arrayMove(exams, index, targetIndex);
-    setExams(newExams);
-    const updates = newExams.map((ex, i) => ({
-      id: ex.id,
-      sortOrder: i,
-    }));
-    if (updates.length > 0) {
-      updateExamOrder(updates);
-    }
-  };
-
   const dndService = useDnDService<ResponseCurriculumExamDto>({
     items: exams,
     setItems: setExams,
     getId: (item) => item.id,
-    renderChild: (item, index) => (
+    onReorder: handleReorder,
+    renderChild: (item, _, { isFirst, isLast, moveUp, moveDown }) => (
       <CurriculumExamItem
         exam={item}
-        isFirst={index === 0}
-        isLast={index === exams.length - 1}
-        onMoveUp={() => moveExam(index, "up")}
-        onMoveDown={() => moveExam(index, "down")}
+        isFirst={isFirst}
+        isLast={isLast}
+        onMoveUp={moveUp}
+        onMoveDown={moveDown}
         onEdit={() =>
           navigate(
             `/curriculum/${curriculumId}/modules/${moduleId}/exams/${item.id}/edit`,
@@ -158,27 +135,6 @@ export function CurriculumExams({
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
-
-  const handleDragEndWrapper = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = exams.findIndex((exam) => exam.id === active.id);
-      const newIndex = exams.findIndex((exam) => exam.id === over.id);
-
-      dndService.handleDragEnd(event);
-
-      const newExams = arrayMove(exams, oldIndex, newIndex);
-
-      const updates = newExams.map((exam, index) => ({
-        id: exam.id,
-        sortOrder: index,
-      }));
-
-      if (updates.length > 0) {
-        updateExamOrder(updates);
-      }
-    }
-  };
 
   if (isLoading) {
     return (
@@ -211,7 +167,7 @@ export function CurriculumExams({
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
-        onDragEnd={handleDragEndWrapper}
+        onDragEnd={dndService.handleDragEnd}
       >
         <SortableContext
           items={exams.map((exam) => exam.id)}

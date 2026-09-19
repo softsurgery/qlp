@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   DndContext,
   closestCenter,
-  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -14,7 +13,6 @@ import {
   SortableContext,
   verticalListSortingStrategy,
   sortableKeyboardCoordinates,
-  arrayMove,
 } from "@dnd-kit/sortable";
 import {
   ChevronDown,
@@ -30,7 +28,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { emptyExcelEditor, stringifyExcelEditor } from "@qlp/components";
 import { useApp } from "@qlp/contexts";
-import { useDnDService } from "@qlp/hooks";
+import { useDnDService, useQueryReorder } from "@qlp/hooks";
 import {
   Button,
   DropdownMenu,
@@ -105,7 +103,9 @@ export const CurriculumLessonMaterials = ({
   const [materialToDelete, setMaterialToDelete] =
     React.useState<ResponseCurriculumLessonMaterialDto | null>(null);
   const [savingId, setSavingId] = React.useState<string | null>(null);
-  const [addedMaterialId, setAddedMaterialId] = React.useState<string | null>(null);
+  const [addedMaterialId, setAddedMaterialId] = React.useState<string | null>(
+    null,
+  );
 
   React.useEffect(() => {
     const sorted = [...loadedMaterials].sort(
@@ -151,28 +151,31 @@ export const CurriculumLessonMaterials = ({
     });
   }, [lessonId, moduleId, queryClient]);
 
-  const { mutate: createMaterial, mutateAsync: createMaterialAsync } = useMutation({
-    mutationFn: (dto: CreateCurriculumMaterialDto) =>
-      api.createMaterial(lessonId, dto),
-    onSuccess: (data) => {
-      invalidate();
-      setAddedMaterialId(data.id);
-    },
-    onError: (error: ServerErrorResponse) => {
-      toast.error(errorMessage(error, tCommon("errors.saveFailed")));
-    },
-  });
+  const { mutate: createMaterial, mutateAsync: createMaterialAsync } =
+    useMutation({
+      mutationFn: (dto: CreateCurriculumMaterialDto) =>
+        api.createMaterial(lessonId, dto),
+      onSuccess: (data) => {
+        invalidate();
+        setAddedMaterialId(data.id);
+      },
+      onError: (error: ServerErrorResponse) => {
+        toast.error(errorMessage(error, tCommon("errors.saveFailed")));
+      },
+    });
 
   const batchUploadInputRef = React.useRef<HTMLInputElement>(null);
   const [isBatchUploading, setIsBatchUploading] = React.useState(false);
 
-  const handleBatchUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBatchUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const files = event.target.files;
     if (!files || files.length === 0 || !baseApi.upload) return;
-    
+
     setIsBatchUploading(true);
     const filesArray = Array.from(files);
-    
+
     // Clear input
     event.target.value = "";
 
@@ -180,7 +183,7 @@ export const CurriculumLessonMaterials = ({
       const uploads = await baseApi.upload.uploadFiles(
         filesArray,
         undefined,
-        false
+        false,
       );
 
       const promises = uploads.map((upload: any, index: number) => {
@@ -189,7 +192,7 @@ export const CurriculumLessonMaterials = ({
         let type = MaterialType.Document;
         if (file.type.startsWith("video/")) type = MaterialType.Video;
         else if (file.type.startsWith("audio/")) type = MaterialType.Audio;
-        
+
         return createMaterialAsync({
           title: file.name,
           type,
@@ -204,7 +207,7 @@ export const CurriculumLessonMaterials = ({
       if (lastCreated) {
         setAddedMaterialId(lastCreated.id);
       }
-      
+
       toast.success(tCommon("commands.saved", "Saved successfully"));
       invalidate();
     } catch (error) {
@@ -237,16 +240,12 @@ export const CurriculumLessonMaterials = ({
     },
   });
 
-  const { mutate: updateMaterialOrder } = useMutation({
-    mutationFn: (updates: { id: string; sortOrder: number }[]) =>
-      api.reorderMaterials(updates),
-    onSuccess: () => {
-      invalidate();
-    },
-    onError: () => {
-      toast.error(tCommon("errors.saveFailed", "Failed to update order"));
-    },
-  });
+  const { handleReorder } =
+    useQueryReorder<ResponseCurriculumLessonMaterialDto>({
+      queryKey: ["curriculum-materials", lessonId],
+      reorderFn: (updates) => api.reorderMaterials(updates),
+      errorMessage: tCommon("errors.saveFailed", "Failed to update order"),
+    });
 
   const { mutate: deleteMaterialMutation, isPending: isDeletionPending } =
     useMutation({
@@ -277,8 +276,7 @@ export const CurriculumLessonMaterials = ({
   const defaultTitle = (type: MaterialType) => {
     if (type === MaterialType.Text) return tMaterial("materialEditor");
     if (type === MaterialType.Video) return tMaterial("materialVideo");
-    if (type === MaterialType.Audio)
-      return tMaterial("materialAudio");
+    if (type === MaterialType.Audio) return tMaterial("materialAudio");
     if (type === MaterialType.Table) return tMaterial("materialTable");
     if (type === MaterialType.Document) return tMaterial("materialDocument");
     return tCommon("editor.newMaterial");
@@ -296,32 +294,19 @@ export const CurriculumLessonMaterials = ({
     });
   };
 
-  const moveMaterial = (index: number, direction: "up" | "down") => {
-    const targetIndex = direction === "up" ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= materials.length) return;
-    const next = arrayMove(materials, index, targetIndex);
-    setMaterials(next);
-    const updates = next.map((m, i) => ({
-      id: m.id,
-      sortOrder: i,
-    }));
-    if (updates.length > 0) {
-      updateMaterialOrder(updates);
-    }
-  };
-
   const dndService = useDnDService<ResponseCurriculumLessonMaterialDto>({
     items: materials,
     setItems: setMaterials,
     getId: (item) => item.id,
-    renderChild: (item, index) => (
+    onReorder: handleReorder,
+    renderChild: (item, _, { isFirst, isLast, moveUp, moveDown }) => (
       <CurriculumLessonMaterialItem
         className="rounded-xl mb-2"
         material={item}
-        isFirst={index === 0}
-        isLast={index === materials.length - 1}
-        onMoveUp={() => moveMaterial(index, "up")}
-        onMoveDown={() => moveMaterial(index, "down")}
+        isFirst={isFirst}
+        isLast={isLast}
+        onMoveUp={moveUp}
+        onMoveDown={moveDown}
         original={loadedMaterials.find((loaded) => loaded.id === item.id)}
         disabled={disabled}
         isSaving={savingId === item.id}
@@ -349,27 +334,6 @@ export const CurriculumLessonMaterials = ({
     }),
   );
 
-  const handleDragEndWrapper = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (disabled || !over || active.id === over.id) return;
-
-    const oldIndex = materials.findIndex(
-      (material) => material.id === active.id,
-    );
-    const newIndex = materials.findIndex((material) => material.id === over.id);
-
-    dndService.handleDragEnd(event);
-
-    const next = arrayMove(materials, oldIndex, newIndex);
-    const updates = next.map((material, index) => ({
-      id: material.id,
-      sortOrder: index,
-    }));
-    if (updates.length > 0) {
-      updateMaterialOrder(updates);
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="flex h-24 items-center justify-center text-sm text-muted-foreground">
@@ -386,9 +350,7 @@ export const CurriculumLessonMaterials = ({
             {tCommon("editor.materials")}
           </h3>
           <p className="text-sm text-muted-foreground">
-            {tMaterial(
-              "materialsDescription"
-            )}
+            {tMaterial("materialsDescription")}
           </p>
         </div>
         <DropdownMenu>
@@ -418,7 +380,9 @@ export const CurriculumLessonMaterials = ({
               );
             })}
             {baseApi.upload && (
-              <DropdownMenuItem onSelect={() => batchUploadInputRef.current?.click()}>
+              <DropdownMenuItem
+                onSelect={() => batchUploadInputRef.current?.click()}
+              >
                 <Upload className="h-4 w-4" />
                 {tMaterial("materialBatchUpload")}
               </DropdownMenuItem>
@@ -430,7 +394,7 @@ export const CurriculumLessonMaterials = ({
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
-        onDragEnd={handleDragEndWrapper}
+        onDragEnd={dndService.handleDragEnd}
       >
         <SortableContext
           items={materials.map((material) => material.id)}
@@ -442,9 +406,7 @@ export const CurriculumLessonMaterials = ({
             ))}
             {dndService.items.length === 0 && (
               <div className="rounded-lg border border-dashed py-8 text-center text-sm text-muted-foreground">
-                {tMaterial(
-                  "noMaterials"
-                )}
+                {tMaterial("noMaterials")}
               </div>
             )}
           </div>

@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import {
   DndContext,
   closestCenter,
-  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -15,10 +14,9 @@ import {
   SortableContext,
   verticalListSortingStrategy,
   sortableKeyboardCoordinates,
-  arrayMove,
 } from "@dnd-kit/sortable";
 import { useApp } from "@qlp/contexts";
-import { useDnDService } from "@qlp/hooks";
+import { useDnDService, useQueryReorder } from "@qlp/hooks";
 import { Button, cn } from "@qlp/ui";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -42,7 +40,7 @@ export function CurriculumLessons({
   moduleId,
 }: CurriculumLessonsProps) {
   const { t: tCommon } = useTranslation("curriculum-common");
-    const { t: tGlobal } = useTranslation("global");
+  const { t: tGlobal } = useTranslation("global");
   const { t: tLesson } = useTranslation("curriculum-lesson");
   const { api: baseApi, appType } = useApp();
   const api =
@@ -70,18 +68,10 @@ export function CurriculumLessons({
     setLessons(sorted);
   }, [loadedLessons]);
 
-  const { mutate: updateLessonOrder } = useMutation({
-    mutationFn: async (updates: { id: string; sortOrder: number }[]) => {
-      return api.reorder(updates);
-    },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: ["curriculum-lessons", moduleId],
-      });
-    },
-    onError: () => {
-      toast.error(tCommon("errors.saveFailed"));
-    },
+  const { handleReorder } = useQueryReorder<ResponseCurriculumLessonDto>({
+    queryKey: ["curriculum-lessons", moduleId],
+    reorderFn: (updates) => api.reorder(updates),
+    errorMessage: tCommon("errors.saveFailed"),
   });
 
   const { mutate: deleteLessonMutation, isPending: isDeletionPending } =
@@ -112,31 +102,18 @@ export function CurriculumLessons({
       resetLesson: () => curriculumLessonStore.set("response", undefined),
     });
 
-  const moveLesson = (index: number, direction: "up" | "down") => {
-    const targetIndex = direction === "up" ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= lessons.length) return;
-    const newLessons = arrayMove(lessons, index, targetIndex);
-    setLessons(newLessons);
-    const updates = newLessons.map((l, i) => ({
-      id: l.id,
-      sortOrder: i,
-    }));
-    if (updates.length > 0) {
-      updateLessonOrder(updates);
-    }
-  };
-
   const dndService = useDnDService<ResponseCurriculumLessonDto>({
     items: lessons,
     setItems: setLessons,
     getId: (item) => item.id,
-    renderChild: (item, index) => (
+    onReorder: handleReorder,
+    renderChild: (item, _, { isFirst, isLast, moveUp, moveDown }) => (
       <CurriculumLessonItem
         lesson={item}
-        isFirst={index === 0}
-        isLast={index === lessons.length - 1}
-        onMoveUp={() => moveLesson(index, "up")}
-        onMoveDown={() => moveLesson(index, "down")}
+        isFirst={isFirst}
+        isLast={isLast}
+        onMoveUp={moveUp}
+        onMoveDown={moveDown}
         onEdit={() =>
           navigate(
             `/curriculum/${curriculumId}/modules/${moduleId}/lessons/${item.id}/edit`,
@@ -159,27 +136,6 @@ export function CurriculumLessons({
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
-
-  const handleDragEndWrapper = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = lessons.findIndex((lesson) => lesson.id === active.id);
-      const newIndex = lessons.findIndex((lesson) => lesson.id === over.id);
-
-      dndService.handleDragEnd(event);
-
-      const newLessons = arrayMove(lessons, oldIndex, newIndex);
-
-      const updates = newLessons.map((lesson, index) => ({
-        id: lesson.id,
-        sortOrder: index,
-      }));
-
-      if (updates.length > 0) {
-        updateLessonOrder(updates);
-      }
-    }
-  };
 
   if (isLoading) {
     return (
@@ -212,7 +168,7 @@ export function CurriculumLessons({
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
-        onDragEnd={handleDragEndWrapper}
+        onDragEnd={dndService.handleDragEnd}
       >
         <SortableContext
           items={lessons.map((lesson) => lesson.id)}
