@@ -75,7 +75,7 @@ export const RichTextField = ({ field }: RichTextFieldProps) => {
         "w-full rounded-md shadow-sm mt-1 transition-all duration-200",
         field.error && "border-destructive focus-within:ring-destructive",
         isFullscreen &&
-          "fixed inset-0 z-[9999] bg-background m-0 p-1 sm:p-3 w-full h-full overflow-hidden flex flex-col rounded-none border-none",
+          "fixed inset-0 z-[9999]  m-0 p-1 sm:p-3 w-full h-full overflow-hidden flex flex-col rounded-none border-none",
         !isFullscreen && field.className,
       )}
     >
