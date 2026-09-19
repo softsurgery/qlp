@@ -154,4 +154,6 @@ import "./components/editor/style.css";
 
 export * from "./hooks/useDialog";
 export * from "./hooks/useMediaQuery";
+export * from "./hooks/useRTL";
 export * from "./hooks/useSheet";
+

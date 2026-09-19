@@ -1,20 +1,9 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, X, Edit2 } from "lucide-react";
-import {
-  Card,
-  Button,
-  Badge,
-  cn,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@qlp/ui";
+import { Card, Button, Badge, cn } from "@qlp/ui";
 import { type ResponseCurriculumLessonDto } from "@qlp/api-client";
 import { useTranslation } from "react-i18next";
-import { identifyUser, identifyUserAvatar } from "@qlp/lib";
-import { useUploadSrc } from "@qlp/hooks";
-import { useApp } from "@qlp/contexts";
 
 export interface CurriculumLessonItemProps {
   lesson: ResponseCurriculumLessonDto;
@@ -29,17 +18,8 @@ export function CurriculumLessonItem({
   onDelete,
   className,
 }: CurriculumLessonItemProps) {
-  const { api: baseApi } = useApp();
   const { t: tGlobal } = useTranslation("global");
 
-  const createdBy = lesson.createdBy;
-  const { data: createdByAvatarSrc } = useUploadSrc(
-    baseApi.upload
-      ? (createdBy?.picture ??
-          (createdBy?.pictureId ? { id: createdBy?.pictureId } : null))
-      : null,
-    baseApi.upload,
-  );
   const {
     attributes,
     listeners,

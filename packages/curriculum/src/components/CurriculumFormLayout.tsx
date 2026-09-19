@@ -2,8 +2,7 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PanelRightClose, PanelRightOpen, ArrowUp } from "lucide-react";
-import { Button, cn, useSheet, useMediaQuery } from "@qlp/ui";
-import { useRTL } from "@qlp/ui/hooks/useRTL";
+import { Button, cn, useSheet, useMediaQuery, useRTL } from "@qlp/ui";
 
 interface CurriculumFormLayoutProps {
   className?: string;
@@ -19,7 +18,7 @@ export const CurriculumFormLayout = ({
   sidebarDescription,
 }: CurriculumFormLayoutProps) => {
   const { t: tUI } = useTranslation("ui");
-  const isRTL = useRTL();
+  const { isRTL } = useRTL();
   const [searchParams] = useSearchParams();
   const isEmbed =
     searchParams.get("embed") === "true" || searchParams.get("embed") === "1";
@@ -139,7 +138,7 @@ export const CurriculumFormLayout = ({
           </div>
         </div>
         {!isMobile && isDesktopSidebarOpen && (
-          <aside className="sticky top-4 flex w-full shrink-0 flex-col self-start rounded-lg border bg-card lg:w-[300px] xl:w-[450px] max-h-[calc(100dvh-5rem)] lg:max-h-[calc(100dvh-7rem)] animate-in slide-in-from-right-8 fade-in-20 duration-300">
+          <aside className="sticky top-4 flex w-full shrink-0 flex-col self-start rounded-lg border bg-card lg:w-[200px] xl:w-[400px] max-h-[calc(100dvh-5rem)] lg:max-h-[calc(100dvh-7rem)] animate-in slide-in-from-right-8 fade-in-20 duration-300">
             <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-y-contain p-4 sm:p-6 pb-8">
               {sidebarContent}
             </div>

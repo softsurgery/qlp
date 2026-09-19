@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { type ResponseCurriculumModuleDto } from "@qlp/api-client";
-import { cn, useSheet } from "@qlp/ui";
+import { cn, useSheet, useRTL } from "@qlp/ui";
 import { CourseNav } from "../nav/CourseNav";
 
 interface CourseNavSheetProps {
@@ -27,7 +27,7 @@ export const useCourseNavSheet = ({
   onSelectItem,
 }: CourseNavSheetProps) => {
   const { t: tCommon } = useTranslation("curriculum-common");
-    const { i18n } = useTranslation();
+  const { isRTL } = useRTL();
   const close = { current: () => {} };
   const {
     SheetFragment: courseNavSheet,
@@ -37,7 +37,8 @@ export const useCourseNavSheet = ({
     title: tCommon("viewer.courseMaterial"),
     headerClassName: "sr-only",
     showCloseButton: false,
-    side: i18n.dir() === "rtl" ? "right" : "left",
+    side: isRTL ? "right" : "left",
+
     className: cn("w-[70vw] max-w-none p-0 sm:max-w-none", className),
     children: (
       <CourseNav
