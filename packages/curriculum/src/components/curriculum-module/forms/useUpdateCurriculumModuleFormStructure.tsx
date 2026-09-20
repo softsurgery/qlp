@@ -10,10 +10,12 @@ import { CurriculumModuleStore } from "../../../hooks/stores/useCurriculumModule
 
 interface UseUpdateCurriculumModuleFormStructureProps {
   curriculumModuleStore: CurriculumModuleStore;
+  disabled?: boolean;
 }
 
 export const useUpdateCurriculumModuleFormStructure = ({
   curriculumModuleStore,
+  disabled,
 }: UseUpdateCurriculumModuleFormStructureProps) => {
   const { t: tCommon } = useTranslation("curriculum-common");
   const getError = (err?: string[]) => err?.[0];
@@ -27,6 +29,7 @@ export const useUpdateCurriculumModuleFormStructure = ({
     description: tCommon("fields.titleDescription"),
     error: getError(curriculumModuleStore.updateDtoErrors?.title),
     props: {
+      disabled,
       value: curriculumModuleStore.updateDto.title || "",
       onChange: (value) => {
         curriculumModuleStore.setNested("updateDto.title", value);
@@ -43,6 +46,7 @@ export const useUpdateCurriculumModuleFormStructure = ({
     description: tCommon("fields.descriptionHint"),
     error: getError(curriculumModuleStore.updateDtoErrors?.description),
     props: {
+      disabled,
       height: 300,
       value: curriculumModuleStore.updateDto.description || "",
       onChange: (value: string) => {

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { isEqual } from "lodash";
 import { setNestedValue } from "@qlp/lib";
 import type {
   ResponseCurriculumLessonDto,
@@ -10,8 +11,10 @@ export interface CurriculumLessonStoreState {
   response?: ResponseCurriculumLessonDto;
   createDto: CreateCurriculumLessonDto;
   createDtoErrors: Record<string, string[]>;
+  initialUpdateDto: UpdateCurriculumLessonDto;
   updateDto: UpdateCurriculumLessonDto;
   updateDtoErrors: Record<string, string[]>;
+  isChanged: boolean;
 }
 
 const initialState: CurriculumLessonStoreState = {
@@ -21,8 +24,10 @@ const initialState: CurriculumLessonStoreState = {
     description: "",
   },
   createDtoErrors: {},
+  initialUpdateDto: {},
   updateDto: {},
   updateDtoErrors: {},
+  isChanged: false,
 };
 
 export interface CurriculumLessonStore extends CurriculumLessonStoreState {
@@ -33,8 +38,17 @@ export interface CurriculumLessonStore extends CurriculumLessonStoreState {
 
 export const useCurriculumLessonStore = create<CurriculumLessonStore>((set) => ({
   ...initialState,
-  set: (key, value) => set({ [key]: value } as Partial<CurriculumLessonStoreState>),
+  set: (key, value) =>
+    set((state) => {
+      const nextState = { ...state, [key]: value };
+      const isChanged = !isEqual(nextState.updateDto, nextState.initialUpdateDto);
+      return { ...nextState, isChanged };
+    }),
   setNested: (path, value) =>
-    set((state) => setNestedValue(state, path, value)),
+    set((state) => {
+      const nextState = setNestedValue(state, path, value);
+      const isChanged = !isEqual(nextState.updateDto, nextState.initialUpdateDto);
+      return { ...nextState, isChanged };
+    }),
   reset: () => set(initialState),
 }));

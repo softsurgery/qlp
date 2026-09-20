@@ -30,7 +30,7 @@ export class CurriculumWorkflowService extends AbstractWorkflowService<
 
     const newStatus = this.transition(curriculum.status, event, this.machine);
 
-    await this.curriculumService.update(id, { status: newStatus });
+    await this.curriculumService.updateCurrentVersion(id, { status: newStatus });
 
     return this.findOneById(id);
   }

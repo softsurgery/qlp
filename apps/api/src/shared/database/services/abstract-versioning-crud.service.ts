@@ -165,6 +165,11 @@ export class AbstractVersioningCrudService<T extends ObjectLiteral> {
     return this.saveNewVersion(id, dto);
   }
 
+  @Transactional()
+  async updateCurrentVersion(id: string | number, dto: DeepPartial<T>) {
+    return this.repository.update(id, dto as any);
+  }
+
   async softDelete(id: string | number): Promise<T | null> {
     return this.repository.softDelete(id);
   }

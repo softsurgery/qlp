@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { isEqual } from "lodash";
 import { setNestedValue } from "@qlp/lib";
 import type {
   ResponseCurriculumExamDto,
@@ -10,8 +11,10 @@ export interface CurriculumExamStoreState {
   response?: ResponseCurriculumExamDto;
   createDto: CreateCurriculumExamDto;
   createDtoErrors: Record<string, string[]>;
+  initialUpdateDto: UpdateCurriculumExamDto;
   updateDto: UpdateCurriculumExamDto;
   updateDtoErrors: Record<string, string[]>;
+  isChanged: boolean;
 }
 
 const initialState: CurriculumExamStoreState = {
@@ -24,8 +27,10 @@ const initialState: CurriculumExamStoreState = {
     questions: [],
   },
   createDtoErrors: {},
+  initialUpdateDto: {},
   updateDto: {},
   updateDtoErrors: {},
+  isChanged: false,
 };
 
 export interface CurriculumExamStore extends CurriculumExamStoreState {
@@ -37,8 +42,16 @@ export interface CurriculumExamStore extends CurriculumExamStoreState {
 export const useCurriculumExamStore = create<CurriculumExamStore>((set) => ({
   ...initialState,
   set: (key, value) =>
-    set({ [key]: value } as Partial<CurriculumExamStoreState>),
+    set((state) => {
+      const nextState = { ...state, [key]: value };
+      const isChanged = !isEqual(nextState.updateDto, nextState.initialUpdateDto);
+      return { ...nextState, isChanged };
+    }),
   setNested: (path, value) =>
-    set((state) => setNestedValue(state, path, value)),
+    set((state) => {
+      const nextState = setNestedValue(state, path, value);
+      const isChanged = !isEqual(nextState.updateDto, nextState.initialUpdateDto);
+      return { ...nextState, isChanged };
+    }),
   reset: () => set(initialState),
 }));

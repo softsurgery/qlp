@@ -11,10 +11,12 @@ import { CurriculumExamStore } from "../../../hooks/stores/useCurriculumExamStor
 
 interface UseUpdateCurriculumExamFormStructureProps {
   curriculumExamStore: CurriculumExamStore;
+  disabled?: boolean;
 }
 
 export const useUpdateCurriculumExamFormStructure = ({
   curriculumExamStore,
+  disabled,
 }: UseUpdateCurriculumExamFormStructureProps) => {
   const { t: tCommon } = useTranslation("curriculum-common");
   const getError = (err?: string[]) => err?.[0];
@@ -28,6 +30,7 @@ export const useUpdateCurriculumExamFormStructure = ({
     description: tCommon("fields.titleDescription"),
     error: getError(curriculumExamStore.updateDtoErrors?.title),
     props: {
+      disabled,
       value: curriculumExamStore.updateDto.title || "",
       onChange: (value) => {
         curriculumExamStore.setNested("updateDto.title", value);
@@ -43,6 +46,7 @@ export const useUpdateCurriculumExamFormStructure = ({
     placeholder: "30",
     description: tCommon("fields.durationHint", { defaultValue: "Exam duration in minutes" }),
     props: {
+      disabled,
       value: curriculumExamStore.updateDto.durationMinutes ?? 30,
       onChange: (value) => {
         curriculumExamStore.setNested("updateDto.durationMinutes", value);
@@ -57,6 +61,7 @@ export const useUpdateCurriculumExamFormStructure = ({
     placeholder: "60",
     description: tCommon("fields.passingScoreHint", { defaultValue: "Minimum score required to pass" }),
     props: {
+      disabled,
       value: curriculumExamStore.updateDto.passingScore ?? 60,
       onChange: (value) => {
         curriculumExamStore.setNested("updateDto.passingScore", value);
@@ -72,6 +77,7 @@ export const useUpdateCurriculumExamFormStructure = ({
     description: tCommon("fields.descriptionHint"),
     error: getError(curriculumExamStore.updateDtoErrors?.description),
     props: {
+      disabled,
       height: 200,
       value: curriculumExamStore.updateDto.description || "",
       onChange: (value: string) => {

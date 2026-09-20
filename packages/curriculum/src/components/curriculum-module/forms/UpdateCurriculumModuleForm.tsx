@@ -55,6 +55,7 @@ export function UpdateCurriculumModuleForm({
   });
   const { workflow: workflowData, isWorkflowPending: isWorkflowLoading } =
     useCurriculumModuleWorkflow({ moduleId });
+  const isChanged = useCurriculumModuleStore((state) => state.isChanged);
   const curriculumModuleStore = useCurriculumModuleStore();
   const resetStore = useCurriculumModuleStore((state) => state.reset);
   const { setRoutes, clearRoutes } = useBreadcrumb();
@@ -73,10 +74,12 @@ export function UpdateCurriculumModuleForm({
 
   React.useEffect(() => {
     if (module) {
-      curriculumModuleStore.set("updateDto", {
+      const dto = {
         title: module.title,
         description: module.description,
-      });
+      };
+      curriculumModuleStore.set("initialUpdateDto", dto);
+      curriculumModuleStore.set("updateDto", dto);
     }
   }, [module]);
 
@@ -113,6 +116,7 @@ export function UpdateCurriculumModuleForm({
   const { updateCurriculumModuleFormStructure } =
     useUpdateCurriculumModuleFormStructure({
       curriculumModuleStore,
+      disabled: !!(workflowData && !workflowData.isUpdatable),
     });
 
   const { mutate: updateMutation, isPending } = useMutation({
@@ -223,6 +227,7 @@ export function UpdateCurriculumModuleForm({
               disabled: !!(
                 isPending ||
                 isLoading ||
+                !isChanged ||
                 (workflowData && !workflowData.isUpdatable)
               ),
             },
@@ -236,7 +241,7 @@ export function UpdateCurriculumModuleForm({
               label: tGlobal("commands.reset") as string,
               icon: <Repeat2 />,
               onClick: resetStore,
-              disabled: isPending,
+              disabled: isPending || !isChanged || !!(workflowData && !workflowData.isUpdatable),
             },
           ]}
         />

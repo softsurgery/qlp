@@ -59,6 +59,7 @@ export function UpdateCurriculumLessonForm({
   });
   const { workflow: workflowData, isWorkflowPending: isWorkflowLoading } =
     useCurriculumLessonWorkflow({ lessonId });
+  const isChanged = useCurriculumLessonStore((state) => state.isChanged);
   const curriculumLessonStore = useCurriculumLessonStore();
   const resetStore = useCurriculumLessonStore((state) => state.reset);
   const { setRoutes, clearRoutes } = useBreadcrumb();
@@ -77,10 +78,12 @@ export function UpdateCurriculumLessonForm({
 
   React.useEffect(() => {
     if (lesson) {
-      curriculumLessonStore.set("updateDto", {
+      const dto = {
         title: lesson.title,
         description: lesson.description,
-      });
+      };
+      curriculumLessonStore.set("initialUpdateDto", dto);
+      curriculumLessonStore.set("updateDto", dto);
     }
   }, [lesson]);
 
@@ -123,6 +126,7 @@ export function UpdateCurriculumLessonForm({
   const { updateCurriculumLessonFormStructure } =
     useUpdateCurriculumLessonFormStructure({
       curriculumLessonStore,
+      disabled: !!(workflowData && !workflowData.isUpdatable),
     });
 
   const { mutate: updateMutation, isPending } = useMutation({
@@ -235,6 +239,7 @@ export function UpdateCurriculumLessonForm({
               disabled: !!(
                 isPending ||
                 isLoading ||
+                !isChanged ||
                 (workflowData && !workflowData.isUpdatable)
               ),
             },
@@ -248,7 +253,7 @@ export function UpdateCurriculumLessonForm({
               label: tGlobal("commands.reset") as string,
               icon: <Repeat2 />,
               onClick: resetStore,
-              disabled: isPending,
+              disabled: isPending || !isChanged || !!(workflowData && !workflowData.isUpdatable),
             },
           ]}
         />

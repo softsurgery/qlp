@@ -15,12 +15,14 @@ interface UseUpdateCurriculumFormStructureProps {
   curriculumStore: CurriculumStore;
   appType?: "admin" | "web";
   ownerOptions?: SelectOption[];
+  disabled?: boolean;
 }
 
 export const useUpdateCurriculumFormStructure = ({
   curriculumStore,
   appType,
   ownerOptions,
+  disabled,
 }: UseUpdateCurriculumFormStructureProps) => {
   const { t: tCommon } = useTranslation("curriculum-common");
   const getError = (err?: string[]) => err?.[0];
@@ -34,6 +36,7 @@ export const useUpdateCurriculumFormStructure = ({
     description: tCommon("fields.titleDescription"),
     error: getError(curriculumStore.updateDtoErrors?.title),
     props: {
+      disabled,
       value: curriculumStore.updateDto.title || "",
       onChange: (value) => {
         curriculumStore.setNested("updateDto.title", value);
@@ -51,6 +54,7 @@ export const useUpdateCurriculumFormStructure = ({
     description: tCommon("fields.slugDescription"),
     error: getError(curriculumStore.updateDtoErrors?.slug),
     props: {
+      disabled,
       value: curriculumStore.updateDto.slug || "",
       onChange: (value) => {
         curriculumStore.setNested("updateDto.slug", value);
@@ -66,6 +70,7 @@ export const useUpdateCurriculumFormStructure = ({
     description: tCommon("fields.descriptionHint"),
     error: getError(curriculumStore.updateDtoErrors?.description),
     props: {
+      disabled,
       height: 500,
       value: curriculumStore.updateDto.description || "",
       onChange: (value: string) => {
@@ -87,6 +92,7 @@ export const useUpdateCurriculumFormStructure = ({
       curriculumStore.updateDtoErrors?.ownerId as string[] | undefined,
     ),
     props: {
+      disabled,
       options: ownerOptions || [],
       value: curriculumStore.updateDto.ownerId,
       onValueChange: (value) => {

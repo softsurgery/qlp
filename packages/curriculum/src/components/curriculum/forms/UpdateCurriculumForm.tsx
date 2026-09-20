@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useApp } from "@qlp/contexts";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -66,6 +66,7 @@ export function UpdateCurriculumForm({
 
   const curriculum = workflowData?.curriculum;
 
+  const isChanged = useCurriculumStore((state) => state.isChanged);
   const curriculumStore = useCurriculumStore();
   const resetStore = useCurriculumStore((state) => state.reset);
 
@@ -75,14 +76,16 @@ export function UpdateCurriculumForm({
   // Populate store
   React.useEffect(() => {
     if (curriculum) {
-      curriculumStore.set("response", curriculum);
-      curriculumStore.set("updateDto", {
+      const dto = {
         title: curriculum.title,
         slug: curriculum.slug,
         description: curriculum.description,
         status: curriculum.status,
         ownerId: curriculum.owner?.id || curriculum.ownerId,
-      });
+      };
+      curriculumStore.set("response", curriculum);
+      curriculumStore.set("initialUpdateDto", dto);
+      curriculumStore.set("updateDto", dto);
     }
   }, [curriculum]);
 
@@ -108,6 +111,7 @@ export function UpdateCurriculumForm({
     curriculumStore,
     appType,
     ownerOptions,
+    disabled: !!(workflowData && !workflowData.isUpdatable),
   });
 
   const { mutate: updateMutation, isPending } = useMutation({
@@ -133,18 +137,14 @@ export function UpdateCurriculumForm({
       mutationFn: (dto: { event: string }) =>
         api.workflow.executeWorkflow(curriculumId, dto),
       onSuccess: () => {
-        toast.success(
-          tGlobal("workflowExecuted"),
-        );
+        toast.success(tGlobal("workflowExecuted"));
         void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
         void queryClient.invalidateQueries({
           queryKey: ["curriculum", curriculumId],
         });
       },
       onError: (error: ServerErrorResponse) => {
-        toast.error(
-          errorMessage(error, tGlobal("workflowError")),
-        );
+        toast.error(errorMessage(error, tGlobal("workflowError")));
       },
     });
 
@@ -205,7 +205,9 @@ export function UpdateCurriculumForm({
               icon: isPending ? <Spinner size="small" /> : <Save />,
               onClick: handleSubmit,
               disabled:
-                isPending || (workflowData && !workflowData.isUpdatable),
+                isPending ||
+                !isChanged ||
+                (workflowData && !workflowData.isUpdatable),
             },
             ...(workflowData?.nextSteps?.map((step) => ({
               label: step.label,
@@ -217,7 +219,7 @@ export function UpdateCurriculumForm({
               label: tGlobal("commands.reset") as string,
               icon: <Repeat2 />,
               onClick: resetStore,
-              disabled: isPending,
+              disabled: isPending || !isChanged || (workflowData && !workflowData.isUpdatable),
             },
           ]}
         />

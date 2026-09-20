@@ -10,10 +10,12 @@ import { CurriculumLessonStore } from "../../../hooks/stores/useCurriculumLesson
 
 interface UseUpdateCurriculumLessonFormStructureProps {
   curriculumLessonStore: CurriculumLessonStore;
+  disabled?: boolean;
 }
 
 export const useUpdateCurriculumLessonFormStructure = ({
   curriculumLessonStore,
+  disabled,
 }: UseUpdateCurriculumLessonFormStructureProps) => {
   const { t: tCommon } = useTranslation("curriculum-common");
   const getError = (err?: string[]) => err?.[0];
@@ -27,6 +29,7 @@ export const useUpdateCurriculumLessonFormStructure = ({
     description: tCommon("fields.titleDescription"),
     error: getError(curriculumLessonStore.updateDtoErrors?.title),
     props: {
+      disabled,
       value: curriculumLessonStore.updateDto.title || "",
       onChange: (value) => {
         curriculumLessonStore.setNested("updateDto.title", value);
@@ -43,6 +46,7 @@ export const useUpdateCurriculumLessonFormStructure = ({
     description: tCommon("fields.descriptionHint"),
     error: getError(curriculumLessonStore.updateDtoErrors?.description),
     props: {
+      disabled,
       height: 300,
       value: curriculumLessonStore.updateDto.description || "",
       onChange: (value: string) => {

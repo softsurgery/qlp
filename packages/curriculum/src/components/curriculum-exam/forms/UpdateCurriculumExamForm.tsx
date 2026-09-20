@@ -59,6 +59,7 @@ export function UpdateCurriculumExamForm({
   });
   const { workflow: workflowData, isWorkflowPending: isWorkflowLoading } =
     useCurriculumExamWorkflow({ examId });
+  const isChanged = useCurriculumExamStore((state) => state.isChanged);
   const curriculumExamStore = useCurriculumExamStore();
   const resetStore = useCurriculumExamStore((state) => state.reset);
   const { setRoutes, clearRoutes } = useBreadcrumb();
@@ -76,13 +77,15 @@ export function UpdateCurriculumExamForm({
 
   React.useEffect(() => {
     if (exam) {
-      curriculumExamStore.set("updateDto", {
+      const dto = {
         title: exam.title,
         description: exam.description,
         durationMinutes: exam.durationMinutes,
         passingScore: exam.passingScore,
         questions: exam.questions || [],
-      });
+      };
+      curriculumExamStore.set("initialUpdateDto", dto);
+      curriculumExamStore.set("updateDto", dto);
     }
   }, [exam]);
 
@@ -124,6 +127,7 @@ export function UpdateCurriculumExamForm({
   const { updateCurriculumExamFormStructure } =
     useUpdateCurriculumExamFormStructure({
       curriculumExamStore,
+      disabled: !!(workflowData && !workflowData.isUpdatable),
     });
 
   const { mutate: updateMutation, isPending } = useMutation({
@@ -237,6 +241,7 @@ export function UpdateCurriculumExamForm({
               disabled: !!(
                 isPending ||
                 isLoading ||
+                !isChanged ||
                 (workflowData && !workflowData.isUpdatable)
               ),
             },
@@ -260,7 +265,7 @@ export function UpdateCurriculumExamForm({
                   });
                 }
               },
-              disabled: isPending,
+              disabled: isPending || !isChanged || !!(workflowData && !workflowData.isUpdatable),
             },
           ]}
         />
