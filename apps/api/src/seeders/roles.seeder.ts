@@ -30,6 +30,11 @@ export class RolesSeedCommand {
         description: 'Administrator role',
       },
       {
+        id: BasicRoles.Tutor,
+        label: 'Tutor',
+        description: 'Tutor role',
+      },
+      {
         id: BasicRoles.User,
         label: 'User',
         description: 'User role',

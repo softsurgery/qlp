@@ -1,0 +1,77 @@
+{
+  "nav": {
+    "today": "اليوم",
+    "previousWeek": "الأسبوع السابق",
+    "nextWeek": "الأسبوع التالي",
+    "title": "الجلسات"
+  },
+  "status": {
+    "idle": "مجدولة",
+    "active": "مباشر",
+    "finished": "انتهت"
+  },
+  "roles": {
+    "host": "المضيف",
+    "student": "طالب",
+    "observer": "مراقب"
+  },
+  "grid": {
+    "createAt": "جلسة جديدة في {{time}}",
+    "spots": "مقعد {{count}}",
+    "spots_other": "{{count}} مقاعد",
+    "unscheduled": "غير مجدولة بعد"
+  },
+  "form": {
+    "createTitle": "جدولة جلسة",
+    "createDescription": "احجز الوقت وعدد المقاعد. يمكنك دعوة المشاركين الآن أو لاحقًا.",
+    "editTitle": "تعديل الجلسة",
+    "editDescription": "تُطبَّق التغييرات فورًا على من لم ينضمّ بعد.",
+    "title": "العنوان",
+    "titlePlaceholder": "مثال: التجويد — الأسبوع الثالث",
+    "description": "الوصف",
+    "host": "المضيف",
+    "hostPlaceholder": "اختر معلّمًا",
+    "hostHint": "يدير المضيف الجلسة ويتحكّم بها كما يفعل المشرف.",
+    "startsAt": "تبدأ في",
+    "endsAt": "تنتهي في",
+    "invalidRange": "يجب أن يكون وقت الانتهاء بعد وقت البدء.",
+    "capacity": "المقاعد",
+    "capacityHint": "يشمل المضيف. القيمة 0 تعني بلا حدّ. تُرفض الدعوات عند امتلاء المقاعد."
+  },
+  "detail": {
+    "spots": "{{taken}} من {{capacity}} مقاعد",
+    "unscheduled": "غير مجدولة",
+    "host": "المضيف",
+    "participants": "المشاركون",
+    "noParticipants": "لم تتم دعوة أحد بعد",
+    "invite": "دعوة شخص",
+    "selectUser": "اختر شخصًا",
+    "full": "جميع المقاعد محجوزة. زد السعة لدعوة المزيد.",
+    "loading": "جارٍ التحميل…"
+  },
+  "actions": {
+    "create": "جلسة جديدة",
+    "edit": "تعديل",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "end": "إنهاء الجلسة",
+    "delete": "حذف",
+    "invite": "دعوة",
+    "open": "فتح الجلسة"
+  },
+  "messages": {
+    "created": "تمت جدولة الجلسة",
+    "updated": "تم تحديث الجلسة",
+    "ended": "انتهت الجلسة",
+    "deleted": "تم حذف الجلسة",
+    "invited": "تمت إضافة الدعوة",
+    "participantRemoved": "تمت إزالة المشارك",
+    "createFailed": "تعذّرت جدولة الجلسة",
+    "updateFailed": "تعذّر تحديث الجلسة",
+    "endFailed": "تعذّر إنهاء الجلسة",
+    "deleteFailed": "تعذّر حذف الجلسة",
+    "inviteFailed": "تعذّرت إضافة الدعوة",
+    "removeFailed": "تعذّرت إزالة المشارك",
+    "loadFailed": "تعذّر تحميل التقويم"
+  }
+}
