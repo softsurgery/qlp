@@ -7,6 +7,9 @@ import {
   createCurriculumModulesResource,
   createCurriculumResource,
 } from "./curriculum/index.js";
+import { createAdminMediaResource } from "./admin-media.js";
+import { createMediaResource } from "./media.js";
+import { createMeetingResource } from "./meetings.js";
 import { createPermissionResource } from "./permission.js";
 import { createRoleResource } from "./roles.js";
 import { createUploadResource } from "./storage.js";
@@ -20,10 +23,12 @@ export function createResources(http: AxiosInstance) {
     role: createRoleResource(http),
     permission: createPermissionResource(http),
     upload: createUploadResource(http),
+
     curriculum: createCurriculumResource(http, "/curriculum"),
     curriculumModules: createCurriculumModulesResource(http, "/curriculum"),
     curriculumLessons: createCurriculumLessonsResource(http, "/curriculum"),
     curriculumExams: createCurriculumExamsResource(http, "/curriculum"),
+
     adminCurriculum: createCurriculumResource(http, "/admin/curriculum"),
     adminCurriculumModules: createCurriculumModulesResource(
       http,
@@ -37,8 +42,11 @@ export function createResources(http: AxiosInstance) {
       http,
       "/admin/curriculum",
     ),
+
+    media: createMediaResource(http),
+    adminMedia: createAdminMediaResource(http),
+    meetings: createMeetingResource(http),
   };
 }
-
 
 export type ApiResources = ReturnType<typeof createResources>;

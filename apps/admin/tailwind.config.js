@@ -8,6 +8,7 @@ export default {
     '../../packages/datatable-builder/src/**/*.{js,ts,jsx,tsx}',
     '../../packages/form-builder/src/**/*.{js,ts,jsx,tsx}',
     '../../packages/curriculum/src/**/*.{js,ts,jsx,tsx}',
+    '../../packages/meetings/src/**/*.{js,ts,jsx,tsx}',
   ],
   plugins: [require('tailwindcss-animate')],
 };

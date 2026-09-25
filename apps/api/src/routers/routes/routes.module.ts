@@ -14,6 +14,10 @@ import { ClientCurriculumLessonMaterialController } from 'src/modules/curriculum
 import { ClientCurriculumExamController } from 'src/modules/curriculum/controllers/curriculum-exam/client-curriculum-exam.controller';
 import { ClientCurriculumModuleWorkflowController } from 'src/modules/curriculum/controllers/curriculum-module/client-curriculum-module-workflow.controller';
 import { ClientCurriculumLessonWorkflowController } from 'src/modules/curriculum/controllers/curriculum-lesson/client-curriculum-lesson-workflow.controller';
+import { MediaModule } from 'src/modules/media/media.module';
+import { ClientMediaController } from 'src/modules/media/controllers/client-media.controller';
+import { MediaWebhookController } from 'src/modules/media/controllers/media-webhook.controller';
+import { ClientMeetingController } from 'src/modules/media/controllers/client-meeting.controller';
 
 @Module({
   controllers: [
@@ -27,9 +31,19 @@ import { ClientCurriculumLessonWorkflowController } from 'src/modules/curriculum
     ClientCurriculumLessonWorkflowController,
     ClientCurriculumLessonMaterialController,
     ClientCurriculumExamController,
+    ClientMediaController,
+    MediaWebhookController,
+    ClientMeetingController,
   ],
   providers: [],
   exports: [],
-  imports: [AuthModule, NotificationModule, LoggerModule, StorageModule, CurriculumModule],
+  imports: [
+    AuthModule,
+    NotificationModule,
+    LoggerModule,
+    StorageModule,
+    CurriculumModule,
+    MediaModule,
+  ],
 })
 export class RoutesModule {}

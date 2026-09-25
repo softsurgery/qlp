@@ -2,6 +2,7 @@ import type { ComponentProps } from "react";
 import { Link } from "react-router-dom";
 import {
   BookOpen,
+  CalendarDays,
   GraduationCap,
   LayoutDashboard,
   Shield,
@@ -26,6 +27,7 @@ import { NavUser } from "@/components/layout/sidebar/NavUser";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation("admin-user-management");
+  const { t: tMeetings } = useTranslation("meetings");
 
   const items = [
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -46,6 +48,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       ],
     },
     { to: "/tutors", icon: GraduationCap, label: "Tutor Verification" },
+    { to: "/meetings", icon: CalendarDays, label: tMeetings("nav.title") },
     { to: "/curriculum", icon: BookOpen, label: "Curriculum" },
   ];
 

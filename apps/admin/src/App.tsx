@@ -19,6 +19,7 @@ import CurriculumLessonEditPage from "./pages/CurriculumLessonEditPage";
 import CurriculumLessonVersionsPage from "./pages/CurriculumLessonVersionsPage";
 import CurriculumExamEditPage from "./pages/CurriculumExamEditPage";
 import CurriculumExamVersionsPage from "./pages/CurriculumExamVersionsPage";
+import MeetingsPage from "./pages/MeetingsPage";
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
   const { isReady, isAuthed, isAdmin } = useIsAdminSession();
@@ -100,6 +101,7 @@ export default function App() {
             path="curriculum/:curriculumId/modules/:moduleId/exams/:examId/versions"
             element={<CurriculumExamVersionsPage />}
           />
+          <Route path="meetings" element={<MeetingsPage />} />
         </Route>
       </Routes>
     </AppProvider>

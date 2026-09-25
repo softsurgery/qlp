@@ -23,4 +23,7 @@ export type {
   CurriculumModulesResource,
   CurriculumLessonsResource,
 } from "./resources/curriculum/index.js";
+export type { MediaResource } from "./resources/media.js";
+export type { AdminMediaResource } from "./resources/admin-media.js";
+export type { MeetingResource } from "./resources/meetings.js";
 export * from "./types/index.js";

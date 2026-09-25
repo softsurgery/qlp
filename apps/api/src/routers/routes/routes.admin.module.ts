@@ -14,6 +14,8 @@ import { AdminCurriculumModuleController } from 'src/modules/curriculum/controll
 import { AdminCurriculumLessonController } from 'src/modules/curriculum/controllers/curriculum-lesson/admin-curriculum-lesson.controller';
 import { AdminCurriculumLessonMaterialController } from 'src/modules/curriculum/controllers/curriculum-lesson/admin-curriculum-lesson-material.controller';
 import { AdminCurriculumExamController } from 'src/modules/curriculum/controllers/curriculum-exam/admin-curriculum-exam.controller';
+import { MediaModule } from 'src/modules/media/media.module';
+import { AdminMediaRoomController } from 'src/modules/media/controllers/admin-media-room.controller';
 
 @Module({
   controllers: [
@@ -27,9 +29,17 @@ import { AdminCurriculumExamController } from 'src/modules/curriculum/controller
     AdminCurriculumLessonController,
     AdminCurriculumLessonMaterialController,
     AdminCurriculumExamController,
+    AdminMediaRoomController,
   ],
   providers: [],
   exports: [],
-  imports: [AuthModule, NotificationModule, LoggerModule, UserManagementModule, CurriculumModule],
+  imports: [
+    AuthModule,
+    NotificationModule,
+    LoggerModule,
+    UserManagementModule,
+    CurriculumModule,
+    MediaModule,
+  ],
 })
 export class RoutesAdminModule {}
