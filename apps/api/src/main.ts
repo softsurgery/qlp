@@ -25,7 +25,12 @@ async function bootstrap() {
   const logger: Logger = new Logger('Bootstrap');
 
   // Config Variables =====================================================
+  // Body Parser =============================================================
   const configService = app.get(ConfigService);
+  const bodyLimit = configService.get<string>('app.http.bodyLimit');
+  app.useBodyParser('json', { limit: bodyLimit });
+  app.useBodyParser('urlencoded', { limit: bodyLimit, extended: true });
+
   const env = configService.get<string>('app.env') || process.env.NODE_ENV || 'development';
 
   const port = configService.get<number>('app.http.port') || 5000;

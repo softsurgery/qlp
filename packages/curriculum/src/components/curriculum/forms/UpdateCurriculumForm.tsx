@@ -1,0 +1,254 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useApp } from "@qlp/contexts";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { Save, Repeat2, Eye } from "lucide-react";
+import { FormBuilder } from "@qlp/form-builder";
+import { useBreadcrumb, useUI } from "@qlp/contexts";
+import { Label } from "@qlp/ui";
+import {
+  type UpdateCurriculumDto,
+  type ServerErrorResponse,
+} from "@qlp/api-client";
+import { useCurriculumStore } from "../../../hooks/stores/useCurriculumStore";
+import { useUpdateCurriculumFormStructure } from "./useUpdateCurriculumFormStructure";
+import { errorMessage } from "../../../utils";
+import { CurriculumFormLayout } from "../../CurriculumFormLayout";
+import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
+import { ActionGrid, Spinner } from "@qlp/components";
+import { useCurriculumPreviewDialog } from "../modals/useCurriculumPreviewDialog";
+import { CurriculumModules } from "../../curriculum-module/CurriculumModules";
+import { useTutors } from "@qlp/hooks";
+
+interface UpdateCurriculumFormProps {
+  className?: string;
+  curriculumId: string;
+  appType?: "admin" | "web";
+  onSuccess?: () => void;
+}
+
+export function UpdateCurriculumForm({
+  className,
+  curriculumId,
+  appType: appTypeProp,
+  onSuccess,
+}: UpdateCurriculumFormProps) {
+  const { t: tGlobal } = useTranslation("global");
+  const navigate = useNavigate();
+  const { api: baseApi, appType: contextAppType } = useApp();
+  const appType = appTypeProp || contextAppType;
+  const api =
+    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+  const uploadApi = baseApi.upload;
+  const { t: tCommon } = useTranslation("curriculum-common");
+  const queryClient = useQueryClient();
+
+  const { previewDialog, openPreviewDialog } = useCurriculumPreviewDialog({
+    curriculumId,
+    previewUrl: `/curriculum/${curriculumId}`,
+  });
+
+  const { tutorOptions: ownerOptions } = useTutors({
+    enabled: appType === "admin",
+  });
+
+  const {
+    data: workflowData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["curriculum", curriculumId, "workflow"],
+    queryFn: () =>
+      api.workflow.findWorkflow(curriculumId, { join: "owner,createdBy" }),
+  });
+
+  const curriculum = workflowData?.curriculum;
+
+  const isChanged = useCurriculumStore((state) => state.isChanged);
+  const curriculumStore = useCurriculumStore();
+  const resetStore = useCurriculumStore((state) => state.reset);
+
+  const { setRoutes, clearRoutes } = useBreadcrumb();
+  const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
+
+  // Populate store
+  React.useEffect(() => {
+    if (curriculum) {
+      const dto = {
+        title: curriculum.title,
+        slug: curriculum.slug,
+        description: curriculum.description,
+        status: curriculum.status,
+        ownerId: curriculum.owner?.id || curriculum.ownerId,
+      };
+      curriculumStore.set("response", curriculum);
+      curriculumStore.set("initialUpdateDto", dto);
+      curriculumStore.set("updateDto", dto);
+    }
+  }, [curriculum]);
+
+  React.useEffect(() => {
+    if (setRoutes && curriculum) {
+      setRoutes([
+        { title: tCommon("title"), href: "/curriculum" },
+        { title: curriculum.title || tCommon("updateTitle") },
+      ]);
+    }
+    if (setEnableMainOverflow) setEnableMainOverflow(true);
+  }, [curriculum, setEnableMainOverflow, setRoutes, tCommon, tGlobal]);
+
+  React.useEffect(() => {
+    return () => {
+      if (clearRoutes) clearRoutes();
+      if (clearEnableMainOverflow) clearEnableMainOverflow();
+      resetStore();
+    };
+  }, [clearEnableMainOverflow, clearRoutes, resetStore]);
+
+  const { updateCurriculumFormStructure } = useUpdateCurriculumFormStructure({
+    curriculumStore,
+    appType,
+    ownerOptions,
+    disabled: !!(workflowData && !workflowData.isUpdatable),
+  });
+
+  const { mutate: updateMutation, isPending } = useMutation({
+    mutationFn: (dto: UpdateCurriculumDto) => {
+      if (!curriculum) throw new Error("Curriculum not loaded");
+      return api.update(curriculum.id, dto);
+    },
+    onSuccess: (updated) => {
+      toast.success(tGlobal("updated"));
+      void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["curriculum", curriculumId],
+      });
+      if (onSuccess) onSuccess();
+    },
+    onError: (error: ServerErrorResponse) => {
+      toast.error(errorMessage(error, tGlobal("saveError")));
+    },
+  });
+
+  const { mutate: executeWorkflowMutation, isPending: isExecutingWorkflow } =
+    useMutation({
+      mutationFn: (dto: { event: string }) =>
+        api.workflow.executeWorkflow(curriculumId, dto),
+      onSuccess: () => {
+        toast.success(tGlobal("workflowExecuted"));
+        void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
+        void queryClient.invalidateQueries({
+          queryKey: ["curriculum", curriculumId],
+        });
+      },
+      onError: (error: ServerErrorResponse) => {
+        toast.error(errorMessage(error, tGlobal("workflowError")));
+      },
+    });
+
+  const handleSubmit = React.useCallback(() => {
+    if (!curriculumStore.updateDto.title?.trim()) {
+      curriculumStore.set("updateDtoErrors", {
+        title: [tCommon("errors.titleRequired")],
+      });
+      return;
+    }
+    curriculumStore.set("updateDtoErrors", {});
+    updateMutation(curriculumStore.updateDto);
+  }, [updateMutation, curriculumStore, tCommon, tGlobal]);
+
+  const mainContent = (
+    <div className="flex flex-col gap-8">
+      <FormBuilder structure={updateCurriculumFormStructure} />
+      <CurriculumModules curriculumId={curriculumId} />
+    </div>
+  );
+
+  const sidebarContent = curriculum ? (
+    <>
+      <CurriculumMetaHeader
+        curriculum={{
+          ...curriculum,
+          owner: appType === "admin" ? undefined : curriculum.owner,
+          createdAt: appType !== "admin" ? undefined : curriculum.createdAt,
+        }}
+        extraRows={[
+          {
+            label: tGlobal("versions"),
+            value: (
+              <span
+                className="cursor-pointer text-primary hover:underline font-semibold"
+                onClick={() => navigate(`/curriculum/${curriculumId}/versions`)}
+              >
+                {curriculum?.version != null ? curriculum?.version : "-"}
+              </span>
+            ),
+          },
+        ]}
+        uploadApi={uploadApi}
+      />
+      <div className="flex flex-col gap-2 w-full">
+        <Label className="text-xs font-bold text-muted-foreground">
+          {tGlobal("commands.actions")}
+        </Label>
+        <ActionGrid
+          actions={[
+            {
+              label: tGlobal("commands.preview") as string,
+              icon: <Eye />,
+              onClick: openPreviewDialog,
+            },
+            {
+              label: tGlobal("commands.save") as string,
+              icon: isPending ? <Spinner size="small" /> : <Save />,
+              onClick: handleSubmit,
+              disabled:
+                isPending ||
+                !isChanged ||
+                (workflowData && !workflowData.isUpdatable),
+            },
+            ...(workflowData?.nextSteps?.map((step) => ({
+              label: step.label,
+              icon: isExecutingWorkflow ? <Spinner size="small" /> : undefined,
+              onClick: () => executeWorkflowMutation({ event: step.label }),
+              disabled: isPending || isExecutingWorkflow,
+            })) || []),
+            {
+              label: tGlobal("commands.reset") as string,
+              icon: <Repeat2 />,
+              onClick: resetStore,
+              disabled: isPending || !isChanged || (workflowData && !workflowData.isUpdatable),
+            },
+          ]}
+        />
+      </div>
+      {previewDialog}
+    </>
+  ) : null;
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full items-center justify-center p-6">
+        <Spinner size="medium" />
+      </div>
+    );
+  }
+
+  if (isError || !curriculum) {
+    return (
+      <div className="flex h-full items-center justify-center p-6">
+        <p className="text-destructive">Failed to load curriculum</p>
+      </div>
+    );
+  }
+
+  return (
+    <CurriculumFormLayout
+      className={className}
+      main={mainContent}
+      sidebar={sidebarContent}
+    />
+  );
+}

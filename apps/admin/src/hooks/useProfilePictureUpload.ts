@@ -14,7 +14,7 @@ export function useProfilePictureUpload({
   userStore,
   mode,
 }: UseProfilePictureUploadProps) {
-  const { t } = useTranslation("user-management");
+  const { t } = useTranslation("admin-user-management");
 
   return useMutation({
     mutationFn: ({

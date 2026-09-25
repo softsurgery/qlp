@@ -1,0 +1,23 @@
+{
+  "createLesson": "إنشاء درس",
+  "lessons": "الدروس",
+  "lessonsDescription": "إدارة دروس هذه الوحدة.",
+  "noLessons": "لا توجد دروس. أنشئ درسًا للبدء.",
+  "editLesson": "تعديل الدرس",
+  "lessonVersions": "إصدارات الدرس",
+  "lessonVersionsDescription": "سجل تغييرات الدرس",
+  "sheet": {
+    "createLesson": {
+      "title": "إنشاء درس",
+      "description": "أدخل عنوان الدرس ووصفًا قصيرًا."
+    }
+  },
+  "dialogs": {
+    "deleteLesson": {
+      "title": "حذف الدرس",
+      "description": "تبقى الإصدارات السابقة. سيُزال أحدث إصدار من الدرس.",
+      "confirm": "حذف",
+      "cancel": "إلغاء"
+    }
+  }
+}

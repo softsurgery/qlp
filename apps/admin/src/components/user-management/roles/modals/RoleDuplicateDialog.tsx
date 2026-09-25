@@ -1,4 +1,4 @@
-import { useDialog } from "@qlp/hooks";
+import { useDialog } from "@qlp/ui";
 import { Spinner } from "@qlp/components";
 import { Button } from "@qlp/ui";
 

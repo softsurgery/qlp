@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
+import { useLocalStorage } from "@qlp/hooks";
+import React from "react";
 
 interface UseDataTableStateOptions {
   order?: boolean;
@@ -8,21 +9,24 @@ interface UseDataTableStateOptions {
 }
 
 export function useDataTableState(
-  _tableId: string,
+  tableId: string,
   options: UseDataTableStateOptions = {},
 ) {
-  const [page, setPage] = useState(options.page ?? 1);
-  const [size, setSize] = useState(options.size ?? 10);
-  const [sortDetails, setSortDetails] = useState({
+  const [page, setPage] = useLocalStorage(`${tableId}-page`, options.page ?? 1);
+  const [size, setSize] = useLocalStorage(
+    `${tableId}-size`,
+    options.size ?? 10,
+  );
+  const [sortDetails, setSortDetails] = useLocalStorage(`${tableId}-sort`, {
     order: options.order ?? true,
     sortKey: options.sortKey ?? "id",
   });
-  const [searchTerm, setSearchTerm] = useState("");
-  const [columnFilters, setColumnFilters] = useState<Record<string, string>>(
-    {},
-  );
+  const [searchTerm, setSearchTerm] = useLocalStorage(`${tableId}-search`, "");
+  const [columnFilters, setColumnFilters] = useLocalStorage<
+    Record<string, string>
+  >(`${tableId}-filters`, {});
 
-  const defaultSort = useMemo(
+  const defaultSort = React.useMemo(
     () => ({
       order: options.order ?? true,
       sortKey: options.sortKey ?? "id",
@@ -30,7 +34,7 @@ export function useDataTableState(
     [options.order, options.sortKey],
   );
 
-  const hasActiveFiltersOrSort = useMemo(
+  const hasActiveFiltersOrSort = React.useMemo(
     () =>
       Boolean(searchTerm) ||
       Object.keys(columnFilters).length > 0 ||
@@ -45,7 +49,7 @@ export function useDataTableState(
     ],
   );
 
-  const clearFiltersAndSort = useCallback(() => {
+  const clearFiltersAndSort = React.useCallback(() => {
     setSearchTerm("");
     setColumnFilters({});
     setSortDetails(defaultSort);

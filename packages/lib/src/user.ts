@@ -3,6 +3,7 @@ export type IdentifiableUser = {
   lastName?: string | null;
   username?: string | null;
   email?: string | null;
+  pictureId?: number | null;
 };
 
 export function identifyUser(user?: IdentifiableUser | null) {

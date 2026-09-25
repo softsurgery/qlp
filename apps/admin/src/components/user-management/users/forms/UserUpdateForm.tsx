@@ -31,7 +31,7 @@ export const UserUpdateForm = ({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { t: tCommon } = useTranslation("common");
-  const { t: tUser } = useTranslation("user-management");
+  const { t: tUser } = useTranslation("admin-user-management");
   const userStore = useUserStore();
   const resetUser = useUserStore((state) => state.reset);
   const setUser = useUserStore((state) => state.set);
@@ -52,22 +52,16 @@ export const UserUpdateForm = ({
       { title: tUser("userManagement.sheet.updateUserTitle") },
     ]);
     setEnableMainOverflow?.(true);
+  }, [setEnableMainOverflow, setIntro, setRoutes, tUser]);
+
+  React.useEffect(() => {
     return () => {
       clearIntro?.();
       clearRoutes?.();
       clearEnableMainOverflow?.();
       resetUser();
     };
-  }, [
-    clearEnableMainOverflow,
-    clearIntro,
-    clearRoutes,
-    resetUser,
-    setEnableMainOverflow,
-    setIntro,
-    setRoutes,
-    tUser,
-  ]);
+  }, [clearEnableMainOverflow, clearIntro, clearRoutes, resetUser]);
 
   const { data: fetchedUser, isPending: isFetchUserPending } = useQuery({
     queryKey: ["user", userId],

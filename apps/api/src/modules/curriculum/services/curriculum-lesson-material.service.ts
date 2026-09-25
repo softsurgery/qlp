@@ -29,9 +29,17 @@ export class CurriculumLessonMaterialService extends AbstractVersioningCrudServi
   }
 
   async findLatestByLesson(lessonId: string) {
-    return this.findAll({
-      filter: `lessonId||$eq||${lessonId}`,
-      sort: 'sortOrder',
+    return this.repository.findAllLatest({
+      where: { lessonId },
+      order: { sortOrder: 'ASC' },
+      relations: ['storage'],
     });
+  }
+
+  async reorderMaterials(updates: { id: string; sortOrder: number }[]) {
+    await Promise.all(
+      updates.map((update) => this.updateMaterial(update.id, { sortOrder: update.sortOrder })),
+    );
+    return { success: true };
   }
 }

@@ -161,8 +161,15 @@ export abstract class DatabaseVersioningAbstractRepository<
     });
   }
 
+  public create(data: DeepPartial<T>): T;
+  public create(data: DeepPartial<T>[]): T[];
+  public create(data: DeepPartial<T> | DeepPartial<T>[]): T | T[] {
+    return this.getRepository().create(data as any);
+  }
+
   public async save(data: DeepPartial<T>): Promise<T> {
-    return this.getRepository().save(data);
+    const entity = this.getRepository().create(data);
+    return this.getRepository().save(entity);
   }
 
   public async saveNewVersion(data: DeepPartial<T>): Promise<T> {
@@ -193,17 +200,18 @@ export abstract class DatabaseVersioningAbstractRepository<
       );
     }
 
-    const newEntity = {
+    const newEntity = this.getRepository().create({
       ...data,
       [versionCol]: newVersion,
       [isLatestCol]: true,
-    };
+    });
 
     return this.getRepository().save(newEntity);
   }
 
   public async saveMany(data: DeepPartial<T>[]): Promise<T[]> {
-    return this.getRepository().save(data);
+    const entities = this.getRepository().create(data);
+    return this.getRepository().save(entities);
   }
 
   public async upsert(data: Partial<T>): Promise<InsertResult> {

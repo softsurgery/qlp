@@ -54,8 +54,8 @@ export function createUserResource(http: AxiosInstance) {
     return response.data;
   };
 
-  const findAll = async (): Promise<ResponseUserDto[]> => {
-    const response = await http.get<ResponseUserDto[]>(`/admin/user/all`);
+  const findAll = async (params?: QueryParams): Promise<ResponseUserDto[]> => {
+    const response = await http.get<ResponseUserDto[]>(`/admin/user/all`, { params });
     return response.data;
   };
 

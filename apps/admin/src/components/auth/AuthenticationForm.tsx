@@ -17,7 +17,7 @@ export function AuthenticationForm({
   className,
   onForgotPassword,
 }: AuthenticationFormProps) {
-  const { t: tAuth } = useTranslation("auth");
+  const { t: tAuth } = useTranslation("admin-auth");
   const navigate = useNavigate();
   const signIn = useSignIn();
   const [usernameOrEmail, setUsernameOrEmail] = React.useState("");

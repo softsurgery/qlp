@@ -1,15 +1,8 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import { componentsResources } from "@qlp/components/i18n";
-import { datatableResources } from "@qlp/datatable-builder/i18n";
-import { formBuilderResources } from "@qlp/form-builder/i18n";
-import { uiResources } from "@qlp/ui/i18n";
-import { curriculumResources } from "@qlp/curriculum/i18n";
-import { meetingsResources } from "@qlp/meetings/i18n";
+import { resources } from "@qlp/i18n";
 import { i18nConfig } from "./config";
-import translationAr from "./locales/ar/translation.json";
-import translationEn from "./locales/en/translation.json";
 
 i18n
   .use(LanguageDetector)
@@ -17,26 +10,7 @@ i18n
   .init({
     ...i18nConfig,
     interpolation: { escapeValue: false },
-    resources: {
-      en: {
-        translation: translationEn,
-        common: uiResources.en,
-        datatable: datatableResources.en,
-        "form-builder": formBuilderResources.en,
-        components: componentsResources.en,
-        curriculum: curriculumResources.en,
-        meetings: meetingsResources.en,
-      },
-      ar: {
-        translation: translationAr,
-        common: uiResources.ar,
-        datatable: datatableResources.ar,
-        "form-builder": formBuilderResources.ar,
-        components: componentsResources.ar,
-        curriculum: curriculumResources.ar,
-        meetings: meetingsResources.ar,
-      },
-    },
+    resources,
   });
 
 i18n.on("languageChanged", (lng) => {

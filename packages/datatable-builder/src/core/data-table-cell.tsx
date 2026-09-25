@@ -28,10 +28,14 @@ export default function DataTableCell({ className, variant, value }: DataTableCe
     );
   } else if (variant === DataTableCellVariant.AVATAR) {
     return (
-      <Avatar className={cn('w-24 h-24', className)}>
-        <AvatarImage src={value?.url} />
-        <AvatarFallback>{value?.fallback}</AvatarFallback>
-      </Avatar>
+      <div className={cn("flex items-center gap-2", className)}>
+        <Avatar className="h-6 w-6 shrink-0">
+          <AvatarImage src={value?.src || value?.url} />
+          <AvatarFallback className="text-[10px]">{value?.fallback}</AvatarFallback>
+        </Avatar>
+        {value?.label && <span>{value.label}</span>}
+      </div>
     );
   }
+  return <div className={className}>{value}</div>;
 }

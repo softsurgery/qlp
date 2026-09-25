@@ -4,7 +4,7 @@ import _axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 import { delay } from "@qlp/lib";
-import { useAuthPersistStore } from "@qlp/hooks";
+import { useAuthPersistStore } from "@qlp/hooks/stores";
 
 export interface CreateAxiosConfig {
   baseURL: string;

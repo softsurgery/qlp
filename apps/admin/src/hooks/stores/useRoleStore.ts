@@ -6,7 +6,7 @@ import type {
   UpdateRoleDto,
 } from "@qlp/api-client";
 import type { FieldErrors } from "@qlp/form-builder";
-import { setNestedValue } from "@/lib/store";
+import { setNestedValue } from "@qlp/lib";
 
 type PermissionMode = "create" | "update";
 

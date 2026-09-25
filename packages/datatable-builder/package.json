@@ -7,7 +7,13 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./i18n": "./src/i18n/index.ts"
+    "./*": [
+      "./src/*.ts",
+      "./src/*.tsx",
+      "./src/*/index.ts",
+      "./src/*/index.tsx",
+      "./src/*"
+    ]
   },
   "scripts": {
     "build": "tsc",
@@ -21,7 +27,8 @@
     "@tanstack/react-table": "^8.20.5",
     "i18next": "^23.15.1",
     "react-i18next": "^15.0.2",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "@qlp/lib": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.3.1",

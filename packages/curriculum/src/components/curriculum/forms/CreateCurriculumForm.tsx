@@ -1,0 +1,157 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { Repeat2, Save } from "lucide-react";
+import { FormBuilder } from "@qlp/form-builder";
+import { useBreadcrumb, useUI, useApp } from "@qlp/contexts";
+import { Label } from "@qlp/ui";
+import { CurriculumMetaHeader } from "../CurriculumMetaHeader";
+import { ActionGrid, Spinner } from "@qlp/components";
+import {
+  type CreateCurriculumDto,
+  type ServerErrorResponse,
+  type ResponseUserDto,
+} from "@qlp/api-client";
+import { useCurriculumStore } from "../../../hooks/stores/useCurriculumStore";
+import { useCreateCurriculumFormStructure } from "./useCreateCurriculumFormStructure";
+import { errorMessage } from "../../../utils";
+import { CurriculumFormLayout } from "../../CurriculumFormLayout";
+import { useTutors } from "@qlp/hooks";
+
+export interface CreateCurriculumFormProps {
+  className?: string;
+  user?: ResponseUserDto | null;
+  appType?: "admin" | "web";
+  onSuccess?: () => void;
+}
+
+export function CreateCurriculumForm({
+  className,
+  user,
+  appType: appTypeProp,
+  onSuccess,
+}: CreateCurriculumFormProps) {
+  const navigate = useNavigate();
+  const { t: tGlobal } = useTranslation("global");
+  const { api: baseApi, appType: contextAppType } = useApp();
+  const appType = appTypeProp || contextAppType;
+  const api =
+    appType === "admin" ? baseApi.adminCurriculum : baseApi.curriculum;
+  const uploadApi = baseApi.upload;
+  const { t: tCommon } = useTranslation("curriculum-common");
+  const queryClient = useQueryClient();
+
+  const { tutorOptions: ownerOptions } = useTutors({
+    enabled: appType === "admin",
+  });
+
+  const curriculumStore = useCurriculumStore();
+  const resetStore = useCurriculumStore((state) => state.reset);
+
+  const { setRoutes, clearRoutes } = useBreadcrumb();
+  const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();
+
+  React.useEffect(() => {
+    if (setRoutes) {
+      setRoutes([
+        { title: tCommon("title"), href: "/curriculum" },
+        { title: tCommon("createTitle") },
+      ]);
+    }
+    if (setEnableMainOverflow) setEnableMainOverflow(true);
+  }, [setEnableMainOverflow, setRoutes, tCommon, tGlobal]);
+
+  React.useEffect(() => {
+    return () => {
+      if (clearRoutes) clearRoutes();
+      if (clearEnableMainOverflow) clearEnableMainOverflow();
+      resetStore();
+    };
+  }, [clearEnableMainOverflow, clearRoutes, resetStore]);
+
+  const { createCurriculumFormStructure } = useCreateCurriculumFormStructure({
+    curriculumStore,
+    appType,
+    ownerOptions,
+  });
+
+  const { mutate: createMutation, isPending } = useMutation({
+    mutationFn: (dto: CreateCurriculumDto) => api.create(dto),
+    onSuccess: (curriculum) => {
+      toast.success(tGlobal("created"));
+      void queryClient.invalidateQueries({ queryKey: ["curriculum"] });
+      curriculumStore.reset();
+      if (onSuccess) onSuccess();
+      else navigate(`/curriculum/${curriculum.id}/edit`);
+    },
+    onError: (error: ServerErrorResponse) => {
+      toast.error(errorMessage(error, tGlobal("saveError")));
+    },
+  });
+
+  const handleReset = React.useCallback(
+    () => curriculumStore.reset(),
+    [curriculumStore],
+  );
+
+  const handleSubmit = React.useCallback(() => {
+    if (!curriculumStore.createDto.title.trim()) {
+      curriculumStore.set("createDtoErrors", {
+        title: [tCommon("errors.titleRequired")],
+      });
+      return;
+    }
+    curriculumStore.set("createDtoErrors", {});
+    createMutation(curriculumStore.createDto);
+  }, [createMutation, curriculumStore, tCommon, tGlobal]);
+
+  const mainContent = (
+    <div className="flex flex-col">
+      <FormBuilder structure={createCurriculumFormStructure} />
+    </div>
+  );
+
+  const sidebarContent = (
+    <>
+      <CurriculumMetaHeader
+        curriculum={{
+          status: curriculumStore.createDto.status || "draft",
+          owner: appType === "admin" ? undefined : (user ?? undefined),
+          createdBy: user ?? undefined,
+        }}
+        uploadApi={uploadApi}
+      />
+      <div className="flex flex-col gap-2 w-full">
+        <Label className="text-xs font-bold text-muted-foreground">
+          {tGlobal("commands.actions")}
+        </Label>
+        <ActionGrid
+          actions={[
+            {
+              label: tGlobal("commands.save") as string,
+              icon: isPending ? <Spinner size="small" /> : <Save />,
+              onClick: handleSubmit,
+              disabled: isPending,
+            },
+            {
+              label: tGlobal("commands.reset") as string,
+              icon: <Repeat2 />,
+              onClick: handleReset,
+              disabled: isPending,
+            },
+          ]}
+        />
+      </div>
+    </>
+  );
+
+  return (
+    <CurriculumFormLayout
+      className={className}
+      main={mainContent}
+      sidebar={sidebarContent}
+    />
+  );
+}

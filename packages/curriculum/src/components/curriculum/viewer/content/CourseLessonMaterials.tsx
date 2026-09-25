@@ -1,0 +1,47 @@
+import { useTranslation } from "react-i18next";
+import { type ResponseCurriculumLessonDto } from "@qlp/api-client";
+import { HtmlContent, Spinner } from "@qlp/components";
+import { cn } from "@qlp/ui";
+import { hasRichText, lessonMaterials } from "../utils";
+import { CourseMaterialBlock } from "./CourseMaterialBlock";
+
+interface CourseLessonMaterialsProps {
+  className?: string;
+  lesson: ResponseCurriculumLessonDto;
+  isPending?: boolean;
+}
+
+export const CourseLessonMaterials = ({
+  className,
+  lesson,
+  isPending,
+}: CourseLessonMaterialsProps) => {
+  const { t: tCommon } = useTranslation("curriculum-common");
+  const materials = lessonMaterials(lesson);
+
+  return (
+    <div className={cn("flex flex-col gap-8", className)}>
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          {lesson.title}
+        </h1>
+        {hasRichText(lesson.description) ? (
+          <HtmlContent html={lesson.description} className="mt-3" />
+        ) : null}
+      </div>
+      {isPending ? (
+        <div className="flex items-center justify-center py-12">
+          <Spinner size="medium" />
+        </div>
+      ) : materials.length === 0 ? (
+        <p className="text-sm text-muted-foreground">
+          {tCommon("viewer.noMaterials")}
+        </p>
+      ) : (
+        materials.map((material) => (
+          <CourseMaterialBlock key={material.id} material={material} />
+        ))
+      )}
+    </div>
+  );
+};

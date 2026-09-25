@@ -1,15 +1,9 @@
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { VersionedEntityHelper } from 'src/shared/database/entities/versioned-entity.helper';
-import { ExamQuestionType } from '../enums/exam-question-type.enum';
-
-export interface ExamQuestion {
-  id: string;
-  prompt: string;
-  type: ExamQuestionType;
-  options?: string[];
-  answer?: string;
-  points: number;
-}
+import { AbstractUserEntity } from 'src/shared/abstract-user-management/entities/abstract-user.entity';
+import { CurriculumStatus } from '../enums/curriculum-status.enum';
+import { CurriculumModuleEntity } from './curriculum-module.entity';
+import { ExamQuestion } from '../interfaces/exam-question.interface';
 
 @Entity('curriculum_exams')
 export class CurriculumExamEntity extends VersionedEntityHelper {
@@ -17,11 +11,25 @@ export class CurriculumExamEntity extends VersionedEntityHelper {
   @Column()
   moduleId: string;
 
+  @ManyToOne(() => CurriculumModuleEntity, (module) => module.exams, {
+    onDelete: 'CASCADE',
+    createForeignKeyConstraints: false,
+  })
+  @JoinColumn({ name: 'moduleId', referencedColumnName: 'id' })
+  module?: CurriculumModuleEntity;
+
   @Column()
   title: string;
 
   @Column({ type: 'text', nullable: true })
   description?: string;
+
+  @Column({
+    type: 'enum',
+    enum: CurriculumStatus,
+    default: CurriculumStatus.Draft,
+  })
+  status: CurriculumStatus;
 
   @Column({ type: 'int', nullable: true })
   durationMinutes?: number;
@@ -34,4 +42,11 @@ export class CurriculumExamEntity extends VersionedEntityHelper {
 
   @Column({ type: 'int', default: 0 })
   sortOrder: number;
+
+  @Column({ nullable: true })
+  createdById?: string;
+
+  @ManyToOne(() => AbstractUserEntity, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'createdById' })
+  createdBy?: AbstractUserEntity;
 }

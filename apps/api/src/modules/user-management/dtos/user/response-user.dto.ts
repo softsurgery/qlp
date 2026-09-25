@@ -13,9 +13,9 @@ export class ResponseUserDto extends ResponseAbstractUserDto {
   @Expose()
   gender?: Gender;
 
-  @ApiProperty({ type: Number })
+  @ApiProperty({ type: Number, nullable: true })
   @Expose()
-  pictureId?: number;
+  pictureId?: number | null;
 
   @ApiProperty({ type: ResponseStorageDto })
   @Expose()

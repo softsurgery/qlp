@@ -1,7 +1,7 @@
 import { BookUser } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { RoleCreateForm } from "../forms/RoleCreateForm";
-import { useSheet } from "@qlp/hooks";
+import { useSheet } from "@qlp/ui";
 
 interface RoleCreateSheet {
   createRole?: () => void;
@@ -14,7 +14,7 @@ export const useRoleCreateSheet = ({
   isCreatePending,
   resetRole,
 }: RoleCreateSheet) => {
-  const { t } = useTranslation("role");
+  const { t } = useTranslation("admin-role");
   const close = { current: () => {} };
   const {
     SheetFragment: createRoleSheet,

@@ -9,6 +9,7 @@ export default registerAs('app', (): Record<string, unknown> => ({
     host: process.env.APP_HOST ?? 'localhost',
     port: process.env.APP_PORT ? Number.parseInt(process.env.APP_PORT) : 80,
     secure: process.env.APP_SECURE === 'true',
+    bodyLimit: process.env.HTTP_BODY_LIMIT ?? '10mb',
   },
 
   jobEnable: process.env.JOB_ENABLE === 'true',

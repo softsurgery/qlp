@@ -25,7 +25,7 @@ interface UserCreateFormProps {
 export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) => {
   const navigate = useNavigate();
   const { t: tCommon } = useTranslation("common");
-  const { t: tUser } = useTranslation("user-management");
+  const { t: tUser } = useTranslation("admin-user-management");
   const userStore = useUserStore();
   const resetUser = useUserStore((state) => state.reset);
   const { roles, isFetchRolesPending } = useRoles();
@@ -45,22 +45,16 @@ export const UserCreateForm = ({ className, onSuccess }: UserCreateFormProps) =>
       { title: tUser("userManagement.sheet.createUserTitle") },
     ]);
     setEnableMainOverflow?.(true);
+  }, [setEnableMainOverflow, setIntro, setRoutes, tUser]);
+
+  React.useEffect(() => {
     return () => {
       clearIntro?.();
       clearRoutes?.();
       clearEnableMainOverflow?.();
       resetUser();
     };
-  }, [
-    clearEnableMainOverflow,
-    clearIntro,
-    clearRoutes,
-    resetUser,
-    setEnableMainOverflow,
-    setIntro,
-    setRoutes,
-    tUser,
-  ]);
+  }, [clearEnableMainOverflow, clearIntro, clearRoutes, resetUser]);
 
   const {
     mutate: uploadProfilePicture,

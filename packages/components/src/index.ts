@@ -1,6 +1,3 @@
-export { BreadcrumbCommon } from "./BreadcrumbCommon";
-export { LanguageSwitcher } from "./LanguageSwitcher";
-export { Spinner } from "./Spinner";
 export {
   AuthenticationLayout,
   AuthFormHeader,
@@ -16,3 +13,25 @@ export type {
   ResetPasswordFormProps,
   AuthScreen,
 } from "./auth";
+
+export {
+  ActionGrid,
+  BreadcrumbCommon,
+  LanguageSwitcher,
+  Spinner,
+  DocumentMetaTable,
+  HtmlContent,
+  ExcelEditor,
+  emptyExcelEditor,
+  parseExcelEditor,
+  stringifyExcelEditor,
+  hasExcelEditorContent,
+} from "./shared";
+export type {
+  MetaTableRow,
+  DocumentMetaTableProps,
+  HtmlContentProps,
+  ExcelEditorProps,
+  ExcelEditorData,
+  ExcelEditorRange,
+} from "./shared";

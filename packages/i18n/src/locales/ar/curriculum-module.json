@@ -1,0 +1,23 @@
+{
+  "createModule": "إنشاء وحدة",
+  "modules": "الوحدات",
+  "modulesDescription": "إدارة وحدات هذا المنهج.",
+  "noModules": "لا توجد وحدات. أنشئ واحدة للبدء.",
+  "editModule": "تعديل الوحدة",
+  "moduleVersions": "إصدارات الوحدة",
+  "moduleVersionsDescription": "سجل تغييرات الوحدة",
+  "sheet": {
+    "createModule": {
+      "title": "إنشاء وحدة",
+      "description": "أدخل عنوان الوحدة ووصفًا قصيرًا."
+    }
+  },
+  "dialogs": {
+    "deleteModule": {
+      "title": "حذف الوحدة",
+      "description": "تبقى الإصدارات السابقة. سيُزال أحدث إصدار من الوحدة ودروسها.",
+      "confirm": "حذف",
+      "cancel": "إلغاء"
+    }
+  }
+}

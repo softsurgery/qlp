@@ -4,8 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import { CalendarPlus, ChevronLeft, ChevronRight } from "lucide-react";
-import { useDialog } from "@qlp/hooks";
-import { Button, cn } from "@qlp/ui";
+import { Button, cn, useDialog } from "@qlp/ui";
 import {
   MediaRoomStatus,
   ParticipantRole,
@@ -127,7 +126,9 @@ export function MeetingsManager({
 
   const { DialogFragment, openDialog, closeDialog } = useDialog({
     title: editing ? t("form.editTitle") : t("form.createTitle"),
-    description: editing ? t("form.editDescription") : t("form.createDescription"),
+    description: editing
+      ? t("form.editDescription")
+      : t("form.createDescription"),
     children: (
       <MeetingForm
         meeting={editing}
@@ -178,7 +179,9 @@ export function MeetingsManager({
           </Button>
           <Button
             variant="ghost"
-            onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))}
+            onClick={() =>
+              setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))
+            }
           >
             {t("nav.today")}
           </Button>
@@ -258,7 +261,8 @@ export function MeetingsManager({
                 mutations.removeParticipant.mutate(
                   { id: selected.id, userId },
                   {
-                    onSuccess: () => toast.success(t("messages.participantRemoved")),
+                    onSuccess: () =>
+                      toast.success(t("messages.participantRemoved")),
                     onError: (error) => fail(error, "messages.removeFailed"),
                   },
                 )

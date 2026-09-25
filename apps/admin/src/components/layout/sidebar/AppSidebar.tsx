@@ -26,7 +26,7 @@ import { NavMain } from "@/components/layout/sidebar/NavMain";
 import { NavUser } from "@/components/layout/sidebar/NavUser";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const { t } = useTranslation("user-management");
+  const { t } = useTranslation("admin-user-management");
   const { t: tMeetings } = useTranslation("meetings");
 
   const items = [

@@ -19,7 +19,7 @@ function ErrorFallback({
   error: Error;
   reset: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("landing");
   console.error(error);
 
   return (

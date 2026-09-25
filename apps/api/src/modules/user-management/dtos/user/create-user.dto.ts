@@ -14,8 +14,8 @@ export class CreateUserDto extends CreateAbstractUserDto {
   @IsOptional()
   gender?: Gender;
 
-  @ApiProperty({ type: Number })
+  @ApiProperty({ type: Number, nullable: true })
   @IsNumber()
   @IsOptional()
-  pictureId?: number;
+  pictureId?: number | null;
 }

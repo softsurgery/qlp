@@ -1,0 +1,23 @@
+{
+  "createModule": "Create Module",
+  "modules": "Modules",
+  "modulesDescription": "Manage the modules for this curriculum.",
+  "noModules": "No modules found. Create one to get started.",
+  "editModule": "Edit Module",
+  "moduleVersions": "Module Versions",
+  "moduleVersionsDescription": "History of module changes",
+  "sheet": {
+    "createModule": {
+      "title": "Create module",
+      "description": "Give this module a title and a short description."
+    }
+  },
+  "dialogs": {
+    "deleteModule": {
+      "title": "Delete module",
+      "description": "Previous versions are kept. This removes the latest version of the module and its lessons.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
+  }
+}

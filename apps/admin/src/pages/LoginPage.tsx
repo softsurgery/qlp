@@ -12,7 +12,7 @@ import { AuthenticationForm } from "@/components/auth/AuthenticationForm";
 import { adminAuthApi } from "@/lib/api";
 
 export default function LoginPage() {
-  const { t } = useTranslation("auth");
+  const { t } = useTranslation("admin-auth");
   const { screen, token, goTo } = useAuthScreen();
 
   return (

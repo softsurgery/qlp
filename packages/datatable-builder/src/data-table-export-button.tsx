@@ -4,7 +4,7 @@ import { FileSpreadsheet } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Spinner } from "@qlp/components";
-import { useMediaQuery } from "@qlp/hooks";
+import { useMediaQuery } from "@qlp/ui";
 import {
   Button,
   Dialog,

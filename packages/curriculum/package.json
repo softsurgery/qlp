@@ -7,22 +7,33 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./i18n": "./src/i18n/index.ts"
+    "./*": [
+      "./src/*.ts",
+      "./src/*.tsx",
+      "./src/*/index.ts",
+      "./src/*/index.tsx",
+      "./src/*"
+    ]
   },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@qlp/api-client": "workspace:*",
     "@qlp/components": "workspace:*",
     "@qlp/contexts": "workspace:*",
     "@qlp/datatable-builder": "workspace:*",
     "@qlp/form-builder": "workspace:*",
     "@qlp/hooks": "workspace:*",
+    "@qlp/lib": "workspace:*",
     "@qlp/ui": "workspace:*",
     "@tanstack/react-table": "^8.20.5",
     "i18next": "^23.15.1",
+    "lodash": "^4.18.1",
     "lucide-react": "^0.441.0",
     "react-i18next": "^15.0.2"
   },
@@ -35,6 +46,7 @@
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.56.2",
+    "@types/lodash": "^4.17.25",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "react": "^18.3.1",

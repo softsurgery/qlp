@@ -7,7 +7,7 @@ import { SignUpLayout } from "../components/auth/SignUpLayout";
 import { SignUpForm } from "../components/auth/SignUpForm";
 
 export default function SignUpPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
   const navigate = useNavigate();
 
   return (

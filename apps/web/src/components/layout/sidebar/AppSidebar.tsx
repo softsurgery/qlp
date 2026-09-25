@@ -29,7 +29,7 @@ import { NavMain } from "./NavMain";
 import { NavUser } from "./NavUser";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
   const { data: user } = useAuthUser();
 
   const items = [

@@ -1,25 +1,19 @@
 import { ConflictException, Injectable, ForbiddenException } from '@nestjs/common';
-import { Transactional } from '@nestjs-cls/transactional';
 import { AbstractVersioningCrudService } from 'src/shared/database/services/abstract-versioning-crud.service';
 import { CurriculumEntity } from '../entities/curriculum.entity';
 import { CurriculumRepository } from '../repositories/curriculum.repository';
 import { CurriculumStatus } from '../enums/curriculum-status.enum';
 import { CreateCurriculumDto } from '../dtos/curriculum/create-curriculum.dto';
 import { UpdateCurriculumDto } from '../dtos/curriculum/update-curriculum.dto';
-import { CurriculumModuleService } from './curriculum-module.service';
-import { CurriculumLessonService } from './curriculum-lesson.service';
-import { CurriculumLessonMaterialService } from './curriculum-lesson-material.service';
-import { CurriculumExamService } from './curriculum-exam.service';
 import { CurriculumCollaboratorRepository } from '../repositories/curriculum-collaborator.repository';
+import { BasicRoles } from 'src/shared/abstract-user-management/enums/basic-roles.enum';
+import { UserService } from '../../user-management/services/user.service';
 
 @Injectable()
 export class CurriculumService extends AbstractVersioningCrudService<CurriculumEntity> {
   constructor(
+    private readonly userService: UserService,
     private readonly curriculumRepository: CurriculumRepository,
-    private readonly moduleService: CurriculumModuleService,
-    private readonly lessonService: CurriculumLessonService,
-    private readonly materialService: CurriculumLessonMaterialService,
-    private readonly examService: CurriculumExamService,
     private readonly collaboratorRepository: CurriculumCollaboratorRepository,
   ) {
     super(curriculumRepository);
@@ -78,6 +72,9 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
   }
 
   async assertCanEdit(id: string, actorId: string) {
+    const user = await this.userService.findOneById(actorId);
+    if (user?.roleId === BasicRoles.Admin) return;
+
     const curriculum = await this.findOneById(id);
     if (!curriculum) return;
     if (curriculum.ownerId === actorId) return;
@@ -91,7 +88,7 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
     }
   }
 
-  async createCurriculum(dto: CreateCurriculumDto) {
+  async createCurriculum(dto: CreateCurriculumDto, createdById?: string) {
     const slug = this.slugify(dto.slug || dto.title);
     await this.assertUniqueSlug(slug);
     return this.save({
@@ -100,6 +97,7 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
       description: dto.description,
       status: dto.status ?? CurriculumStatus.Draft,
       ownerId: dto.ownerId,
+      createdById: createdById,
     });
   }
 
@@ -114,69 +112,5 @@ export class CurriculumService extends AbstractVersioningCrudService<CurriculumE
       ...dto,
       slug,
     });
-  }
-
-  async getTree(id: string, version?: number) {
-    const curriculum =
-      version != null ? await this.findOneByVersion(id, version) : await this.findOneById(id);
-    const modules = await this.moduleService.findLatestByCurriculum(id);
-
-    const nestedModules = await Promise.all(
-      modules.map(async (module) => {
-        const [lessons, exams] = await Promise.all([
-          this.lessonService.findLatestByModule(module.id),
-          this.examService.findLatestByModule(module.id),
-        ]);
-
-        const lessonsWithMaterials = await Promise.all(
-          lessons.map(async (lesson) => ({
-            ...lesson,
-            materials: await this.materialService.findLatestByLesson(lesson.id),
-          })),
-        );
-
-        return {
-          ...module,
-          lessons: lessonsWithMaterials,
-          exams,
-        };
-      }),
-    );
-
-    return {
-      ...curriculum,
-      modules: nestedModules,
-    };
-  }
-
-  @Transactional()
-  async softDeleteTree(id: string, actorId?: string) {
-    if (actorId) {
-      await this.assertCanEdit(id, actorId);
-    }
-    const modules = await this.moduleService.findLatestByCurriculum(id);
-    await Promise.all(
-      modules.map(async (module) => {
-        const [lessons, exams] = await Promise.all([
-          this.lessonService.findLatestByModule(module.id),
-          this.examService.findLatestByModule(module.id),
-        ]);
-
-        await Promise.all(
-          lessons.map(async (lesson) => {
-            const materials = await this.materialService.findLatestByLesson(lesson.id);
-            await Promise.all(
-              materials.map((material) => this.materialService.softDelete(material.id)),
-            );
-            await this.lessonService.softDelete(lesson.id);
-          }),
-        );
-
-        await Promise.all(exams.map((exam) => this.examService.softDelete(exam.id)));
-        await this.moduleService.softDelete(module.id);
-      }),
-    );
-
-    return this.softDelete(id);
   }
 }

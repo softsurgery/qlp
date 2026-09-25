@@ -1,4 +1,4 @@
-import { useDialog } from "@qlp/hooks";
+import { useDialog } from "@qlp/ui";
 import { Spinner } from "@qlp/components";
 import { Button } from "@qlp/ui";
 import { useTranslation } from "react-i18next";
@@ -16,7 +16,7 @@ export const useDisapproveUserDialog = ({
   isDisapprovalPending,
   resetUser,
 }: UserDisapproveDialogProps) => {
-  const { t } = useTranslation("user-management");
+  const { t } = useTranslation("admin-user-management");
   const { t: tCommon } = useTranslation("common");
   const close = { current: () => {} };
   const {

@@ -21,7 +21,7 @@ export const PermissionAccordions = ({
   type,
 }: PermissionAccordionsProps) => {
   const roleStore = useRoleStore();
-  const { t } = useTranslation("role");
+  const { t } = useTranslation("admin-role");
 
   if (!permissions) return null;
 

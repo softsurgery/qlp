@@ -31,8 +31,8 @@ interface RolesProps {
 }
 
 export default function Roles({ className }: RolesProps) {
-  const { t, ready } = useTranslation("role");
-  const { t: tUser } = useTranslation("user-management");
+  const { t, ready } = useTranslation("admin-role");
+  const { t: tUser } = useTranslation("admin-user-management");
   const { setIntro, clearIntro } = useIntro();
   const { setRoutes, clearRoutes } = useBreadcrumb();
   const { setEnableMainOverflow, clearEnableMainOverflow } = useUI();

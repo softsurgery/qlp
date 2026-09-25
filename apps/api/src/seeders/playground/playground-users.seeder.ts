@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/modules/user-management/services/user.service';
 import { mockUsersSeed } from '../data/playground-user.seeder';
 import { RoleService } from 'src/shared/abstract-user-management/services/role.service';
+import { ExtendedRoles } from 'src/modules/user-management/enums/extended-roles.enum';
 import { BasicRoles } from 'src/shared/abstract-user-management/enums/basic-roles.enum';
 
 @Injectable()
@@ -40,7 +41,13 @@ export class PlaygroundUsersSeedCommand {
           return;
         }
 
-        const mappedRoleId = mappedRoles[existsInSeedData.roleId] ?? mappedRoles[BasicRoles.User];
+        const mappedRoleId = mappedRoles[existsInSeedData.roleId];
+        if (!mappedRoleId) {
+          console.log(
+            `⚠️ Role not found for user ${existsInSeedData.username}: ${existsInSeedData.roleId}`,
+          );
+          return;
+        }
 
         await this.userService.save({
           ...existsInSeedData,
@@ -52,15 +59,15 @@ export class PlaygroundUsersSeedCommand {
       }
     };
 
-    const mappedRoles: Record<string, string> = {};
-    for (const basicRole of Object.values(BasicRoles)) {
-      const role = await this.roleService.findOneByLabel(basicRole);
-      if (role) mappedRoles[basicRole] = role.id;
-    }
+    const roles = await this.roleService.findAll();
+    const mappedRoles = Object.fromEntries(roles.map((role) => [role.label, role.id]));
 
-    const missing = Object.values(BasicRoles).filter((role) => !mappedRoles[role]);
-    if (missing.length) {
-      console.log(`⚠️ Roles not found (${missing.join(', ')})! Please run the roles seeder first.`);
+    if (
+      !mappedRoles[BasicRoles.Admin] ||
+      !mappedRoles[BasicRoles.User] ||
+      !mappedRoles[ExtendedRoles.Tutor]
+    ) {
+      console.log('⚠️ Roles not found! Please run the roles seeder first.');
       return;
     }
 

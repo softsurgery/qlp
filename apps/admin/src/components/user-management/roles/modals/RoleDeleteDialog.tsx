@@ -1,4 +1,4 @@
-import { useDialog } from "@qlp/hooks";
+import { useDialog } from "@qlp/ui";
 import { Spinner } from "@qlp/components";
 import { Button } from "@qlp/ui";
 import { useTranslation } from "react-i18next";
@@ -16,7 +16,7 @@ export const useRoleDeleteDialog = ({
   isDeletionPending,
   resetRole,
 }: RoleDeleteDialogProps) => {
-  const { t } = useTranslation("role");
+  const { t } = useTranslation("admin-role");
   const close = { current: () => {} };
   const {
     DialogFragment: deleteRoleDialog,

@@ -5,10 +5,13 @@ import { CurriculumModuleRepository } from '../repositories/curriculum-module.re
 import { CreateCurriculumModuleDto } from '../dtos/module/create-curriculum-module.dto';
 import { UpdateCurriculumModuleDto } from '../dtos/module/update-curriculum-module.dto';
 import { CurriculumModuleCollaboratorRepository } from '../repositories/curriculum-module-collaborator.repository';
+import { BasicRoles } from 'src/shared/abstract-user-management/enums/basic-roles.enum';
+import { UserService } from '../../user-management/services/user.service';
 
 @Injectable()
 export class CurriculumModuleService extends AbstractVersioningCrudService<CurriculumModuleEntity> {
   constructor(
+    private readonly userService: UserService,
     private readonly moduleRepository: CurriculumModuleRepository,
     private readonly collaboratorRepository: CurriculumModuleCollaboratorRepository,
   ) {
@@ -44,6 +47,9 @@ export class CurriculumModuleService extends AbstractVersioningCrudService<Curri
   }
 
   async assertCanEdit(id: string, actorId: string) {
+    const user = await this.userService.findOneById(actorId);
+    if (user?.roleId === BasicRoles.Admin) return;
+
     const module = await this.findOneById(id);
     if (!module) return;
     if (module.ownerId === actorId) return;
@@ -57,7 +63,11 @@ export class CurriculumModuleService extends AbstractVersioningCrudService<Curri
     }
   }
 
-  async createForCurriculum(curriculumId: string, dto: CreateCurriculumModuleDto) {
+  async createForCurriculum(
+    curriculumId: string,
+    dto: CreateCurriculumModuleDto,
+    createdById?: string,
+  ) {
     const siblings = await this.findAll({ filter: `curriculumId||$eq||${curriculumId}` });
     const sortOrder = dto.sortOrder ?? siblings.length;
     return this.save({
@@ -66,6 +76,7 @@ export class CurriculumModuleService extends AbstractVersioningCrudService<Curri
       description: dto.description,
       sortOrder,
       ownerId: dto.ownerId,
+      createdById: createdById,
     });
   }
 
@@ -83,11 +94,29 @@ export class CurriculumModuleService extends AbstractVersioningCrudService<Curri
     return super.softDelete(id);
   }
 
-  async findLatestByCurriculum(curriculumId: string) {
+  async findLatestByCurriculum(curriculumId: string, join?: string) {
     const modules = await this.findAll({
       filter: `curriculumId||$eq||${curriculumId}`,
       sort: 'sortOrder',
+      join,
     });
     return modules;
+  }
+
+  async reorderModules(updates: { id: string; sortOrder: number }[], userId?: string) {
+    // Perform sequentially or in parallel?
+    // Doing this in parallel might be fine, since they are separate IDs,
+    // but saveNewVersion creates new versions. Let's do it in a loop for safety or Promise.all.
+    // Wait, since we are calling updateModule, it will create new versions.
+    await Promise.all(
+      updates.map((update) =>
+        this.updateModule(update.id, { sortOrder: update.sortOrder }, userId),
+      ),
+    );
+    return { success: true };
+  }
+
+  async findVersions(id: string, join?: string) {
+    return super.findAllVersions(id, { join });
   }
 }

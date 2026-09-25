@@ -33,4 +33,19 @@ export class ExamQuestionDto {
   @Min(0)
   @IsOptional()
   points?: number;
+
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  @IsOptional()
+  min?: number;
+
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  @IsOptional()
+  max?: number;
+
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  @IsOptional()
+  step?: number;
 }

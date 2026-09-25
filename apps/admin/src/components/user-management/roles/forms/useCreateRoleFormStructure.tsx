@@ -19,7 +19,7 @@ export const useCreateRoleFormStructure = ({
   roleStore,
   permissions,
 }: RoleCreateFormStructureProps) => {
-  const { t } = useTranslation("role");
+  const { t } = useTranslation("admin-role");
 
   const labelField: Field<TextFieldProps> = {
     id: "label",

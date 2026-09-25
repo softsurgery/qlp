@@ -1,0 +1,23 @@
+{
+  "createLesson": "Create Lesson",
+  "lessons": "Lessons",
+  "lessonsDescription": "Manage the lessons for this module.",
+  "noLessons": "No lessons found. Create one to get started.",
+  "editLesson": "Edit Lesson",
+  "lessonVersions": "Lesson Versions",
+  "lessonVersionsDescription": "History of lesson changes",
+  "sheet": {
+    "createLesson": {
+      "title": "Create lesson",
+      "description": "Give this lesson a title and a short description."
+    }
+  },
+  "dialogs": {
+    "deleteLesson": {
+      "title": "Delete lesson",
+      "description": "Previous versions are kept. This removes the latest version of the lesson.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
+  }
+}

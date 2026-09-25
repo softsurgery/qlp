@@ -39,7 +39,7 @@ const LEARNER_ITEMS = [
 ] as const;
 
 function usePageMeta() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("landing");
 
   useEffect(() => {
     const pageTitle = t("meta.title");
@@ -136,7 +136,7 @@ function BrandMark({ homeAria, name }: { homeAria: string; name: string }) {
 }
 
 export default function HomePage() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("landing");
   const [menuOpen, setMenuOpen] = useState(false);
   usePageMeta();
 

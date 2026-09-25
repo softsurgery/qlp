@@ -128,11 +128,7 @@ export function DataTable<TData, TValue>({
       return;
     }
     setContent?.(
-      <DataTablePagination
-        table={table}
-        context={context}
-        className="px-10"
-      />,
+      <DataTablePagination table={table} context={context} className="px-10" />,
     );
   }, [
     footerPagination,
@@ -153,7 +149,12 @@ export function DataTable<TData, TValue>({
   return (
     <div className={cn("flex flex-col gap-4", className)}>
       <DataTableToolbar table={table} data={data} context={context} />
-      <div className={cn("min-h-0 overflow-auto rounded-lg border", containerClassName)}>
+      <div
+        className={cn(
+          "min-h-0 overflow-auto rounded-lg border",
+          containerClassName,
+        )}
+      >
         <Table className="border-separate border-spacing-0">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -163,7 +164,19 @@ export function DataTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
-                      className="sticky top-0 z-20 border-b bg-background text-xs"
+                      className="sticky top-0 z-20 border-b bg-background text-xs whitespace-normal"
+                      style={{
+                        width:
+                          header.getSize() !== 150
+                            ? `${header.getSize()}px`
+                            : undefined,
+                        maxWidth:
+                          header.column.columnDef.maxSize &&
+                          header.column.columnDef.maxSize !==
+                            Number.MAX_SAFE_INTEGER
+                            ? `${header.column.columnDef.maxSize}px`
+                            : undefined,
+                      }}
                     >
                       {header.isPlaceholder
                         ? null
@@ -187,8 +200,19 @@ export function DataTable<TData, TValue>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="p-1 px-2 text-xs"
-                      style={{ width: `${cell.column.getSize()}px` }}
+                      className="p-1 px-2 text-xs whitespace-normal"
+                      style={{
+                        width:
+                          cell.column.getSize() !== 150
+                            ? `${cell.column.getSize()}px`
+                            : undefined,
+                        maxWidth:
+                          cell.column.columnDef.maxSize &&
+                          cell.column.columnDef.maxSize !==
+                            Number.MAX_SAFE_INTEGER
+                            ? `${cell.column.columnDef.maxSize}px`
+                            : undefined,
+                      }}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,

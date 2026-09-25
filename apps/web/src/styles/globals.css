@@ -1,5 +1,6 @@
 @import "@qlp/ui/styles/scrollbar.css";
 @import "@qlp/ui/styles/input-styles.css";
+@import "@qlp/ui/styles/container.css";
 
 @tailwind base;
 @tailwind components;
@@ -15,8 +16,8 @@
     --popover-foreground: 160 30% 10%;
     --primary: 158 64% 28%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 158 20% 95%;
-    --secondary-foreground: 160 30% 10%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 98%;
     --muted: 160 10% 96%;
     --muted-foreground: 160 10% 40%;
     --accent: 158 20% 95%;
@@ -24,7 +25,7 @@
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
     --border: 160 15% 90%;
-    --input: 160 15% 90%;
+    --input: 0 0% 100%;
     --ring: 158 64% 28%;
     --radius: 0.5rem;
     --sidebar-background: 158 20% 97%;
@@ -41,14 +42,14 @@
   .dark {
     --background: 160 20% 8%;
     --foreground: 0 0% 98%;
-    --card: 160 18% 10%;
+    --card: 160 14% 16%;
     --card-foreground: 0 0% 98%;
-    --popover: 160 18% 10%;
+    --popover: 160 14% 16%;
     --popover-foreground: 0 0% 98%;
     --primary: 158 64% 40%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 160 14% 16%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 0 0% 9%;
     --muted: 160 14% 16%;
     --muted-foreground: 160 8% 65%;
     --accent: 160 14% 16%;
@@ -56,7 +57,7 @@
     --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 98%;
     --border: 160 12% 18%;
-    --input: 160 12% 18%;
+    --input: 160 20% 8%;
     --ring: 158 64% 40%;
     --sidebar-background: 160 18% 10%;
     --sidebar-foreground: 0 0% 98%;
