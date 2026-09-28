@@ -20,7 +20,7 @@ import {
 import { MeetingsWeekGrid } from "./MeetingsWeekGrid";
 import { MeetingDetailPanel } from "./MeetingDetailPanel";
 import { MeetingForm, type MeetingFormValues } from "./MeetingFormDialog";
-import type { MeetingUser, MeetingsUiProps } from "../types";
+import { MEETING_ROLE_IDS, type MeetingUser, type MeetingsUiProps } from "../types";
 
 export function MeetingsManager({
   api,
@@ -61,17 +61,33 @@ export function MeetingsManager({
   );
   const mutations = useMeetingMutations(api);
 
+  // Admins need the directory to assign tutors; tutors need it to invite students.
+  const hostsAnyMeeting = meetings.some((m) => m.hostId === currentUserId);
   const usersQuery = useQuery({
     queryKey: ["meetings", "users"],
     queryFn: () => userApi.findAll(),
     staleTime: 60_000,
-    enabled: canSchedule,
+    enabled: canSchedule || hostsAnyMeeting,
   });
   const users = (usersQuery.data ?? []) as MeetingUser[];
 
-  const hostOptions = useMemo(
-    () => users.filter((u) => u.roleId === "Admin" || u.roleId === "Tutor"),
+  // The API refuses inactive or unapproved accounts, so never offer them.
+  const eligibleUsers = useMemo(
+    () => users.filter((u) => u.isActive && u.isApproved),
     [users],
+  );
+
+  const hostOptions = useMemo(
+    () => eligibleUsers.filter((u) => u.roleId === MEETING_ROLE_IDS.tutor),
+    [eligibleUsers],
+  );
+
+  const inviteCandidates = useMemo(
+    () =>
+      isAdmin
+        ? eligibleUsers.filter((u) => u.id !== currentUserId)
+        : eligibleUsers.filter((u) => u.roleId === MEETING_ROLE_IDS.student),
+    [eligibleUsers, isAdmin, currentUserId],
   );
 
   const isMutating =
@@ -99,7 +115,7 @@ export function MeetingsManager({
 
     if (editing) {
       mutations.update.mutate(
-        { id: editing.id, dto: payload },
+        { id: editing.id, dto: { ...payload, hostId: isAdmin ? values.hostId : undefined } },
         {
           onSuccess: () => {
             toast.success(t("messages.updated"));
@@ -112,7 +128,7 @@ export function MeetingsManager({
     }
 
     mutations.create.mutate(
-      { ...payload, hostId: isAdmin ? values.hostId : undefined },
+      { ...payload, hostId: values.hostId },
       {
         onSuccess: (created) => {
           toast.success(t("messages.created"));
@@ -128,7 +144,7 @@ export function MeetingsManager({
     title: editing ? t("form.editTitle") : t("form.createTitle"),
     description: editing
       ? t("form.editDescription")
-      : t("form.createDescription"),
+      : t(isAdmin ? "form.createDescriptionAdmin" : "form.createDescription"),
     children: (
       <MeetingForm
         meeting={editing}
@@ -224,9 +240,11 @@ export function MeetingsManager({
               meeting={selected}
               participants={participants.data ?? []}
               users={users}
+              inviteCandidates={inviteCandidates}
               isLoadingParticipants={participants.isLoading}
               isMutating={isMutating}
               canManage={canManage(selected)}
+              canDelete={isAdmin}
               joinHref={
                 selected.status !== MediaRoomStatus.FINISHED
                   ? `${joinBasePath}/${selected.id}`

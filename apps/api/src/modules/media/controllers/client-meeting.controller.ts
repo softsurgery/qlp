@@ -114,8 +114,8 @@ export class ClientMeetingController {
   @ApiOperation({
     summary: 'Schedule a session',
     description:
-      'Tutors always host what they create. Only admins may set hostId to another user, ' +
-      'and only to a user who is allowed to host.',
+      'Tutors always host what they schedule. Admins must set hostId to a tutor, ' +
+      'who then manages the session and invites its students.',
   })
   @LogEvent(EventType.MEDIA_ROOM_CREATED)
   async create(
@@ -135,9 +135,9 @@ export class ClientMeetingController {
     @Request() req: AdvancedRequest,
   ): Promise<ResponseMediaRoomDto> {
     const room = await this.mediaRoomService.findRoomOrFail(id);
-    await this.mediaRoomService.assertCanManage(room, this.requireUser(req));
-    req.logInfo = { id };
-    return toDto(ResponseMediaRoomDto, await this.mediaRoomService.updateRoom(id, dto));
+    const user = await this.mediaRoomService.assertCanManage(room, this.requireUser(req));
+    req.logInfo = { id, hostId: dto.hostId };
+    return toDto(ResponseMediaRoomDto, await this.mediaRoomService.updateRoom(id, dto, user));
   }
 
   @Post('/:id/end')
@@ -154,7 +154,10 @@ export class ClientMeetingController {
   }
 
   @Post('/:id/participants')
-  @ApiOperation({ summary: 'Invite someone, refused once the reserved spots are taken' })
+  @ApiOperation({
+    summary: 'Invite someone, refused once the reserved spots are taken',
+    description: 'Hosts may only invite students. Admins may invite anyone.',
+  })
   @LogEvent(EventType.MEDIA_PARTICIPANT_ADDED)
   async invite(
     @Param('id') id: string,
@@ -162,12 +165,12 @@ export class ClientMeetingController {
     @Request() req: AdvancedRequest,
   ): Promise<ResponseMediaRoomParticipantDto> {
     const room = await this.mediaRoomService.findRoomOrFail(id);
-    await this.mediaRoomService.assertCanManage(room, this.requireUser(req));
+    const user = await this.mediaRoomService.assertCanManage(room, this.requireUser(req));
     req.logInfo = { roomId: id, userId: dto.userId, role: dto.role };
 
     return toDto(
       ResponseMediaRoomParticipantDto,
-      await this.mediaRoomService.inviteParticipant(id, dto.userId, dto.role),
+      await this.mediaRoomService.inviteParticipant(id, dto.userId, dto.role, user),
     );
   }
 
@@ -185,13 +188,14 @@ export class ClientMeetingController {
   }
 
   @Delete('/:id')
+  @ApiOperation({ summary: 'Delete a session, admins only' })
   @LogEvent(EventType.MEDIA_ROOM_DELETED)
   async remove(
     @Param('id') id: string,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseMediaRoomDto | null> {
-    const room = await this.mediaRoomService.findRoomOrFail(id);
-    await this.mediaRoomService.assertCanManage(room, this.requireUser(req));
+    await this.mediaRoomService.findRoomOrFail(id);
+    await this.mediaRoomService.assertPrivileged(this.requireUser(req));
     req.logInfo = { id };
     return toDto(ResponseMediaRoomDto, await this.mediaRoomService.deleteRoom(id));
   }

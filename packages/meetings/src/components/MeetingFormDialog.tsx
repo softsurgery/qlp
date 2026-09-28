@@ -80,7 +80,11 @@ export function MeetingForm({
     new Date(values.scheduledEndAt as string) <=
       new Date(values.scheduledStartAt as string);
 
-  const canSubmit = values.title.trim().length > 0 && !invalidRange && !isPending;
+  // Admins must assign a tutor; tutors editing their own session never see the field.
+  const missingHost = Boolean(isAdmin) && !values.hostId;
+
+  const canSubmit =
+    values.title.trim().length > 0 && !invalidRange && !missingHost && !isPending;
 
   return (
     <form

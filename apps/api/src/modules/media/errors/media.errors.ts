@@ -34,8 +34,14 @@ export class MediaRoomManagementDeniedException extends HttpException {
 }
 
 export class MediaHostAssignmentDeniedException extends HttpException {
-  constructor() {
-    super('Only administrators can assign another user as host', HttpStatus.FORBIDDEN);
+  constructor(message = 'Only administrators can assign the host of a session') {
+    super(message, HttpStatus.FORBIDDEN);
+  }
+}
+
+export class MediaInviteDeniedException extends HttpException {
+  constructor(message = 'Hosts can only invite students') {
+    super(message, HttpStatus.FORBIDDEN);
   }
 }
 

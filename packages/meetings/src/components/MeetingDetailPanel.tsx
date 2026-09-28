@@ -25,9 +25,11 @@ interface MeetingDetailPanelProps {
   meeting: ResponseMediaRoomDto;
   participants: ResponseMediaRoomParticipantDto[];
   users: MeetingUser[];
+  inviteCandidates: MeetingUser[];
   isLoadingParticipants?: boolean;
   isMutating?: boolean;
   canManage: boolean;
+  canDelete: boolean;
   joinHref?: string;
   onEdit: () => void;
   onEnd: () => void;
@@ -41,9 +43,11 @@ export function MeetingDetailPanel({
   meeting,
   participants,
   users,
+  inviteCandidates,
   isLoadingParticipants,
   isMutating,
   canManage,
+  canDelete,
   joinHref,
   onEdit,
   onEnd,
@@ -78,12 +82,12 @@ export function MeetingDetailPanel({
 
   const invitable = useMemo(
     () =>
-      users.filter(
+      inviteCandidates.filter(
         (u) =>
           u.id !== meeting.hostId &&
           !participants.some((p) => p.userId === u.id),
       ),
-    [users, participants, meeting.hostId],
+    [inviteCandidates, participants, meeting.hostId],
   );
 
   return (
@@ -247,9 +251,11 @@ export function MeetingDetailPanel({
           <Button variant="outline" onClick={onEnd} disabled={isMutating || isFinished}>
             {t("actions.end")}
           </Button>
-          <Button variant="destructive" onClick={onDelete} disabled={isMutating}>
-            {t("actions.delete")}
-          </Button>
+          {canDelete && (
+            <Button variant="destructive" onClick={onDelete} disabled={isMutating}>
+              {t("actions.delete")}
+            </Button>
+          )}
         </div>
       )}
     </div>

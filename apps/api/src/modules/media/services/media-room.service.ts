@@ -13,6 +13,7 @@ import { MediaRoomStatus } from '../enums/media-room-status.enum';
 import { ParticipantRole, PARTICIPANT_ROLE_RANK } from '../enums/participant-role.enum';
 import {
   MEDIA_HOST_CAPABLE_ROLE_IDS,
+  MEDIA_INVITABLE_ROLE_IDS,
   MEDIA_PRIVILEGED_ROLE_IDS,
   MEDIA_ROOM_NAME_PREFIX,
 } from '../constants/media.constant';
@@ -21,6 +22,7 @@ import { UpdateMediaRoomDto } from '../dtos/update-media-room.dto';
 import {
   MediaAccessDeniedException,
   MediaHostAssignmentDeniedException,
+  MediaInviteDeniedException,
   MediaRoleEscalationException,
   MediaRoomCapacityException,
   MediaRoomClosedException,
@@ -66,8 +68,12 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
     return user;
   }
 
-  canSchedule(user?: AbstractUserEntity | null): boolean {
+  private isHostCapable(user?: AbstractUserEntity | null): boolean {
     return Boolean(user?.roleId && MEDIA_HOST_CAPABLE_ROLE_IDS.includes(user.roleId));
+  }
+
+  canSchedule(user?: AbstractUserEntity | null): boolean {
+    return this.isPrivilegedUser(user) || this.isHostCapable(user);
   }
 
   async assertCanSchedule(userId: string): Promise<AbstractUserEntity> {
@@ -80,12 +86,45 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
     return user;
   }
 
+  async assertPrivileged(userId: string): Promise<AbstractUserEntity> {
+    const user = await this.getUserOrFail(userId);
+    if (!this.isPrivilegedUser(user)) {
+      throw new MediaRoomManagementDeniedException('Only administrators can do this');
+    }
+    return user;
+  }
+
+  private async assertHostAssignable(hostId: string): Promise<AbstractUserEntity> {
+    const host = await this.getUserOrFail(hostId);
+    if (!this.isHostCapable(host)) {
+      throw new MediaHostAssignmentDeniedException('Only a tutor can be assigned as host');
+    }
+    return host;
+  }
+
   async assertCanManage(room: MediaRoomEntity, userId: string): Promise<AbstractUserEntity> {
     const user = await this.getUserOrFail(userId);
     if (room.hostId !== userId && !this.isPrivilegedUser(user)) {
       throw new MediaRoomManagementDeniedException();
     }
     return user;
+  }
+
+  private async assertCanInvite(
+    requester: AbstractUserEntity,
+    userId: string,
+    role: ParticipantRole,
+  ): Promise<void> {
+    if (role === ParticipantRole.HOST) {
+      throw new MediaInviteDeniedException('The host is assigned by an administrator');
+    }
+    const invitee = await this.getUserOrFail(userId);
+    if (
+      !this.isPrivilegedUser(requester) &&
+      (!invitee.roleId || !MEDIA_INVITABLE_ROLE_IDS.includes(invitee.roleId))
+    ) {
+      throw new MediaInviteDeniedException();
+    }
   }
 
   async assertCapacityForInvite(room: MediaRoomEntity, incoming = 1): Promise<void> {
@@ -135,22 +174,28 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
   @Transactional()
   async createRoom(dto: CreateMediaRoomDto, requesterId: string): Promise<MediaRoomEntity> {
     const requester = await this.assertCanSchedule(requesterId);
+    const isAdmin = this.isPrivilegedUser(requester);
 
-    const wantsOtherHost = Boolean(dto.hostId && dto.hostId !== requesterId);
-    if (wantsOtherHost && !this.isPrivilegedUser(requester)) {
-      throw new MediaHostAssignmentDeniedException();
-    }
-
-    const hostId = dto.hostId ?? requesterId;
-    if (wantsOtherHost) {
-      const host = await this.getUserOrFail(hostId);
-      if (!host.roleId || !MEDIA_HOST_CAPABLE_ROLE_IDS.includes(host.roleId)) {
+    // Tutors always host what they schedule; admins must assign a tutor.
+    let hostId: string;
+    if (isAdmin) {
+      if (!dto.hostId) {
+        throw new MediaHostAssignmentDeniedException('A tutor must be assigned as host');
+      }
+      hostId = dto.hostId;
+      await this.assertHostAssignable(hostId);
+    } else {
+      if (dto.hostId && dto.hostId !== requesterId) {
         throw new MediaHostAssignmentDeniedException();
       }
+      hostId = requesterId;
     }
 
     const capacity = dto.maxParticipants ?? 0;
     const invites = dto.participants?.filter((p) => p.userId !== hostId) ?? [];
+    for (const participant of invites) {
+      await this.assertCanInvite(requester, participant.userId, participant.role);
+    }
     if (capacity > 0 && invites.length + 1 > capacity) {
       throw new MediaRoomCapacityException(capacity);
     }
@@ -178,18 +223,39 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
   }
 
   @Transactional()
-  async inviteParticipant(roomId: string, userId: string, role: ParticipantRole) {
+  async inviteParticipant(
+    roomId: string,
+    userId: string,
+    role: ParticipantRole,
+    requester: AbstractUserEntity,
+  ) {
     const room = await this.findRoomOrFail(roomId);
-    await this.getUserOrFail(userId);
+    if (userId === room.hostId) {
+      throw new MediaInviteDeniedException('The host is already part of this session');
+    }
+    await this.assertCanInvite(requester, userId, role);
     await this.assertCapacityForInvite(room);
     return this.participantService.enroll(roomId, userId, role);
   }
 
   @Transactional()
-  async updateRoom(roomId: string, dto: UpdateMediaRoomDto): Promise<MediaRoomEntity> {
+  async updateRoom(
+    roomId: string,
+    dto: UpdateMediaRoomDto,
+    requester: AbstractUserEntity,
+  ): Promise<MediaRoomEntity> {
     const room = await this.findRoomOrFail(roomId);
 
     const payload: QueryDeepPartialEntity<MediaRoomEntity> = {};
+    if (dto.hostId !== undefined && dto.hostId !== room.hostId) {
+      if (!this.isPrivilegedUser(requester)) {
+        throw new MediaHostAssignmentDeniedException();
+      }
+      await this.assertHostAssignable(dto.hostId);
+      // The new host no longer needs a participant seat.
+      await this.participantService.removeFromRoom(roomId, dto.hostId);
+      payload.hostId = dto.hostId;
+    }
     if (dto.title !== undefined) payload.title = dto.title;
     if (dto.description !== undefined) payload.description = dto.description;
     if (dto.status !== undefined) payload.status = dto.status;
