@@ -139,6 +139,20 @@
     "microphone": "الميكروفون",
     "displayName": "اسم العرض",
     "observerNotice": "أنت في هذه الجلسة كمراقب. يمكنك المشاهدة والاستماع دون التحدّث أو مشاركة الفيديو.",
+    "room": {
+      "shareScreen": "مشاركة الشاشة",
+      "stopScreenShare": "إيقاف المشاركة",
+      "chat": "الدردشة",
+      "leave": "مغادرة",
+      "messages": "الرسائل",
+      "closeChat": "إغلاق الدردشة",
+      "messagePlaceholder": "اكتب رسالة…",
+      "send": "إرسال",
+      "connecting": "جارٍ الاتصال",
+      "reconnecting": "جارٍ إعادة الاتصال",
+      "disconnected": "انقطع الاتصال",
+      "allowPlayback": "انقر للسماح بتشغيل الصوت والفيديو"
+    },
     "status": {
       "idle": "لم تبدأ",
       "active": "مباشر",

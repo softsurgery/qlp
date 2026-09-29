@@ -139,6 +139,20 @@
     "microphone": "Microphone",
     "displayName": "Display name",
     "observerNotice": "You are in this session as an observer. You can watch and listen, but not speak or share video.",
+    "room": {
+      "shareScreen": "Share screen",
+      "stopScreenShare": "Stop sharing",
+      "chat": "Chat",
+      "leave": "Leave",
+      "messages": "Messages",
+      "closeChat": "Close chat",
+      "messagePlaceholder": "Write a message…",
+      "send": "Send",
+      "connecting": "Connecting",
+      "reconnecting": "Reconnecting",
+      "disconnected": "Disconnected",
+      "allowPlayback": "Click to allow audio and video"
+    },
     "status": {
       "idle": "Not started",
       "active": "Live",
