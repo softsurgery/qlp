@@ -23,6 +23,20 @@ export class MediaAttendanceService extends AbstractCrudService<MediaRoomAttenda
     return this.attendanceRepository.findAll({ where: { mediaRoomId } });
   }
 
+  // Whether a user is connected right now, and when they last left, as seen by LiveKit webhooks.
+  async getPresence(
+    mediaRoomId: string,
+    identity: string,
+  ): Promise<{ present: boolean; lastLeftAt?: Date }> {
+    const rows = await this.attendanceRepository.findAll({ where: { mediaRoomId, identity } });
+    const present = rows.some((row) => !row.leftAt);
+    const lastLeftAt = rows
+      .map((row) => (row.leftAt ? new Date(row.leftAt) : undefined))
+      .filter((date): date is Date => Boolean(date))
+      .sort((a, b) => b.getTime() - a.getTime())[0];
+    return { present, lastLeftAt };
+  }
+
   private findByParticipantSid(
     mediaRoomId: string,
     participantSid: string,

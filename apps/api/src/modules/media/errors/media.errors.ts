@@ -45,6 +45,20 @@ export class MediaInviteDeniedException extends HttpException {
   }
 }
 
+export class MediaRoomNotOpenException extends HttpException {
+  constructor(opensAt: Date) {
+    super(
+      {
+        statusCode: 425,
+        error: 'Too Early',
+        message: `This session opens at ${opensAt.toISOString()}`,
+        opensAt: opensAt.toISOString(),
+      },
+      425,
+    );
+  }
+}
+
 export class MediaRoomCapacityException extends HttpException {
   constructor(capacity: number) {
     super(`This session is limited to ${capacity} participant(s)`, HttpStatus.CONFLICT);

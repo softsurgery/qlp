@@ -189,11 +189,22 @@ export class MediaWebhookService {
   private async onRoomFinished(event: WebhookEvent, room: MediaRoomEntity | null) {
     if (!room) return this.unknownRoom(event);
 
-    const endedAt = fromSeconds(event.createdAt);
-    await this.mediaRoomService.markFinished(room.id, endedAt);
+    // LiveKit closes a room shortly after the last person leaves. That only ends the session
+    // once its scheduled time is over; before that, people (host included) may come back.
+    const endedAt = fromSeconds(event.createdAt) ?? new Date();
     const closed = await this.attendanceService.closeAllOpen(room.id, endedAt);
 
-    this.logger.log(`Room ${room.id} finished, closed ${closed} open attendance record(s)`);
+    const isOver = this.mediaRoomService.isPastScheduledEnd(room, endedAt);
+    if (isOver) {
+      await this.mediaRoomService.markFinished(room.id, endedAt);
+    } else {
+      await this.mediaRoomService.markIdle(room.id);
+    }
+
+    this.logger.log(
+      `LiveKit room for ${room.id} closed (${isOver ? 'session over' : 'session still open'}), ` +
+        `closed ${closed} open attendance record(s)`,
+    );
     return true;
   }
 

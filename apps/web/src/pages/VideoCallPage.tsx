@@ -15,6 +15,7 @@ import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@qlp/ui
 import { AlertTriangle, Eye, Loader2 } from "lucide-react";
 import {
   classifyMediaError,
+  mediaErrorOpensAt,
   useMediaRoom,
   useMediaToken,
   type MediaErrorKind,
@@ -26,7 +27,7 @@ type Stage = "lobby" | "connecting" | "connected";
 export default function VideoCallPage() {
   const { roomId } = useParams();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
 
   const [stage, setStage] = useState<Stage>("lobby");
   const [choices, setChoices] = useState<LocalUserChoices | null>(null);
@@ -155,7 +156,10 @@ export default function VideoCallPage() {
           )}
 
           {tokenMutation.isError && errorKind && (
-            <InlineError kind={errorKind} />
+            <InlineError
+              kind={errorKind}
+              opensAt={mediaErrorOpensAt(tokenMutation.error)}
+            />
           )}
 
           <Button variant="ghost" onClick={leave}>
@@ -167,14 +171,23 @@ export default function VideoCallPage() {
   );
 }
 
-function InlineError({ kind }: { kind: MediaErrorKind }) {
-  const { t } = useTranslation();
+function InlineError({ kind, opensAt }: { kind: MediaErrorKind; opensAt?: Date }) {
+  const { t, i18n } = useTranslation("web");
+  const time = opensAt
+    ? new Intl.DateTimeFormat(i18n.language, {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(opensAt)
+    : "";
   return (
     <div className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm">
       <AlertTriangle className="mt-0.5 h-4 w-4 text-destructive" />
       <div>
         <p className="font-medium">{t(`video.errors.${kind}.title`)}</p>
-        <p className="text-muted-foreground">{t(`video.errors.${kind}.body`)}</p>
+        <p className="text-muted-foreground">{t(`video.errors.${kind}.body`, { time })}</p>
       </div>
     </div>
   );
@@ -187,7 +200,7 @@ function SessionUnavailable({
   kind: MediaErrorKind;
   onBack: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
   return (
     <div className="mx-auto w-full max-w-lg">
       <Card>

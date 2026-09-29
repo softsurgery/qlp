@@ -155,7 +155,11 @@
       },
       "ended": {
         "title": "This session has ended",
-        "body": "The host closed the session. It cannot be rejoined."
+        "body": "The session is over and can no longer be joined."
+      },
+      "notOpen": {
+        "title": "This session hasn't opened yet",
+        "body": "You can join from {{time}}. Come back then and press Join."
       },
       "unavailable": {
         "title": "Video is unavailable",

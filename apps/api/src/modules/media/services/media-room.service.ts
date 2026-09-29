@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Between, FindOptionsWhere, In } from 'typeorm';
+import { Between, FindOptionsWhere, In, IsNull, LessThan } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { AbstractCrudService } from 'src/shared/database/services/abstract-crud.service';
 import { AbstractUserEntity } from 'src/shared/abstract-user-management/entities/abstract-user.entity';
@@ -375,6 +375,29 @@ export class MediaRoomService extends AbstractCrudService<MediaRoomEntity> {
     }
 
     return this.mediaRoomRepository.update(roomId, payload);
+  }
+
+  isPastScheduledEnd(room: MediaRoomEntity, at = new Date()): boolean {
+    return Boolean(room.scheduledEndAt && at > new Date(room.scheduledEndAt));
+  }
+
+  // Sessions whose scheduled end has passed but that nobody has closed yet.
+  findOverdueOpen(now = new Date()): Promise<MediaRoomEntity[]> {
+    return this.mediaRoomRepository.findAll({
+      where: {
+        scheduledEndAt: LessThan(now),
+        endedAt: IsNull(),
+        status: In([MediaRoomStatus.IDLE, MediaRoomStatus.ACTIVE]),
+      },
+    });
+  }
+
+  // The LiveKit room emptied out, but the session itself is not over: people may come back.
+  @Transactional()
+  async markIdle(roomId: string): Promise<MediaRoomEntity | null> {
+    const room = await this.findRoomOrFail(roomId);
+    if (room.status !== MediaRoomStatus.ACTIVE) return room;
+    return this.mediaRoomRepository.update(roomId, { status: MediaRoomStatus.IDLE });
   }
 
   @Transactional()
