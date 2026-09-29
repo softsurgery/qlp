@@ -55,7 +55,7 @@ export default function VideoCallPage() {
       try {
         const issued = await tokenMutation.mutateAsync({
           roomId,
-          participantName: userChoices.username,
+          participantName: displayName,
         });
         setGrant(issued);
       } catch {
@@ -63,7 +63,7 @@ export default function VideoCallPage() {
         void room.refetch();
       }
     },
-    [roomId, tokenMutation, room],
+    [roomId, displayName, tokenMutation, room],
   );
 
   const isObserver = grant?.role === ParticipantRole.OBSERVER;
@@ -130,11 +130,13 @@ export default function VideoCallPage() {
           <p className="text-sm text-muted-foreground">{t("video.lobbyHint")}</p>
 
           <div
-            className="overflow-hidden rounded-md border bg-[#111] [&_.lk-prejoin]:w-full"
+            className="overflow-hidden rounded-md border bg-[#111] [&_#username]:hidden [&_.lk-prejoin]:w-full"
             data-lk-theme="default"
           >
+            {/* Participants always appear under their account name, so the name field is hidden. */}
             <PreJoin
               onSubmit={handleJoin}
+              onValidate={() => true}
               defaults={{
                 username: displayName,
                 videoEnabled: true,
@@ -143,7 +145,6 @@ export default function VideoCallPage() {
               joinLabel={t("video.join")}
               micLabel={t("video.microphone")}
               camLabel={t("video.camera")}
-              userLabel={t("video.displayName")}
               persistUserChoices
             />
           </div>
