@@ -5,7 +5,6 @@ import {
   LiveKitRoom,
   PreJoin,
   RoomAudioRenderer,
-  VideoConference,
   type LocalUserChoices,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
@@ -21,6 +20,7 @@ import {
   type MediaErrorKind,
 } from "@/hooks/useMedia";
 import { useAuthUser } from "@/hooks/useAuth";
+import { MeetingConference } from "@/components/video/MeetingConference";
 
 type Stage = "lobby" | "connecting" | "connected";
 
@@ -111,7 +111,7 @@ export default function VideoCallPage() {
             </div>
           )}
           <div className="min-h-0 flex-1">
-            <VideoConference />
+            <MeetingConference />
           </div>
           <RoomAudioRenderer />
         </LiveKitRoom>
