@@ -1,10 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
-import { CalendarPlus, ChevronLeft, ChevronRight } from "lucide-react";
-import { Button, cn, useDialog } from "@qlp/ui";
+import { cn, useDialog, useSheet } from "@qlp/ui";
 import {
   MediaRoomStatus,
   ParticipantRole,
@@ -17,10 +15,30 @@ import {
   useMeetingParticipants,
   useMeetingsCalendar,
 } from "../hooks/useMeetings";
-import { MeetingsWeekGrid } from "./MeetingsWeekGrid";
+import { useElementWidth } from "../hooks/useElementWidth";
+import { MeetingsToolbar } from "./MeetingsToolbar";
+import { MeetingsTimeGrid } from "./MeetingsTimeGrid";
+import { MeetingsMonthGrid } from "./MeetingsMonthGrid";
 import { MeetingDetailPanel } from "./MeetingDetailPanel";
 import { MeetingForm, type MeetingFormValues } from "./MeetingFormDialog";
-import type { MeetingUser, MeetingsUiProps } from "../types";
+import { MEETING_ROLE_IDS, type MeetingUser, type MeetingsUiProps } from "../types";
+import {
+  stepAnchor,
+  visibleDays,
+  visibleRange,
+  type CalendarView,
+} from "../lib/calendar";
+
+/*
+ * Layout follows the width the meetings UI actually has (it sits next to the app sidebar),
+ * not the screen width.
+ */
+// Below this: day view by default, toolbar on two rows.
+const COMPACT_BELOW = 640;
+// Below this the month view shows dots instead of titled chips.
+const MONTH_CHIPS_FROM = 720;
+// From this width the meeting details sit beside the calendar; below, they open in a drawer.
+const SIDE_PANEL_FROM = 1024;
 
 export function MeetingsManager({
   api,
@@ -32,17 +50,29 @@ export function MeetingsManager({
 }: MeetingsUiProps) {
   const { t } = useTranslation("meetings");
 
-  const [weekStart, setWeekStart] = useState(() =>
-    startOfWeek(new Date(), { weekStartsOn: 1 }),
-  );
+  const rootRef = useRef<HTMLDivElement>(null);
+  const width = useElementWidth(rootRef);
+  const measured = width > 0;
+  const compact = measured && width < COMPACT_BELOW;
+  const hasSidePanel = !measured || width >= SIDE_PANEL_FROM;
+
+  // Until the user picks a view, narrow layouts open on a single day.
+  const [chosenView, setChosenView] = useState<CalendarView | undefined>();
+  const view: CalendarView = chosenView ?? (compact ? "day" : "week");
+  const [anchor, setAnchor] = useState(() => new Date());
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const [draftStart, setDraftStart] = useState<Date | undefined>();
 
   const range = useMemo(() => {
-    const from = weekStart;
-    const to = endOfWeek(weekStart, { weekStartsOn: 1 });
+    const { from, to } = visibleRange(view, anchor);
     return { from: from.toISOString(), to: to.toISOString() };
-  }, [weekStart]);
+  }, [view, anchor]);
+  const days = useMemo(() => visibleDays(view, anchor), [view, anchor]);
+
+  const openDay = (day: Date) => {
+    setAnchor(day);
+    setChosenView("day");
+  };
 
   const capabilities = useMeetingCapabilities(api);
   const isAdmin = capabilities.data?.isAdmin ?? isAdminProp ?? false;
@@ -61,17 +91,33 @@ export function MeetingsManager({
   );
   const mutations = useMeetingMutations(api);
 
+  // Admins need the directory to assign tutors; tutors need it to invite students.
+  const hostsAnyMeeting = meetings.some((m) => m.hostId === currentUserId);
   const usersQuery = useQuery({
     queryKey: ["meetings", "users"],
     queryFn: () => userApi.findAll(),
     staleTime: 60_000,
-    enabled: canSchedule,
+    enabled: canSchedule || hostsAnyMeeting,
   });
   const users = (usersQuery.data ?? []) as MeetingUser[];
 
-  const hostOptions = useMemo(
-    () => users.filter((u) => u.roleId === "Admin" || u.roleId === "Tutor"),
+  // The API refuses inactive or unapproved accounts, so never offer them.
+  const eligibleUsers = useMemo(
+    () => users.filter((u) => u.isActive && u.isApproved),
     [users],
+  );
+
+  const hostOptions = useMemo(
+    () => eligibleUsers.filter((u) => u.roleId === MEETING_ROLE_IDS.tutor),
+    [eligibleUsers],
+  );
+
+  const inviteCandidates = useMemo(
+    () =>
+      isAdmin
+        ? eligibleUsers.filter((u) => u.id !== currentUserId)
+        : eligibleUsers.filter((u) => u.roleId === MEETING_ROLE_IDS.student),
+    [eligibleUsers, isAdmin, currentUserId],
   );
 
   const isMutating =
@@ -99,7 +145,7 @@ export function MeetingsManager({
 
     if (editing) {
       mutations.update.mutate(
-        { id: editing.id, dto: payload },
+        { id: editing.id, dto: { ...payload, hostId: isAdmin ? values.hostId : undefined } },
         {
           onSuccess: () => {
             toast.success(t("messages.updated"));
@@ -112,7 +158,7 @@ export function MeetingsManager({
     }
 
     mutations.create.mutate(
-      { ...payload, hostId: isAdmin ? values.hostId : undefined },
+      { ...payload, hostId: values.hostId },
       {
         onSuccess: (created) => {
           toast.success(t("messages.created"));
@@ -128,7 +174,7 @@ export function MeetingsManager({
     title: editing ? t("form.editTitle") : t("form.createTitle"),
     description: editing
       ? t("form.editDescription")
-      : t("form.createDescription"),
+      : t(isAdmin ? "form.createDescriptionAdmin" : "form.createDescription"),
     children: (
       <MeetingForm
         meeting={editing}
@@ -140,7 +186,7 @@ export function MeetingsManager({
         onCancel={() => closeRef.current()}
       />
     ),
-    className: "w-[560px] max-w-[95vw]",
+    className: "w-[560px] max-w-[95vw] max-h-[90dvh] overflow-y-auto",
   });
   closeRef.current = closeDialog;
 
@@ -157,47 +203,119 @@ export function MeetingsManager({
     openDialog();
   };
 
-  return (
-    <div className={cn("flex min-h-0 flex-1 flex-col gap-3", className)}>
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-1">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setWeekStart((w) => addDays(w, -7))}
-            aria-label={t("nav.previousWeek")}
-          >
-            <ChevronLeft className="size-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setWeekStart((w) => addDays(w, 7))}
-            aria-label={t("nav.nextWeek")}
-          >
-            <ChevronRight className="size-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() =>
-              setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))
-            }
-          >
-            {t("nav.today")}
-          </Button>
-          <span className="ml-2 text-sm font-medium">
-            {format(weekStart, "d MMM")} –{" "}
-            {format(endOfWeek(weekStart, { weekStartsOn: 1 }), "d MMM yyyy")}
-          </span>
-        </div>
+  const selectMeeting = (meeting: ResponseMediaRoomDto) => {
+    setSelectedId(meeting.id);
+    if (!hasSidePanel) openSheet();
+  };
 
-        {canSchedule && (
-          <Button onClick={() => openCreate()}>
-            <CalendarPlus className="size-4" />
-            {t("actions.create")}
-          </Button>
-        )}
-      </div>
+  const clearSelection = () => {
+    setSelectedId(undefined);
+    closeSheet();
+  };
+
+  const detailPanel = selected && (
+    <MeetingDetailPanel
+      meeting={selected}
+      participants={participants.data ?? []}
+      users={users}
+      inviteCandidates={inviteCandidates}
+      isLoadingParticipants={participants.isLoading}
+      isMutating={isMutating}
+      canManage={canManage(selected)}
+      canDelete={isAdmin}
+      joinHref={
+        selected.status !== MediaRoomStatus.FINISHED
+          ? `${joinBasePath}/${selected.id}`
+          : undefined
+      }
+      onEdit={() => openEdit(selected)}
+      onEnd={() =>
+        mutations.end.mutate(selected.id, {
+          onSuccess: () => toast.success(t("messages.ended")),
+          onError: (error) => fail(error, "messages.endFailed"),
+        })
+      }
+      onDelete={() =>
+        mutations.remove.mutate(selected.id, {
+          onSuccess: () => {
+            toast.success(t("messages.deleted"));
+            clearSelection();
+          },
+          onError: (error) => fail(error, "messages.deleteFailed"),
+        })
+      }
+      onInvite={(userId, role: ParticipantRole) =>
+        mutations.invite.mutate(
+          { id: selected.id, dto: { userId, role } },
+          {
+            onSuccess: () => toast.success(t("messages.invited")),
+            onError: (error) => fail(error, "messages.inviteFailed"),
+          },
+        )
+      }
+      onRemoveParticipant={(userId) =>
+        mutations.removeParticipant.mutate(
+          { id: selected.id, userId },
+          {
+            onSuccess: () => toast.success(t("messages.participantRemoved")),
+            onError: (error) => fail(error, "messages.removeFailed"),
+          },
+        )
+      }
+      onClose={clearSelection}
+    />
+  );
+
+  // Narrow layouts show the details in a drawer, from the inline end (left in Arabic).
+  const { SheetFragment, openSheet, closeSheet, isOpen: isSheetOpen } = useSheet({
+    title: selected?.title,
+    headerClassName: "sr-only",
+    showCloseButton: false,
+    className: "w-full p-0 sm:max-w-md",
+    onToggle: () => setSelectedId(undefined),
+    children: <div className="h-full">{detailPanel}</div>,
+  });
+
+  // Moving between layouts (sidebar toggle, rotation) keeps the selection in the right place.
+  useEffect(() => {
+    if (hasSidePanel && isSheetOpen) closeSheet();
+    if (!hasSidePanel && selectedId && !isSheetOpen) openSheet();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasSidePanel]);
+
+  // Search filters the calendar by meeting name, within the loaded range.
+  const [search, setSearch] = useState("");
+  const query = search.trim().toLocaleLowerCase();
+  const matching = useMemo(
+    () =>
+      query ? meetings.filter((m) => m.title.toLocaleLowerCase().includes(query)) : meetings,
+    [meetings, query],
+  );
+
+  const pickSearchResult = (meeting: ResponseMediaRoomDto) => {
+    if (meeting.scheduledStartAt) setAnchor(new Date(meeting.scheduledStartAt));
+    selectMeeting(meeting);
+  };
+
+  const scheduledInView = matching.filter((m) => m.scheduledStartAt);
+  const unscheduled = matching.filter((m) => !m.scheduledStartAt);
+
+  return (
+    <div ref={rootRef} className={cn("flex min-h-0 flex-1 flex-col gap-3", className)}>
+      <MeetingsToolbar
+        view={view}
+        onViewChange={setChosenView}
+        anchor={anchor}
+        onNavigate={(direction) => setAnchor((current) => stepAnchor(view, current, direction))}
+        onToday={() => setAnchor(new Date())}
+        canCreate={canSchedule}
+        onCreate={() => openCreate()}
+        search={search}
+        onSearchChange={setSearch}
+        searchResults={query ? matching : []}
+        onSearchPick={pickSearchResult}
+        compact={compact}
+      />
 
       {calendar.isError && (
         <div className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm">
@@ -206,73 +324,65 @@ export function MeetingsManager({
       )}
 
       <div className="flex min-h-0 flex-1 gap-3">
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border">
-          <MeetingsWeekGrid
-            weekStart={weekStart}
-            meetings={meetings}
-            selectedId={selectedId}
-            onSelect={(meeting) => setSelectedId(meeting.id)}
-            onCreateAt={openCreate}
-            canCreate={canSchedule}
-            isLoading={calendar.isFetching}
-          />
+        <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border">
+          {view === "month" ? (
+            <MeetingsMonthGrid
+              month={anchor}
+              meetings={scheduledInView}
+              selectedId={selectedId}
+              onSelect={selectMeeting}
+              onDayClick={openDay}
+              compact={measured && width < MONTH_CHIPS_FROM}
+            />
+          ) : (
+            <MeetingsTimeGrid
+              days={days}
+              meetings={scheduledInView}
+              selectedId={selectedId}
+              onSelect={selectMeeting}
+              onCreateAt={openCreate}
+              onDayClick={openDay}
+              canCreate={canSchedule}
+              minColumnWidth={view === "week" ? "5.5rem" : "0px"}
+            />
+          )}
+
+          {unscheduled.length > 0 && (
+            <div className="shrink-0 border-t p-2">
+              <div className="mb-1 text-xs font-medium text-muted-foreground">
+                {t("grid.unscheduled")}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {unscheduled.map((meeting) => (
+                  <button
+                    key={meeting.id}
+                    type="button"
+                    onClick={() => selectMeeting(meeting)}
+                    className={cn(
+                      "rounded-md border bg-muted/40 px-2 py-1 text-xs hover:bg-accent",
+                      selectedId === meeting.id && "ring-2 ring-primary",
+                    )}
+                  >
+                    {meeting.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {calendar.isFetching && (
+            <div className="pointer-events-none absolute inset-0 z-30 bg-background/40 backdrop-blur-[1px]" />
+          )}
         </div>
 
-        {selected && (
-          <aside className="hidden w-80 shrink-0 overflow-hidden rounded-lg border lg:block">
-            <MeetingDetailPanel
-              meeting={selected}
-              participants={participants.data ?? []}
-              users={users}
-              isLoadingParticipants={participants.isLoading}
-              isMutating={isMutating}
-              canManage={canManage(selected)}
-              joinHref={
-                selected.status !== MediaRoomStatus.FINISHED
-                  ? `${joinBasePath}/${selected.id}`
-                  : undefined
-              }
-              onEdit={() => openEdit(selected)}
-              onEnd={() =>
-                mutations.end.mutate(selected.id, {
-                  onSuccess: () => toast.success(t("messages.ended")),
-                  onError: (error) => fail(error, "messages.endFailed"),
-                })
-              }
-              onDelete={() =>
-                mutations.remove.mutate(selected.id, {
-                  onSuccess: () => {
-                    toast.success(t("messages.deleted"));
-                    setSelectedId(undefined);
-                  },
-                  onError: (error) => fail(error, "messages.deleteFailed"),
-                })
-              }
-              onInvite={(userId, role: ParticipantRole) =>
-                mutations.invite.mutate(
-                  { id: selected.id, dto: { userId, role } },
-                  {
-                    onSuccess: () => toast.success(t("messages.invited")),
-                    onError: (error) => fail(error, "messages.inviteFailed"),
-                  },
-                )
-              }
-              onRemoveParticipant={(userId) =>
-                mutations.removeParticipant.mutate(
-                  { id: selected.id, userId },
-                  {
-                    onSuccess: () =>
-                      toast.success(t("messages.participantRemoved")),
-                    onError: (error) => fail(error, "messages.removeFailed"),
-                  },
-                )
-              }
-              onClose={() => setSelectedId(undefined)}
-            />
+        {hasSidePanel && detailPanel && (
+          <aside className="w-80 shrink-0 overflow-hidden rounded-lg border xl:w-96">
+            {detailPanel}
           </aside>
         )}
       </div>
 
+      {!hasSidePanel && SheetFragment}
       {DialogFragment}
     </div>
   );

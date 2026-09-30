@@ -5,7 +5,6 @@ import {
   LiveKitRoom,
   PreJoin,
   RoomAudioRenderer,
-  VideoConference,
   type LocalUserChoices,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
@@ -15,18 +14,20 @@ import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@qlp/ui
 import { AlertTriangle, Eye, Loader2 } from "lucide-react";
 import {
   classifyMediaError,
+  mediaErrorOpensAt,
   useMediaRoom,
   useMediaToken,
   type MediaErrorKind,
 } from "@/hooks/useMedia";
 import { useAuthUser } from "@/hooks/useAuth";
+import { MeetingConference } from "@/components/video/MeetingConference";
 
 type Stage = "lobby" | "connecting" | "connected";
 
 export default function VideoCallPage() {
   const { roomId } = useParams();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
 
   const [stage, setStage] = useState<Stage>("lobby");
   const [choices, setChoices] = useState<LocalUserChoices | null>(null);
@@ -54,7 +55,7 @@ export default function VideoCallPage() {
       try {
         const issued = await tokenMutation.mutateAsync({
           roomId,
-          participantName: userChoices.username,
+          participantName: displayName,
         });
         setGrant(issued);
       } catch {
@@ -62,7 +63,7 @@ export default function VideoCallPage() {
         void room.refetch();
       }
     },
-    [roomId, tokenMutation, room],
+    [roomId, displayName, tokenMutation, room],
   );
 
   const isObserver = grant?.role === ParticipantRole.OBSERVER;
@@ -91,7 +92,8 @@ export default function VideoCallPage() {
 
   if (stage !== "lobby" && grant) {
     return (
-      <div className="h-[calc(100vh-8rem)] overflow-hidden rounded-lg border">
+      // Phones: the call takes over the screen. Larger screens: it stays inside the app layout.
+      <div className="fixed inset-0 z-50 h-dvh overflow-hidden bg-[#111] md:static md:z-auto md:h-[calc(100dvh-8rem)] md:rounded-lg md:border">
         <LiveKitRoom
           token={grant.token}
           serverUrl={grant.livekitUrl}
@@ -110,7 +112,7 @@ export default function VideoCallPage() {
             </div>
           )}
           <div className="min-h-0 flex-1">
-            <VideoConference />
+            <MeetingConference />
           </div>
           <RoomAudioRenderer />
         </LiveKitRoom>
@@ -121,19 +123,21 @@ export default function VideoCallPage() {
   return (
     <div className="mx-auto w-full max-w-3xl">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between gap-2">
+        <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2 p-4 sm:p-6">
           <CardTitle>{t("video.lobbyTitle")}</CardTitle>
           <Badge variant="secondary">{t(`video.status.${room.data?.status ?? "idle"}`)}</Badge>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 p-4 pt-0 sm:p-6 sm:pt-0">
           <p className="text-sm text-muted-foreground">{t("video.lobbyHint")}</p>
 
           <div
-            className="overflow-hidden rounded-md border bg-[#111] [&_.lk-prejoin]:w-full"
+            className="overflow-hidden rounded-md border bg-[#111] [&_#username]:hidden [&_.lk-prejoin]:w-full"
             data-lk-theme="default"
           >
+            {/* Participants always appear under their account name, so the name field is hidden. */}
             <PreJoin
               onSubmit={handleJoin}
+              onValidate={() => true}
               defaults={{
                 username: displayName,
                 videoEnabled: true,
@@ -142,7 +146,6 @@ export default function VideoCallPage() {
               joinLabel={t("video.join")}
               micLabel={t("video.microphone")}
               camLabel={t("video.camera")}
-              userLabel={t("video.displayName")}
               persistUserChoices
             />
           </div>
@@ -155,7 +158,10 @@ export default function VideoCallPage() {
           )}
 
           {tokenMutation.isError && errorKind && (
-            <InlineError kind={errorKind} />
+            <InlineError
+              kind={errorKind}
+              opensAt={mediaErrorOpensAt(tokenMutation.error)}
+            />
           )}
 
           <Button variant="ghost" onClick={leave}>
@@ -167,14 +173,23 @@ export default function VideoCallPage() {
   );
 }
 
-function InlineError({ kind }: { kind: MediaErrorKind }) {
-  const { t } = useTranslation();
+function InlineError({ kind, opensAt }: { kind: MediaErrorKind; opensAt?: Date }) {
+  const { t, i18n } = useTranslation("web");
+  const time = opensAt
+    ? new Intl.DateTimeFormat(i18n.language, {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(opensAt)
+    : "";
   return (
     <div className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm">
       <AlertTriangle className="mt-0.5 h-4 w-4 text-destructive" />
       <div>
         <p className="font-medium">{t(`video.errors.${kind}.title`)}</p>
-        <p className="text-muted-foreground">{t(`video.errors.${kind}.body`)}</p>
+        <p className="text-muted-foreground">{t(`video.errors.${kind}.body`, { time })}</p>
       </div>
     </div>
   );
@@ -187,7 +202,7 @@ function SessionUnavailable({
   kind: MediaErrorKind;
   onBack: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation("web");
   return (
     <div className="mx-auto w-full max-w-lg">
       <Card>

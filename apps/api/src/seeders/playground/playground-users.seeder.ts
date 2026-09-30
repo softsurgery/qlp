@@ -65,7 +65,8 @@ export class PlaygroundUsersSeedCommand {
     if (
       !mappedRoles[BasicRoles.Admin] ||
       !mappedRoles[BasicRoles.User] ||
-      !mappedRoles[ExtendedRoles.Tutor]
+      !mappedRoles[ExtendedRoles.Tutor] ||
+      !mappedRoles[ExtendedRoles.Student]
     ) {
       console.log('⚠️ Roles not found! Please run the roles seeder first.');
       return;

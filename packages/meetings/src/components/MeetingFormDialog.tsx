@@ -80,11 +80,16 @@ export function MeetingForm({
     new Date(values.scheduledEndAt as string) <=
       new Date(values.scheduledStartAt as string);
 
-  const canSubmit = values.title.trim().length > 0 && !invalidRange && !isPending;
+  // Admins must assign a tutor; tutors editing their own session never see the field.
+  const missingHost = Boolean(isAdmin) && !values.hostId;
+
+  const canSubmit =
+    values.title.trim().length > 0 && !invalidRange && !missingHost && !isPending;
 
   return (
     <form
-      className="space-y-4"
+      // Phones get the form in a bottom drawer: let it scroll instead of running off screen.
+      className="space-y-4 max-md:max-h-[70dvh] max-md:overflow-y-auto max-md:px-2 max-md:pb-2"
       onSubmit={(event) => {
         event.preventDefault();
         if (!canSubmit) return;
@@ -179,7 +184,7 @@ export function MeetingForm({
         <p className="text-xs text-muted-foreground">{t("form.capacityHint")}</p>
       </div>
 
-      <div className="flex justify-end gap-2 pt-2">
+      <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
         <Button type="button" variant="secondary" onClick={onCancel}>
           {t("actions.cancel")}
         </Button>

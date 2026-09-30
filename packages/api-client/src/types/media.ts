@@ -100,6 +100,8 @@ export interface MediaCalendarQuery {
 export interface UpdateMediaRoomDto {
   title?: string;
   description?: string;
+  /** Admins only: reassign the session to another tutor. */
+  hostId?: string;
   status?: MediaRoomStatus;
   scheduledStartAt?: string;
   scheduledEndAt?: string;

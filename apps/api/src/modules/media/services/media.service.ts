@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { Room as LiveKitRoom, RoomServiceClient } from 'livekit-server-sdk';
 import { MediaRoomEntity } from '../entities/media-room.entity';
 import { MediaRoomStatus } from '../enums/media-room-status.enum';
@@ -8,6 +9,14 @@ import { CreateMediaTokenDto } from '../dtos/create-media-token.dto';
 import { MediaRoomService } from './media-room.service';
 import { MediaRoomParticipantService } from './media-room-participant.service';
 import { MediaTokenService } from './media-token.service';
+import { MediaAttendanceService } from './media-attendance.service';
+import {
+  MEDIA_HOST_EARLY_ACCESS_MINUTES,
+  MEDIA_HOST_RECONNECT_GRACE_MINUTES,
+} from '../constants/media.constant';
+import { MediaRoomClosedException, MediaRoomNotOpenException } from '../errors/media.errors';
+
+const MINUTE_MS = 60_000;
 
 export interface IssuedMediaToken {
   token: string;
@@ -36,6 +45,7 @@ export class MediaService {
     private readonly mediaRoomService: MediaRoomService,
     private readonly participantService: MediaRoomParticipantService,
     private readonly mediaTokenService: MediaTokenService,
+    private readonly attendanceService: MediaAttendanceService,
   ) {}
 
   private getRoomClient(): RoomServiceClient | undefined {
@@ -59,6 +69,7 @@ export class MediaService {
       userId,
     );
     const role = this.mediaRoomService.reconcileRequestedRole(grantedRole, dto.role);
+    await this.assertWithinJoinWindow(room, grantedRole);
 
     const displayName =
       [user.firstName, user.lastName].filter(Boolean).join(' ').trim() ||
@@ -86,6 +97,64 @@ export class MediaService {
       expiresInSeconds,
       role,
     };
+  }
+
+  /**
+   * Hosts and admins may enter up to an hour early; everyone else from the scheduled start.
+   * Past the scheduled end, the session stays open only while the host is in it (or just
+   * dropped out), so a session running late isn't cut off but an abandoned one can't be reused.
+   */
+  private async assertWithinJoinWindow(
+    room: MediaRoomEntity,
+    role: ParticipantRole,
+    now = new Date(),
+  ): Promise<void> {
+    if (room.scheduledStartAt) {
+      const start = new Date(room.scheduledStartAt).getTime();
+      const early = role === ParticipantRole.HOST ? MEDIA_HOST_EARLY_ACCESS_MINUTES * MINUTE_MS : 0;
+      const opensAt = new Date(start - early);
+      if (now < opensAt) {
+        throw new MediaRoomNotOpenException(opensAt);
+      }
+    }
+
+    if (!this.mediaRoomService.isPastScheduledEnd(room, now)) return;
+    if (await this.isHostAround(room, now)) return;
+
+    await this.mediaRoomService.markFinished(room.id, now);
+    throw new MediaRoomClosedException();
+  }
+
+  private async isHostAround(room: MediaRoomEntity, now = new Date()): Promise<boolean> {
+    const { present, lastLeftAt } = await this.attendanceService.getPresence(room.id, room.hostId);
+    if (present) return true;
+    return Boolean(
+      lastLeftAt &&
+        now.getTime() - lastLeftAt.getTime() < MEDIA_HOST_RECONNECT_GRACE_MINUTES * MINUTE_MS,
+    );
+  }
+
+  // Closes sessions that ran past their scheduled end once the host has left for good.
+  @Cron(CronExpression.EVERY_MINUTE)
+  async closeOverdueRooms(): Promise<void> {
+    const now = new Date();
+    const overdue = await this.mediaRoomService.findOverdueOpen(now);
+
+    for (const room of overdue) {
+      try {
+        if (await this.isHostAround(room, now)) continue;
+
+        if (room.status === MediaRoomStatus.ACTIVE) {
+          // Disconnects anyone still inside.
+          await this.endRoom(room.id);
+        } else {
+          await this.mediaRoomService.markFinished(room.id, now);
+        }
+        this.logger.log(`Closed overdue session ${room.id}`);
+      } catch (error) {
+        this.logger.warn(`Could not close overdue session ${room.id}: ${this.describe(error)}`);
+      }
+    }
   }
 
   async getCalendar(

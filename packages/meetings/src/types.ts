@@ -7,6 +7,13 @@ import type {
 
 export type { MeetingResource };
 
+// Mirrors the API's role ids (BasicRoles / ExtendedRoles).
+export const MEETING_ROLE_IDS = {
+  admin: "Admin",
+  tutor: "Tutor",
+  student: "Student",
+} as const;
+
 export interface MeetingsUiProps {
   api: MeetingResource;
   userApi: UserResource;

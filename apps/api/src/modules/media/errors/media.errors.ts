@@ -34,8 +34,28 @@ export class MediaRoomManagementDeniedException extends HttpException {
 }
 
 export class MediaHostAssignmentDeniedException extends HttpException {
-  constructor() {
-    super('Only administrators can assign another user as host', HttpStatus.FORBIDDEN);
+  constructor(message = 'Only administrators can assign the host of a session') {
+    super(message, HttpStatus.FORBIDDEN);
+  }
+}
+
+export class MediaInviteDeniedException extends HttpException {
+  constructor(message = 'Hosts can only invite students') {
+    super(message, HttpStatus.FORBIDDEN);
+  }
+}
+
+export class MediaRoomNotOpenException extends HttpException {
+  constructor(opensAt: Date) {
+    super(
+      {
+        statusCode: 425,
+        error: 'Too Early',
+        message: `This session opens at ${opensAt.toISOString()}`,
+        opensAt: opensAt.toISOString(),
+      },
+      425,
+    );
   }
 }
 

@@ -13,6 +13,11 @@ export class UpdateMediaRoomDto {
   @IsOptional()
   description?: string;
 
+  @ApiProperty({ required: false, description: 'Admins only: reassign the session to another tutor' })
+  @IsString()
+  @IsOptional()
+  hostId?: string;
+
   @ApiProperty({ enum: MediaRoomStatus, required: false })
   @IsEnum(MediaRoomStatus)
   @IsOptional()

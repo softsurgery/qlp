@@ -9,6 +9,7 @@ export type MediaErrorKind =
   | "forbidden"
   | "notFound"
   | "ended"
+  | "notOpen"
   | "unavailable"
   | "unknown";
 
@@ -21,11 +22,21 @@ export function classifyMediaError(error: unknown): MediaErrorKind {
       return "notFound";
     case 409:
       return "ended";
+    case 425:
+      return "notOpen";
     case 503:
       return "unavailable";
     default:
       return "unknown";
   }
+}
+
+/** When a "notOpen" refusal says the session opens, if the API told us. */
+export function mediaErrorOpensAt(error: unknown): Date | undefined {
+  const opensAt = (error as { response?: { data?: { opensAt?: string } } })?.response?.data
+    ?.opensAt;
+  const date = opensAt ? new Date(opensAt) : undefined;
+  return date && !Number.isNaN(date.getTime()) ? date : undefined;
 }
 
 export function useMediaRoom(roomId: string | undefined) {

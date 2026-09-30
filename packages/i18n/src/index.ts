@@ -42,6 +42,10 @@ import curriculumModuleAr from "./locales/ar/curriculum-module.json";
 import curriculumMaterialEn from "./locales/en/curriculum-material.json";
 import curriculumMaterialAr from "./locales/ar/curriculum-material.json";
 
+// Meetings
+import meetingsEn from "./locales/en/meetings.json";
+import meetingsAr from "./locales/ar/meetings.json";
+
 export const supportedLngs = ["en", "ar"] as const;
 export type SupportedLng = (typeof supportedLngs)[number];
 
@@ -70,6 +74,7 @@ export const resources = {
     "curriculum-lesson": curriculumLessonEn,
     "curriculum-module": curriculumModuleEn,
     "curriculum-material": curriculumMaterialEn,
+    meetings: meetingsEn,
   },
   ar: {
     "admin-auth": adminAuthAr,
@@ -87,5 +92,6 @@ export const resources = {
     "curriculum-lesson": curriculumLessonAr,
     "curriculum-module": curriculumModuleAr,
     "curriculum-material": curriculumMaterialAr,
+    meetings: meetingsAr,
   },
 };

@@ -96,9 +96,9 @@ export class AdminMediaRoomController {
     @Body() dto: UpdateMediaRoomDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseMediaRoomDto> {
-    await this.assertManageable(id, req);
-    req.logInfo = { id };
-    return toDto(ResponseMediaRoomDto, await this.mediaRoomService.updateRoom(id, dto));
+    const user = await this.assertManageable(id, req);
+    req.logInfo = { id, hostId: dto.hostId };
+    return toDto(ResponseMediaRoomDto, await this.mediaRoomService.updateRoom(id, dto, user));
   }
 
   @Post('/:id/end')
@@ -120,12 +120,12 @@ export class AdminMediaRoomController {
     @Body() dto: CreateMediaRoomParticipantDto,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseMediaRoomParticipantDto> {
-    await this.assertManageable(id, req);
+    const user = await this.assertManageable(id, req);
     req.logInfo = { roomId: id, userId: dto.userId, role: dto.role };
 
     return toDto(
       ResponseMediaRoomParticipantDto,
-      await this.mediaRoomService.inviteParticipant(id, dto.userId, dto.role),
+      await this.mediaRoomService.inviteParticipant(id, dto.userId, dto.role, user),
     );
   }
 
@@ -147,7 +147,9 @@ export class AdminMediaRoomController {
     @Param('id') id: string,
     @Request() req: AdvancedRequest,
   ): Promise<ResponseMediaRoomDto | null> {
-    await this.assertManageable(id, req);
+    if (!req.user?.sub) throw new UnauthorizedException();
+    await this.mediaRoomService.findRoomOrFail(id);
+    await this.mediaRoomService.assertPrivileged(req.user.sub);
     req.logInfo = { id };
     return toDto(ResponseMediaRoomDto, await this.mediaRoomService.deleteRoom(id));
   }
