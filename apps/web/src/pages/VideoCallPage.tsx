@@ -92,7 +92,8 @@ export default function VideoCallPage() {
 
   if (stage !== "lobby" && grant) {
     return (
-      <div className="h-[calc(100vh-8rem)] overflow-hidden rounded-lg border">
+      // Phones: the call takes over the screen. Larger screens: it stays inside the app layout.
+      <div className="fixed inset-0 z-50 h-dvh overflow-hidden bg-[#111] md:static md:z-auto md:h-[calc(100dvh-8rem)] md:rounded-lg md:border">
         <LiveKitRoom
           token={grant.token}
           serverUrl={grant.livekitUrl}
@@ -122,11 +123,11 @@ export default function VideoCallPage() {
   return (
     <div className="mx-auto w-full max-w-3xl">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between gap-2">
+        <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2 p-4 sm:p-6">
           <CardTitle>{t("video.lobbyTitle")}</CardTitle>
           <Badge variant="secondary">{t(`video.status.${room.data?.status ?? "idle"}`)}</Badge>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 p-4 pt-0 sm:p-6 sm:pt-0">
           <p className="text-sm text-muted-foreground">{t("video.lobbyHint")}</p>
 
           <div

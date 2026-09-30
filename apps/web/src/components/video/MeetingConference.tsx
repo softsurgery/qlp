@@ -32,6 +32,7 @@ import {
   type TrackReferenceOrPlaceholder,
   type WidgetState,
 } from "@livekit/components-react";
+import { cn } from "@qlp/ui";
 
 /*
  * A translated copy of LiveKit's <VideoConference /> prefab. LiveKit hardcodes its English
@@ -40,6 +41,50 @@ import {
  * exported building blocks, keeping their class names so @livekit/components-styles applies.
  * Room audio is rendered by the page (<RoomAudioRenderer />), not here.
  */
+
+/*
+ * Responsive overrides. @livekit/components-styles loads after Tailwind, so properties it
+ * already sets need the `!` modifier to win; properties it doesn't set don't.
+ */
+const conferenceClass = cn(
+  // Landscape phones: slimmer bars, more room for video.
+  "[@media(max-height:480px)]:[--lk-control-bar-height:56px]",
+  "[@media(max-height:480px)]:[--lk-chat-header-height:48px]",
+  // Touch screens can't hover: keep the tile's pin and connection-quality badges visible.
+  "[@media(hover:none)]:[&_.lk-focus-toggle-button]:!opacity-100",
+  "[@media(hover:none)]:[&_.lk-connection-quality]:!opacity-100",
+);
+
+const controlBarClass = cn(
+  // Narrow phones: tighter spacing so every button fits on one row.
+  "max-[480px]:!gap-1.5 max-[480px]:!p-2",
+  "max-[480px]:[&_button]:!px-2.5 max-[480px]:[&_button]:!py-2",
+  "[@media(max-height:480px)]:!py-1.5",
+  // Finger-sized tap targets.
+  "[@media(pointer:coarse)]:[&_button]:min-h-11 [@media(pointer:coarse)]:[&_button]:min-w-11",
+);
+
+// Right-to-left: border on the inner side of the chat.
+const chatClass = "rtl:!border-l-0 rtl:border-r rtl:border-[var(--lk-border-color)]";
+
+// When the call is too narrow for a chat column, the chat slides over the video instead,
+// above the control bar, opening from the inline end (right, or left in Arabic).
+const chatOverlayClass = cn(
+  "!absolute !top-0 !bottom-[var(--lk-control-bar-height)] !right-0 !left-auto z-10",
+  "!w-[min(100%,24rem)] !max-w-full shadow-2xl",
+  "rtl:!left-0 rtl:!right-auto",
+);
+
+/*
+ * Layout decisions use the width the call actually has, not the screen width: the call
+ * sits next to the app sidebar, so a 1024px laptop with the sidebar open leaves it ~700px.
+ */
+// LiveKit's chat column is ~55ch (~480px); keep ~640px for video beside it.
+const CHAT_COLUMN_MIN_WIDTH = 1120;
+// Below this the chat overlay covers the whole call.
+const CHAT_FULL_WIDTH_BELOW = 640;
+// Labelled buttons (Microphone, Camera, Share screen, Chat, Leave) need about this much.
+const BUTTON_LABELS_MIN_WIDTH = 720;
 
 const sameTrack = (
   a?: TrackReferenceOrPlaceholder,
@@ -55,16 +100,18 @@ const supportsScreenSharing = () =>
   typeof navigator !== "undefined" &&
   Boolean(navigator.mediaDevices && "getDisplayMedia" in navigator.mediaDevices);
 
-function useMediaQuery(query: string) {
-  const [matches, setMatches] = React.useState(() => window.matchMedia(query).matches);
-  React.useEffect(() => {
-    const media = window.matchMedia(query);
-    const update = () => setMatches(media.matches);
-    update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, [query]);
-  return matches;
+/** Live width of an element; follows sidebar toggles, window resizes and the chat column. */
+function useElementWidth<T extends HTMLElement>(ref: React.RefObject<T>) {
+  const [width, setWidth] = React.useState(0);
+  React.useLayoutEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    setWidth(element.getBoundingClientRect().width);
+    const observer = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref]);
+  return width;
 }
 
 export function MeetingConference() {
@@ -74,6 +121,15 @@ export function MeetingConference() {
     showSettings: false,
   });
   const lastAutoFocusedScreenShare = React.useRef<TrackReferenceOrPlaceholder | null>(null);
+
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const innerRef = React.useRef<HTMLDivElement>(null);
+  const callWidth = useElementWidth(rootRef);
+  // The inner area shrinks when the chat is a column, so the buttons follow it too.
+  const barWidth = useElementWidth(innerRef);
+  const chatAsOverlay = callWidth < CHAT_COLUMN_MIN_WIDTH;
+  const chatFullWidth = callWidth < CHAT_FULL_WIDTH_BELOW;
+  const showButtonLabels = barWidth >= BUTTON_LABELS_MIN_WIDTH;
 
   const tracks = useTracks(
     [
@@ -129,9 +185,9 @@ export function MeetingConference() {
   ]);
 
   return (
-    <div className="lk-video-conference">
+    <div ref={rootRef} className={cn("lk-video-conference", conferenceClass)}>
       <LayoutContextProvider value={layoutContext} onWidgetChange={setWidgetState}>
-        <div className="lk-video-conference-inner">
+        <div ref={innerRef} className="lk-video-conference-inner">
           {!focusTrack ? (
             <div className="lk-grid-layout-wrapper">
               <GridLayout tracks={tracks}>
@@ -148,21 +204,21 @@ export function MeetingConference() {
               </FocusLayoutContainer>
             </div>
           )}
-          <MeetingControlBar />
+          <MeetingControlBar showLabels={showButtonLabels} />
         </div>
-        <MeetingChat style={{ display: widgetState.showChat ? "grid" : "none" }} />
+        <MeetingChat
+          className={cn(chatAsOverlay && chatOverlayClass, chatFullWidth && "!w-full")}
+          style={{ display: widgetState.showChat ? "grid" : "none" }}
+        />
       </LayoutContextProvider>
       <MeetingConnectionToast />
     </div>
   );
 }
 
-function MeetingControlBar() {
+function MeetingControlBar({ showLabels }: { showLabels: boolean }) {
   const { t } = useTranslation("web");
-  const layoutContext = useMaybeLayoutContext();
-  const isChatOpen = Boolean(layoutContext?.widget.state?.showChat);
-  const isTooLittleSpace = useMediaQuery(`(max-width: ${isChatOpen ? 1000 : 760}px)`);
-  const showText = !isTooLittleSpace;
+  const showText = showLabels;
 
   const permissions = useLocalParticipantPermissions();
   const canPublish = (source: Track.Source) => {
@@ -184,7 +240,7 @@ function MeetingControlBar() {
   } = usePersistentUserChoices();
 
   return (
-    <div className="lk-control-bar">
+    <div className={cn("lk-control-bar", controlBarClass)}>
       {canPublish(Track.Source.Microphone) && (
         <div className="lk-button-group">
           <TrackToggle
@@ -282,7 +338,7 @@ function MeetingChat(props: React.HTMLAttributes<HTMLDivElement>) {
   }, [chatMessages, layoutContext?.widget]);
 
   return (
-    <div {...props} className="lk-chat">
+    <div {...props} className={cn("lk-chat", chatClass, props.className)}>
       <div className="lk-chat-header">
         {t("video.room.messages")}
         {layoutContext && (
