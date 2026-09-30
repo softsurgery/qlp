@@ -1,0 +1,28 @@
+{
+  "name": "@qlp/lib",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": [
+      "./src/*.ts",
+      "./src/*.tsx",
+      "./src/*/index.ts",
+      "./src/*/index.tsx",
+      "./src/*"
+    ]
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "date-fns": "^4.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  }
+}

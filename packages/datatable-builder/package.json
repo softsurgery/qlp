@@ -1,0 +1,44 @@
+{
+  "name": "@qlp/datatable-builder",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": [
+      "./src/*.ts",
+      "./src/*.tsx",
+      "./src/*/index.ts",
+      "./src/*/index.tsx",
+      "./src/*"
+    ]
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@qlp/components": "workspace:*",
+    "@qlp/contexts": "workspace:*",
+    "@qlp/hooks": "workspace:*",
+    "@qlp/ui": "workspace:*",
+    "@tanstack/react-table": "^8.20.5",
+    "i18next": "^23.15.1",
+    "react-i18next": "^15.0.2",
+    "xlsx": "^0.18.5",
+    "@qlp/lib": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.3"
+  }
+}

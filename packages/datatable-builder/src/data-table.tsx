@@ -1,0 +1,256 @@
+import React from "react";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+} from "@tanstack/react-table";
+import { DataTableToolbar } from "./data-table-toolbar";
+import { Spinner } from "@qlp/components";
+import { PackageOpen } from "lucide-react";
+import { DataTablePagination } from "./data-table-pagination";
+import { DataTableConfig } from "./types";
+import { useTranslation } from "react-i18next";
+import {
+  cn,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@qlp/ui";
+import { useFooter } from "@qlp/contexts";
+
+interface DataTableProps<TData, TValue> {
+  className?: string;
+  containerClassName?: string;
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  context: DataTableConfig<TData>;
+  footerPagination?: boolean;
+  isPending: boolean;
+}
+
+export function DataTable<TData, TValue>({
+  className,
+  containerClassName,
+  columns,
+  data,
+  context,
+  footerPagination = true,
+  isPending,
+}: DataTableProps<TData, TValue>) {
+  //set pagination in footer
+  const { setContent } = useFooter();
+  const { t } = useTranslation("datatable");
+  const { t: tCommon } = useTranslation("common");
+
+  const [rowSelection, setRowSelection] = React.useState({});
+  const initialDefaultVisibility = React.useMemo(
+    () =>
+      Object.fromEntries(
+        context?.invisibleColumns?.map((column) => [column, false]) || [],
+      ),
+    [context?.invisibleColumns],
+  );
+  const [internalColumnVisibility, setInternalColumnVisibility] =
+    React.useState<VisibilityState>(initialDefaultVisibility);
+
+  const columnVisibility = context?.columnVisibility
+    ? { ...initialDefaultVisibility, ...context.columnVisibility }
+    : internalColumnVisibility;
+
+  const handleColumnVisibilityChange = React.useCallback(
+    (
+      updaterOrValue:
+        VisibilityState | ((old: VisibilityState) => VisibilityState),
+    ) => {
+      if (context?.setColumnVisibility) {
+        context.setColumnVisibility(updaterOrValue as any);
+      } else {
+        setInternalColumnVisibility(updaterOrValue);
+      }
+    },
+    [context],
+  );
+
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    [],
+  );
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+      columnVisibility,
+      rowSelection,
+      columnFilters,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: handleColumnVisibilityChange,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    initialState: {
+      pagination: {
+        pageSize: 100,
+      },
+    },
+    defaultColumn: {
+      size: 0,
+      minSize: 0,
+    },
+    meta: {
+      context,
+    },
+  });
+
+  React.useEffect(() => {
+    if (!footerPagination) {
+      setContent?.(null);
+      return;
+    }
+    setContent?.(
+      <DataTablePagination table={table} context={context} className="px-10" />,
+    );
+  }, [
+    footerPagination,
+    context.totalPageCount,
+    context.size,
+    context.page,
+    context.hasActiveFiltersOrSort,
+    context.clearFiltersAndSort,
+    setContent,
+  ]);
+
+  React.useEffect(() => {
+    return () => {
+      setContent?.(null);
+    };
+  }, [setContent]);
+
+  return (
+    <div className={cn("flex flex-col gap-4", className)}>
+      <DataTableToolbar table={table} data={data} context={context} />
+      <div
+        className={cn(
+          "min-h-0 overflow-auto rounded-lg border",
+          containerClassName,
+        )}
+      >
+        <Table className="border-separate border-spacing-0">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id} className="hover:bg-transparent">
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className="sticky top-0 z-20 border-b bg-background text-xs whitespace-normal"
+                      style={{
+                        width:
+                          header.getSize() !== 150
+                            ? `${header.getSize()}px`
+                            : undefined,
+                        maxWidth:
+                          header.column.columnDef.maxSize &&
+                          header.column.columnDef.maxSize !==
+                            Number.MAX_SAFE_INTEGER
+                            ? `${header.column.columnDef.maxSize}px`
+                            : undefined,
+                      }}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length && !isPending ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className="p-1 px-2 text-xs whitespace-normal"
+                      style={{
+                        width:
+                          cell.column.getSize() !== 150
+                            ? `${cell.column.getSize()}px`
+                            : undefined,
+                        maxWidth:
+                          cell.column.columnDef.maxSize &&
+                          cell.column.columnDef.maxSize !==
+                            Number.MAX_SAFE_INTEGER
+                            ? `${cell.column.columnDef.maxSize}px`
+                            : undefined,
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : !isPending ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <div className="flex items-center justify-center gap-2 font-bold">
+                    {t("datatable.noResults")} <PackageOpen />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center "
+                >
+                  <div className="flex items-center justify-center gap-2 font-bold">
+                    {tCommon("table.loading")} <Spinner />
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      {!footerPagination && (
+        <DataTablePagination table={table} context={context} />
+      )}
+    </div>
+  );
+}

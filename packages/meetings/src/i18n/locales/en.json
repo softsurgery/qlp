@@ -1,0 +1,77 @@
+{
+  "nav": {
+    "today": "Today",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "title": "Meetings"
+  },
+  "status": {
+    "idle": "Scheduled",
+    "active": "Live",
+    "finished": "Ended"
+  },
+  "roles": {
+    "host": "Host",
+    "student": "Student",
+    "observer": "Observer"
+  },
+  "grid": {
+    "createAt": "New session at {{time}}",
+    "spots": "{{count}} spot",
+    "spots_other": "{{count}} spots",
+    "unscheduled": "Not yet scheduled"
+  },
+  "form": {
+    "createTitle": "Schedule a session",
+    "createDescription": "Reserve a time and the number of spots. You can invite people now or later.",
+    "editTitle": "Edit session",
+    "editDescription": "Changes apply immediately for anyone who has not joined yet.",
+    "title": "Title",
+    "titlePlaceholder": "e.g. Tajwīd — week 3",
+    "description": "Description",
+    "host": "Host",
+    "hostPlaceholder": "Select a tutor",
+    "hostHint": "The host runs the session and can manage it like an administrator.",
+    "startsAt": "Starts at",
+    "endsAt": "Ends at",
+    "invalidRange": "The end time must be after the start time.",
+    "capacity": "Spots",
+    "capacityHint": "Includes the host. 0 means no limit. Invitations are refused once the spots are taken."
+  },
+  "detail": {
+    "spots": "{{taken}} of {{capacity}} spots",
+    "unscheduled": "Not scheduled",
+    "host": "Host",
+    "participants": "Participants",
+    "noParticipants": "Nobody invited yet",
+    "invite": "Invite someone",
+    "selectUser": "Select a person",
+    "full": "All spots are taken. Increase the capacity to invite more people.",
+    "loading": "Loading…"
+  },
+  "actions": {
+    "create": "New session",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "end": "End session",
+    "delete": "Delete",
+    "invite": "Invite",
+    "open": "Open session"
+  },
+  "messages": {
+    "created": "Session scheduled",
+    "updated": "Session updated",
+    "ended": "Session ended",
+    "deleted": "Session deleted",
+    "invited": "Invitation added",
+    "participantRemoved": "Participant removed",
+    "createFailed": "Could not schedule the session",
+    "updateFailed": "Could not update the session",
+    "endFailed": "Could not end the session",
+    "deleteFailed": "Could not delete the session",
+    "inviteFailed": "Could not add the invitation",
+    "removeFailed": "Could not remove the participant",
+    "loadFailed": "Could not load the calendar"
+  }
+}

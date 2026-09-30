@@ -1,0 +1,33 @@
+{
+  "materialsDescription": "أضف كتل المحتوى لهذا الدرس وأعد ترتيبها.",
+  "noMaterials": "لا توجد مواد بعد. أضف محررًا أو فيديو أو تسجيلًا أو جدولًا.",
+  "materialEditor": "محرر",
+  "materialVideo": "فيديو",
+  "materialAudio": "تسجيل صوتي",
+  "materialTable": "جدول",
+  "uploadVideo": "رفع فيديو",
+  "replaceVideo": "استبدال الفيديو",
+  "uploadAudio": "رفع صوت",
+  "replaceAudio": "استبدال الصوت",
+  "noVideo": "لم يُرفع فيديو",
+  "noAudio": "لا يوجد تسجيل بعد",
+  "startRecording": "بدء التسجيل",
+  "stopRecording": "إيقاف التسجيل",
+  "recordingError": "تعذر الوصول إلى الميكروفون",
+  "materialType": {
+    "video": "فيديو",
+    "document": "مستند",
+    "audio": "صوت",
+    "text": "نص",
+    "link": "رابط",
+    "table": "جدول"
+  },
+  "dialogs": {
+    "deleteMaterial": {
+      "title": "حذف المادة",
+      "description": "تبقى الإصدارات السابقة. سيُزال أحدث إصدار من هذه المادة.",
+      "confirm": "حذف",
+      "cancel": "إلغاء"
+    }
+  }
+}

@@ -1,0 +1,116 @@
+import { ConflictException, Injectable, ForbiddenException } from '@nestjs/common';
+import { AbstractVersioningCrudService } from 'src/shared/database/services/abstract-versioning-crud.service';
+import { CurriculumEntity } from '../entities/curriculum.entity';
+import { CurriculumRepository } from '../repositories/curriculum.repository';
+import { CurriculumStatus } from '../enums/curriculum-status.enum';
+import { CreateCurriculumDto } from '../dtos/curriculum/create-curriculum.dto';
+import { UpdateCurriculumDto } from '../dtos/curriculum/update-curriculum.dto';
+import { CurriculumCollaboratorRepository } from '../repositories/curriculum-collaborator.repository';
+import { BasicRoles } from 'src/shared/abstract-user-management/enums/basic-roles.enum';
+import { UserService } from '../../user-management/services/user.service';
+
+@Injectable()
+export class CurriculumService extends AbstractVersioningCrudService<CurriculumEntity> {
+  constructor(
+    private readonly userService: UserService,
+    private readonly curriculumRepository: CurriculumRepository,
+    private readonly collaboratorRepository: CurriculumCollaboratorRepository,
+  ) {
+    super(curriculumRepository);
+  }
+
+  async addOrUpdateCollaborator(
+    curriculumId: string,
+    userId: string,
+    role: string,
+    actorId?: string,
+  ) {
+    if (actorId) {
+      await this.assertCanEdit(curriculumId, actorId);
+    }
+    const existing = await this.collaboratorRepository.findOne({
+      where: { curriculumId, userId },
+    });
+    if (existing) {
+      existing.role = role as any;
+      return this.collaboratorRepository.save(existing);
+    }
+    return this.collaboratorRepository.save(
+      this.collaboratorRepository.create({ curriculumId, userId, role: role as any }),
+    );
+  }
+
+  async removeCollaborator(curriculumId: string, userId: string, actorId?: string) {
+    if (actorId) {
+      await this.assertCanEdit(curriculumId, actorId);
+    }
+    const existing = await this.collaboratorRepository.findOne({
+      where: { curriculumId, userId },
+    });
+    if (existing) {
+      await this.collaboratorRepository.remove(existing);
+    }
+  }
+
+  private slugify(value: string) {
+    const slug = value
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    return slug || `curriculum-${Date.now()}`;
+  }
+
+  private async assertUniqueSlug(slug: string, excludeId?: string) {
+    const existing = await this.findOneByCondition({
+      filter: `slug||$eq||${slug}`,
+    });
+    if (existing && existing.id !== excludeId) {
+      throw new ConflictException(`Curriculum slug "${slug}" is already in use`);
+    }
+  }
+
+  async assertCanEdit(id: string, actorId: string) {
+    const user = await this.userService.findOneById(actorId);
+    if (user?.roleId === BasicRoles.Admin) return;
+
+    const curriculum = await this.findOneById(id);
+    if (!curriculum) return;
+    if (curriculum.ownerId === actorId) return;
+
+    const isEditor = await this.collaboratorRepository.findOne({
+      where: { curriculumId: id, userId: actorId, role: 'EDITOR' as any },
+    });
+
+    if (!isEditor) {
+      throw new ForbiddenException('You do not have permission to edit this curriculum');
+    }
+  }
+
+  async createCurriculum(dto: CreateCurriculumDto, createdById?: string) {
+    const slug = this.slugify(dto.slug || dto.title);
+    await this.assertUniqueSlug(slug);
+    return this.save({
+      title: dto.title,
+      slug,
+      description: dto.description,
+      status: dto.status ?? CurriculumStatus.Draft,
+      ownerId: dto.ownerId,
+      createdById: createdById,
+    });
+  }
+
+  async updateCurriculum(id: string, dto: UpdateCurriculumDto, actorId?: string) {
+    if (actorId) {
+      await this.assertCanEdit(id, actorId);
+    }
+    const latest = await this.findOneById(id);
+    const slug = dto.slug ? this.slugify(dto.slug) : latest.slug;
+    await this.assertUniqueSlug(slug, id);
+    return this.update(id, {
+      ...dto,
+      slug,
+    });
+  }
+}

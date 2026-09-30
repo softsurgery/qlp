@@ -1,43 +1,48 @@
-import axios from 'axios';
+import { createApiClient, type ResponseUserDto } from "@qlp/api-client";
+import { useAuthPersistStore } from "@qlp/hooks";
 
-const TOKEN_KEY = 'admin_access_token';
-const REFRESH_KEY = 'admin_refresh_token';
+export const AUTH_USER_STORAGE_KEY = "admin_user";
+export const AUTH_USER_QUERY_KEY = ["auth", "user"] as const;
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
-});
+export type AuthUser = ResponseUserDto & {
+  role?: { id: string; label: string };
+  roleId?: string;
+};
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+export function readStoredUser(): AuthUser | null {
+  try {
+    const raw = localStorage.getItem(AUTH_USER_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as AuthUser) : null;
+  } catch {
+    return null;
+  }
+}
 
-api.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(REFRESH_KEY);
-      localStorage.removeItem('admin_user');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
+export function writeStoredUser(user: AuthUser | null) {
+  if (user) localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(user));
+  else localStorage.removeItem(AUTH_USER_STORAGE_KEY);
+}
+
+export function isAdminUser(user: AuthUser | null | undefined) {
+  return user?.role?.label === "Admin";
+}
+
+function clearSession() {
+  useAuthPersistStore.getState().logout();
+  writeStoredUser(null);
+}
+
+const client = createApiClient({
+  baseURL: import.meta.env.VITE_API_URL || "/api",
+  refreshPath: "/admin/auth/refresh-token",
+  onUnauthorized: () => {
+    clearSession();
+    window.location.href = "/login";
   },
-);
+});
 
-export default api;
+export const api = client;
+export const adminAuthApi = client.adminAuth;
 
-export const authApi = {
-  login: (email: string, password: string) => api.post('/auth/login', { email, password }),
-};
-
-export const adminApi = {
-  getUsers: () => api.get('/admin/users'),
-  setUserActive: (id: string, isActive: boolean) => api.patch(`/admin/users/${id}/active`, { isActive }),
-  getPendingTutors: () => api.get('/admin/tutors/pending'),
-  verifyTutor: (id: string, status: string) => api.patch(`/admin/tutors/${id}/verify`, { status }),
-  getCurriculum: () => api.get('/admin/curriculum'),
-};
-
-export { TOKEN_KEY, REFRESH_KEY };
+export { clearSession };
+export default client.http;

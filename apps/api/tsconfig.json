@@ -12,13 +12,19 @@
     "rootDir": "./src",
     "baseUrl": "./",
     "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "strictPropertyInitialization": false,
+    "types": ["node", "multer"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }

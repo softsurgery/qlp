@@ -1,0 +1,23 @@
+{
+  "createExam": "Create Exam",
+  "exams": "Exams",
+  "examsDescription": "Manage the exams and assessments for this module.",
+  "noExams": "No exams found. Create one to get started.",
+  "editExam": "Edit Exam",
+  "examVersions": "Exam Versions",
+  "examVersionsDescription": "History of exam changes",
+  "sheet": {
+    "createExam": {
+      "title": "Create exam",
+      "description": "Give this exam a title, time limit, passing score, and questions."
+    }
+  },
+  "dialogs": {
+    "deleteExam": {
+      "title": "Delete exam",
+      "description": "Previous versions are kept. This removes the latest version of the exam.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
+  }
+}

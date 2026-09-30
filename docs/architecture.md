@@ -146,7 +146,10 @@ qlp/
 │   ├── api/          # NestJS modular monolith
 │   ├── web/          # Learner React + Vite (prototype; target Next.js)
 │   └── admin/        # Admin console React + Vite
-├── packages/shared/
+├── packages/
+│   ├── api-client/
+│   ├── hooks/
+│   └── lib/
 └── docs/
 ```
 

@@ -1,0 +1,87 @@
+import { randomUUID } from 'crypto';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  TableInheritance,
+} from 'typeorm';
+import { RoleEntity } from './role.entity';
+import { LogEntity } from 'src/shared/logger/entities/log.entity';
+import { OAuthProvider } from '../../auth/enums/oauth.enum';
+import { NotificationEntity } from 'src/shared/notifications/entities/notification.entity';
+
+@Entity('users')
+@TableInheritance({ column: { type: 'varchar', name: 'type' } })
+export class AbstractUserEntity extends EntityHelper {
+  @PrimaryColumn()
+  id: string;
+
+  @BeforeInsert()
+  assignId() {
+    if (!this.id) {
+      this.id = randomUUID();
+    }
+  }
+
+  @Column({ nullable: true })
+  firstName?: string;
+
+  @Column({ nullable: true })
+  lastName?: string;
+
+  @Column({ type: 'date', nullable: true })
+  dateOfBirth?: Date;
+
+  @Column({ default: false })
+  isActive: boolean;
+
+  @Column({ default: false })
+  isApproved: boolean;
+
+  @Column({ nullable: true })
+  password?: string;
+
+  @Column({ unique: true })
+  username: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  emailVerified?: Date;
+
+  @Column({
+    type: 'enum',
+    enum: OAuthProvider,
+    nullable: true,
+    default: OAuthProvider.EMAIL,
+  })
+  source?: OAuthProvider;
+
+  @Column({ nullable: true })
+  image?: string;
+
+  @ManyToOne(() => RoleEntity, (role) => role.users, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  @JoinColumn({ name: 'roleId' })
+  role: RoleEntity;
+
+  @Column({})
+  roleId: string;
+
+  @OneToMany(() => LogEntity, (log) => log.user)
+  logs?: LogEntity[];
+
+  @OneToMany(() => NotificationEntity, (notif) => notif.user)
+  notifications?: NotificationEntity[];
+
+  @Column({ type: 'timestamp', nullable: true })
+  lastSeen?: Date;
+}

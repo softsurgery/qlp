@@ -1,0 +1,39 @@
+{
+  "materialsDescription": "Add and reorder the content blocks for this lesson.",
+  "noMaterials": "No materials yet. Add an editor, video, recording, or table.",
+  "materialEditor": "Editor",
+  "materialVideo": "Video",
+  "materialAudio": "Voice recording",
+  "materialTable": "Table",
+  "uploadVideo": "Upload video",
+  "replaceVideo": "Replace video",
+  "uploadAudio": "Upload audio",
+  "replaceAudio": "Replace audio",
+  "noVideo": "No video uploaded",
+  "noAudio": "No recording yet",
+  "startRecording": "Start recording",
+  "stopRecording": "Stop recording",
+  "recordingError": "Could not access the microphone",
+  "materialType": {
+    "video": "Video",
+    "document": "Document",
+    "audio": "Audio",
+    "text": "Text",
+    "link": "Link",
+    "table": "Table"
+  },
+  "dialogs": {
+    "deleteMaterial": {
+      "title": "Delete material",
+      "description": "Previous versions are kept. This removes the latest version of this material.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
+  },
+  "materialDocument": "Document",
+  "materialBatchUpload": "Upload Files",
+  "downloadFile": "Download file",
+  "noFile": "No file uploaded",
+  "replaceFile": "Replace file",
+  "uploadFile": "Upload file"
+}

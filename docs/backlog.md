@@ -182,7 +182,7 @@ Source of truth for product/engineering backlog. Aligned with:
 
 Completed in local MVP (pre-PDF alignment):
 
-- [x] Monorepo (NestJS API + React/Vite web + shared package)
+- [x] Monorepo (NestJS API + React/Vite web + admin)
 - [x] PostgreSQL schema, migrations, Qaida curriculum seed
 - [x] Email auth, JWT, roles (student/tutor/parent/admin)
 - [x] Profiles, parent-child linking, progress, achievements
