@@ -1,9 +1,21 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { format, isSameMonth, isSameYear } from "date-fns";
-import { CalendarPlus, ChevronLeft, ChevronRight } from "lucide-react";
-import { Button, cn } from "@qlp/ui";
-import { CALENDAR_VIEWS, visibleRange, type CalendarView } from "../lib/calendar";
+import { endOfMonth, format, getWeekOfMonth, startOfMonth } from "date-fns";
+import { ArrowLeft, ArrowRight, CalendarPlus, ChevronDown } from "lucide-react";
+import {
+  Badge,
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+  cn,
+} from "@qlp/ui";
+import type { ResponseMediaRoomDto } from "@qlp/api-client";
+import { CALENDAR_VIEWS, WEEK_OPTIONS, visibleRange, type CalendarView } from "../lib/calendar";
 import { useDateLocale } from "../hooks/useDateLocale";
+import { MeetingsSearch } from "./MeetingsSearch";
 
 interface MeetingsToolbarProps {
   view: CalendarView;
@@ -13,7 +25,11 @@ interface MeetingsToolbarProps {
   onToday: () => void;
   canCreate: boolean;
   onCreate: () => void;
-  /** Narrow layout: title on its own row, icon-only create button. */
+  search: string;
+  onSearchChange: (value: string) => void;
+  searchResults: ResponseMediaRoomDto[];
+  onSearchPick: (meeting: ResponseMediaRoomDto) => void;
+  /** Narrow layout: controls wrap under the title, icon-only create button. */
   compact?: boolean;
 }
 
@@ -25,97 +41,148 @@ export function MeetingsToolbar({
   onToday,
   canCreate,
   onCreate,
+  search,
+  onSearchChange,
+  searchResults,
+  onSearchPick,
   compact = false,
 }: MeetingsToolbarProps) {
   const { t } = useTranslation("meetings");
-  const title = useRangeTitle(view, anchor, compact);
+  const locale = useDateLocale();
+  const [searchOpen, setSearchOpen] = useState(Boolean(search));
+
+  const subtitle = useRangeSubtitle(view, anchor);
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <div className="flex items-center gap-1">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => onNavigate(-1)}
-          aria-label={t(`nav.previous.${view}`)}
-        >
-          <ChevronLeft className="size-4 rtl:rotate-180" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => onNavigate(1)}
-          aria-label={t(`nav.next.${view}`)}
-        >
-          <ChevronRight className="size-4 rtl:rotate-180" />
-        </Button>
-        <Button variant="ghost" onClick={onToday}>
-          {t("nav.today")}
-        </Button>
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+      <div className="flex min-w-0 items-center gap-3">
+        <TodayCard onClick={onToday} />
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <h2 className="truncate text-lg font-semibold leading-tight" aria-live="polite">
+              {format(anchor, "LLLL yyyy", { locale })}
+            </h2>
+            <Badge variant="outline" className="shrink-0 font-medium">
+              {t("header.week", { number: getWeekOfMonth(anchor, WEEK_OPTIONS) })}
+            </Badge>
+          </div>
+          <p className="truncate text-sm text-muted-foreground">{subtitle}</p>
+        </div>
       </div>
-
-      <h2
-        className={cn(
-          "truncate text-sm font-semibold sm:text-base",
-          compact ? "order-last basis-full" : "min-w-0 flex-1",
-        )}
-        aria-live="polite"
-      >
-        {title}
-      </h2>
 
       <div
-        role="tablist"
-        aria-label={t("views.label")}
-        className={cn("flex rounded-md border p-0.5", compact && "ms-auto")}
+        className={cn(
+          "flex flex-wrap items-center gap-2",
+          compact ? "w-full" : "ms-auto",
+        )}
       >
-        {CALENDAR_VIEWS.map((option) => (
-          <Button
-            key={option}
-            role="tab"
-            aria-selected={view === option}
-            size="sm"
-            variant={view === option ? "secondary" : "ghost"}
-            className="h-7 px-2.5"
-            onClick={() => onViewChange(option)}
-          >
-            {t(`views.${option}`)}
-          </Button>
-        ))}
-      </div>
+        <MeetingsSearch
+          value={search}
+          onChange={onSearchChange}
+          results={searchResults}
+          onPick={onSearchPick}
+          onOpenChange={setSearchOpen}
+          className={cn(compact && searchOpen && "order-last basis-full")}
+        />
 
-      {canCreate &&
-        (compact ? (
-          <Button size="icon" onClick={onCreate} aria-label={t("actions.create")}>
-            <CalendarPlus className="size-4" />
+        <div className="inline-flex items-center rounded-md border shadow-sm">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-e-none"
+            onClick={() => onNavigate(-1)}
+            aria-label={t(`nav.previous.${view}`)}
+          >
+            <ArrowLeft className="size-4 rtl:rotate-180" />
           </Button>
-        ) : (
-          <Button onClick={onCreate}>
-            <CalendarPlus className="size-4" />
-            {t("actions.create")}
+          <Button
+            variant="ghost"
+            className="rounded-none border-x px-3 font-medium"
+            onClick={onToday}
+          >
+            {t("nav.today")}
           </Button>
-        ))}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-s-none"
+            onClick={() => onNavigate(1)}
+            aria-label={t(`nav.next.${view}`)}
+          >
+            <ArrowRight className="size-4 rtl:rotate-180" />
+          </Button>
+        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="gap-1.5 font-medium shadow-sm">
+              {t(`views.${view}View`)}
+              <ChevronDown className="size-4 opacity-60" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuRadioGroup
+              value={view}
+              onValueChange={(value) => onViewChange(value as CalendarView)}
+            >
+              {CALENDAR_VIEWS.map((option) => (
+                <DropdownMenuRadioItem key={option} value={option}>
+                  {t(`views.${option}View`)}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {canCreate && (
+          <Button
+            onClick={onCreate}
+            size={compact ? "icon" : "default"}
+            className={cn(compact && "ms-auto")}
+            aria-label={compact ? t("actions.create") : undefined}
+          >
+            <CalendarPlus className="size-4" />
+            {!compact && t("actions.create")}
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
 
-function useRangeTitle(view: CalendarView, anchor: Date, compact: boolean): string {
+/** Today's date as a small calendar card; clicking it jumps back to today. */
+function TodayCard({ onClick }: { onClick: () => void }) {
+  const { t } = useTranslation("meetings");
+  const locale = useDateLocale();
+  const today = new Date();
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={t("nav.today")}
+      title={format(today, "PPPP", { locale })}
+      className="w-14 shrink-0 overflow-hidden rounded-lg border text-center shadow-sm transition-colors hover:bg-accent/40"
+    >
+      <div className="bg-muted py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+        {format(today, "LLL", { locale })}
+      </div>
+      <div className="py-0.5 text-lg font-bold leading-7 text-primary">
+        {format(today, "d", { locale })}
+      </div>
+    </button>
+  );
+}
+
+function useRangeSubtitle(view: CalendarView, anchor: Date): string {
   const locale = useDateLocale();
   const options = { locale };
 
-  if (view === "day") {
-    return format(anchor, compact ? "EEE d MMM yyyy" : "EEEE d MMMM yyyy", options);
-  }
-  if (view === "month") {
-    return format(anchor, "MMMM yyyy", options);
-  }
+  if (view === "day") return format(anchor, "PPPP", options);
 
-  const { from, to } = visibleRange("week", anchor);
-  if (isSameMonth(from, to)) {
-    return `${format(from, "d", options)} – ${format(to, "d MMM yyyy", options)}`;
-  }
-  if (isSameYear(from, to)) {
-    return `${format(from, "d MMM", options)} – ${format(to, "d MMM yyyy", options)}`;
-  }
-  return `${format(from, "d MMM yyyy", options)} – ${format(to, "d MMM yyyy", options)}`;
+  const { from, to } =
+    view === "month"
+      ? { from: startOfMonth(anchor), to: endOfMonth(anchor) }
+      : visibleRange("week", anchor);
+  return `${format(from, "PP", options)} – ${format(to, "PP", options)}`;
 }

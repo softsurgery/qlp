@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { useTranslation } from "react-i18next";
 import { differenceInMinutes, format, isSameDay, isToday, startOfDay } from "date-fns";
 import { cn } from "@qlp/ui";
-import type { ResponseMediaRoomDto } from "@qlp/api-client";
-import { MeetingStatusDot } from "./MeetingStatusBadge";
+import { MediaRoomStatus, type ResponseMediaRoomDto } from "@qlp/api-client";
 import { HOUR_HEIGHT_PX, hourBounds, layoutDay, meetingEnd, meetingStart } from "../lib/calendar";
+import { eventColorFor } from "../lib/eventColors";
 import { useDateLocale } from "../hooks/useDateLocale";
 
 interface MeetingsTimeGridProps {
@@ -223,6 +223,8 @@ function MeetingEventCard({
   style: CSSProperties;
 }) {
   const { t } = useTranslation("meetings");
+  const locale = useDateLocale();
+  const color = eventColorFor(meeting.id);
   const start = meetingStart(meeting)!;
   const end = meetingEnd(meeting)!;
   const tall = typeof style.height === "number" && style.height >= 56;
@@ -234,26 +236,28 @@ function MeetingEventCard({
         event.stopPropagation();
         onSelect(meeting);
       }}
+      title={meeting.title}
       className={cn(
-        "absolute z-[6] overflow-hidden rounded-md border px-1.5 py-1 text-start text-xs shadow-sm transition-shadow",
-        "border-primary/30 bg-primary/10 hover:shadow-md",
-        meeting.status === "finished" && "border-border bg-muted text-muted-foreground",
-        meeting.status === "active" && "border-emerald-500/40 bg-emerald-500/15",
-        selected && "ring-2 ring-primary",
+        "absolute z-[6] overflow-hidden rounded-md border px-1.5 py-1 text-start text-xs shadow-sm transition-shadow hover:shadow-md",
+        color.chip,
+        meeting.status === MediaRoomStatus.FINISHED && "opacity-50",
+        selected && "ring-2 ring-ring ring-offset-1 ring-offset-background",
       )}
       style={style}
     >
       <div className="flex items-center gap-1">
-        <MeetingStatusDot status={meeting.status} />
-        <span className="truncate font-medium">{meeting.title}</span>
+        {meeting.status === MediaRoomStatus.ACTIVE && (
+          <span className="size-1.5 shrink-0 animate-pulse rounded-full bg-current" />
+        )}
+        <span className="truncate font-semibold">{meeting.title}</span>
       </div>
-      <div className="truncate text-[10px] opacity-80">
-        {format(start, "HH:mm")}–{format(end, "HH:mm")}
+      <div className={cn("truncate text-[11px] tabular-nums", color.muted)}>
+        {format(start, "p", { locale })} – {format(end, "p", { locale })}
         {meeting.maxParticipants > 0 &&
           ` · ${t("grid.spots", { count: meeting.maxParticipants })}`}
       </div>
       {detailed && tall && meeting.hostName && (
-        <div className="truncate text-[10px] opacity-80">
+        <div className={cn("truncate text-[11px]", color.muted)}>
           {t("detail.host")}: {meeting.hostName}
         </div>
       )}

@@ -13,11 +13,23 @@
     },
     "title": "Meetings"
   },
+  "header": {
+    "week": "Week {{number}}"
+  },
+  "search": {
+    "open": "Search meetings",
+    "placeholder": "Search by name…",
+    "clear": "Clear search",
+    "noResults": "No meetings match in this period"
+  },
   "views": {
     "label": "Calendar view",
     "day": "Day",
     "week": "Week",
-    "month": "Month"
+    "month": "Month",
+    "dayView": "Day view",
+    "weekView": "Week view",
+    "monthView": "Month view"
   },
   "status": {
     "idle": "Scheduled",
@@ -34,7 +46,7 @@
     "spots": "{{count}} spot",
     "spots_other": "{{count}} spots",
     "unscheduled": "Not yet scheduled",
-    "more": "+{{count}} more"
+    "more": "{{count}} more…"
   },
   "form": {
     "createTitle": "Schedule a session",

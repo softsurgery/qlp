@@ -13,11 +13,23 @@
     },
     "title": "الجلسات"
   },
+  "header": {
+    "week": "الأسبوع {{number}}"
+  },
+  "search": {
+    "open": "البحث عن جلسة",
+    "placeholder": "ابحث بالاسم…",
+    "clear": "مسح البحث",
+    "noResults": "لا توجد جلسات مطابقة في هذه الفترة"
+  },
   "views": {
     "label": "عرض التقويم",
     "day": "يوم",
     "week": "أسبوع",
-    "month": "شهر"
+    "month": "شهر",
+    "dayView": "عرض اليوم",
+    "weekView": "عرض الأسبوع",
+    "monthView": "عرض الشهر"
   },
   "status": {
     "idle": "مجدولة",
@@ -34,7 +46,7 @@
     "spots": "مقعد {{count}}",
     "spots_other": "{{count}} مقاعد",
     "unscheduled": "غير مجدولة بعد",
-    "more": "+{{count}} أخرى"
+    "more": "{{count}} أخرى…"
   },
   "form": {
     "createTitle": "جدولة جلسة",

@@ -283,8 +283,22 @@ export function MeetingsManager({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasSidePanel]);
 
-  const scheduledInView = meetings.filter((m) => m.scheduledStartAt);
-  const unscheduled = meetings.filter((m) => !m.scheduledStartAt);
+  // Search filters the calendar by meeting name, within the loaded range.
+  const [search, setSearch] = useState("");
+  const query = search.trim().toLocaleLowerCase();
+  const matching = useMemo(
+    () =>
+      query ? meetings.filter((m) => m.title.toLocaleLowerCase().includes(query)) : meetings,
+    [meetings, query],
+  );
+
+  const pickSearchResult = (meeting: ResponseMediaRoomDto) => {
+    if (meeting.scheduledStartAt) setAnchor(new Date(meeting.scheduledStartAt));
+    selectMeeting(meeting);
+  };
+
+  const scheduledInView = matching.filter((m) => m.scheduledStartAt);
+  const unscheduled = matching.filter((m) => !m.scheduledStartAt);
 
   return (
     <div ref={rootRef} className={cn("flex min-h-0 flex-1 flex-col gap-3", className)}>
@@ -296,6 +310,10 @@ export function MeetingsManager({
         onToday={() => setAnchor(new Date())}
         canCreate={canSchedule}
         onCreate={() => openCreate()}
+        search={search}
+        onSearchChange={setSearch}
+        searchResults={query ? matching : []}
+        onSearchPick={pickSearchResult}
         compact={compact}
       />
 
