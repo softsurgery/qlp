@@ -1,9 +1,23 @@
 {
   "nav": {
     "today": "Today",
-    "previousWeek": "Previous week",
-    "nextWeek": "Next week",
+    "previous": {
+      "day": "Previous day",
+      "week": "Previous week",
+      "month": "Previous month"
+    },
+    "next": {
+      "day": "Next day",
+      "week": "Next week",
+      "month": "Next month"
+    },
     "title": "Meetings"
+  },
+  "views": {
+    "label": "Calendar view",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month"
   },
   "status": {
     "idle": "Scheduled",
@@ -19,7 +33,8 @@
     "createAt": "New session at {{time}}",
     "spots": "{{count}} spot",
     "spots_other": "{{count}} spots",
-    "unscheduled": "Not yet scheduled"
+    "unscheduled": "Not yet scheduled",
+    "more": "+{{count}} more"
   },
   "form": {
     "createTitle": "Schedule a session",

@@ -8,11 +8,12 @@ const TONE: Record<string, string> = {
   [MediaRoomStatus.FINISHED]: "bg-border",
 };
 
-export function MeetingStatusDot({ status }: { status: string }) {
+export function MeetingStatusDot({ status, large }: { status: string; large?: boolean }) {
   return (
     <span
       className={cn(
-        "inline-block size-1.5 shrink-0 rounded-full",
+        "inline-block shrink-0 rounded-full",
+        large ? "size-2" : "size-1.5",
         TONE[status] ?? TONE[MediaRoomStatus.IDLE],
       )}
     />
